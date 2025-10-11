@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Exam Manager System - SMA Laboratorium UM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 15s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            padding: 60px 40px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .intro h2 {
+            font-size: 2.2em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .intro p {
+            font-size: 1.15em;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover::before {
+            transform: translateY(0);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .card-icon {
+            font-size: 4.5em;
+            margin-bottom: 25px;
+            display: block;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .card:nth-child(1) .card-icon {
+            animation-delay: 0s;
+        }
+
+        .card:nth-child(2) .card-icon {
+            animation-delay: 0.5s;
+        }
+
+        .card h3 {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .card p {
+            font-size: 1.05em;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .features {
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+            color: #555;
+            position: relative;
+        }
+
+        .feature-item::before {
+            content: '✓';
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            left: 0;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .footer h4 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .version {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .header p {
+                font-size: 1.1em;
+            }
+
+            .logo {
+                font-size: 3em;
+            }
+
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .intro h2 {
+                font-size: 1.8em;
+            }
+
+            .main-content {
+                padding: 40px 20px;
+            }
+
+            .card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">📝</div>
+                <h1>Smart Exam Manager</h1>
+                <p>Sistem Ujian Digital Terintegrasi dengan QR Code Security</p>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="intro">
+                <h2>Selamat Datang, Pak/Bu Guru!</h2>
+                <p>Pilih aplikasi yang Anda butuhkan untuk mengelola ujian digital dengan sistem keamanan QR Code yang canggih dan mudah digunakan.</p>
+            </div>
+
+            <div class="cards-container">
+                <!-- Teacher Suite Card -->
+                <div class="card">
+                    <span class="card-icon">👨‍🏫</span>
+                    <h3>Teacher Suite</h3>
+                    <p>Platform lengkap untuk membuat dan mengelola soal ujian dengan fitur bulk upload dan keamanan maksimal.</p>
+                    
+                    <div class="features">
+                        <div class="feature-item">Bulk upload soal via CSV/Excel</div>
+                        <div class="feature-item">Upload gambar untuk soal</div>
+                        <div class="feature-item">Multiple choice & multiple answers</div>
+                        <div class="feature-item">Generate exam file dengan QR Code</div>
+                        <div class="feature-item">Anti-cheat system terintegrasi</div>
+                    </div>
+
+                    <a href="teacher.html" class="btn">🚀 Buka Teacher Suite</a>
+                </div>
+
+                <!-- QR Dashboard Card -->
+                <div class="card">
+                    <span class="card-icon">📱</span>
+                    <h3>QR Dashboard</h3>
+                    <p>Scan dan kelola hasil ujian siswa dengan cepat menggunakan sistem QR Code yang aman dan terenkripsi.</p>
+                    
+                    <div class="features">
+                        <div class="feature-item">Scan QR Code hasil siswa</div>
+                        <div class="feature-item">Dashboard statistik lengkap</div>
+                        <div class="feature-item">Export ke Excel/CSV</div>
+                        <div class="feature-item">Filter & sorting data</div>
+                        <div class="feature-item">Tracking pelanggaran ujian</div>
+                    </div>
+
+                    <a href="dashboard.html" class="btn">📊 Buka QR Dashboard</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h4>Created by Mr. Sugeng Mardiyanto</h4>
+            <p>SMA Laboratorium Universitas Negeri Malang</p>
+            <p>Jl. Bromo No. 16, Malang, Jawa Timur</p>
+            <div class="version">Version 4.0 - Bulk Upload Feature</div>
+        </div>
+    </div>
+</body>
+</html>
