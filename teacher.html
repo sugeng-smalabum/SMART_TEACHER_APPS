@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Exam Manager – Teacher Suite (Bulk Upload)</title>
+    <title>Smart Exam Manager – Teacher Suite v5.0</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; padding-top: 80px; }
         .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
         .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
         .header h1 { font-size: 2.5em; margin-bottom: 10px; }
@@ -37,6 +37,8 @@
         .btn-danger:hover { background: #c82333; }
         .btn-secondary { background: #6c757d; color: white; }
         .btn-secondary:hover { background: #5a6268; }
+        .btn-warning { background: #ffc107; color: #000; }
+        .btn-warning:hover { background: #e0a800; }
         .question-item { background: white; padding: 20px; margin-bottom: 15px; border-radius: 8px; border-left: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .question-number { font-weight: bold; color: #667eea; font-size: 1.2em; }
@@ -51,7 +53,7 @@
         .alert-success { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
         .alert-warning { background: #fff3cd; color: #856404; border-left: 4px solid #ffc107; }
         .exam-settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .upload-area { border: 3px dashed #667eea; border-radius: 12px; padding: 30px; text-align: center; background: white; cursor: pointer; transition: all 0.3s; }
+        .upload-area { border: 3px dashed #667eea; border-radius: 12px; padding: 30px; text-align: center; background: white; transition: all 0.3s; margin-top: 20px; }
         .upload-area:hover { background: #f8f9ff; border-color: #764ba2; }
         .upload-area.dragover { background: #e8eaff; border-color: #764ba2; }
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; }
@@ -59,49 +61,70 @@
         .tab.active { color: #667eea; border-bottom-color: #667eea; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .template-info { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .template-info { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
         .template-info table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         .template-info th, .template-info td { padding: 10px; text-align: left; border: 1px solid #e0e0e0; }
         .template-info th { background: #f8f9fa; font-weight: 600; }
+        nav { position: fixed; top: 0; left: 0; right: 0; padding: 15px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 1000; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        nav a { padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s; }
+        nav a:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .save-load-section { background: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745; margin-bottom: 20px; }
+        .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
         @media (max-width: 768px) { 
+            body { padding-top: 140px; }
             .header h1 { font-size: 1.8em; } 
             .main-content { padding: 15px; } 
             .exam-settings { grid-template-columns: 1fr; }
             .tabs { flex-wrap: wrap; }
             .tab { padding: 10px 16px; font-size: 0.9em; }
+            nav { padding: 10px; }
+            nav a { font-size: 0.85em; padding: 8px 16px; }
         }
     </style>
 </head>
 <body>
-<nav style="position: fixed; top: 0; left: 0; right: 0; padding: 15px 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-  <a href="index.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Home</a>
-  <a href="teacher.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Teacher</a>
-  <a href="dashboard.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Dashboard</a>
-</nav>
+    <nav>
+        <a href="index.html">🏠 Home</a>
+        <a href="teacher.html">👨‍🏫 Teacher</a>
+        <a href="dashboard.html">📊 Dashboard</a>
+    </nav>
+
     <div class="container">
         <div class="header">
             <h1>📝 Smart Exam Manager</h1>
-            <p>Teacher Suite - QR Code Security System v4.0 (Bulk Upload)</p>
+            <p>Teacher Suite v5.0 - Enhanced with Save/Load & Better UI</p>
         </div>
 
         <div class="main-content">
             <div class="alert alert-success">
-                <strong>🚀 NEW FEATURE:</strong> Bulk upload questions from Excel/CSV! Download template, fill it, and upload all questions at once!
+                <strong>🚀 NEW in v5.0:</strong> Save your work! Export/Import questions, improved UI, better CSV handling, and "Ragu-ragu" (Doubt) feature in student exams!
+            </div>
+
+            <!-- Save/Load Section -->
+            <div class="save-load-section">
+                <h3 style="color: #28a745; margin-bottom: 15px;">💾 Save & Load Your Work</h3>
+                <p style="margin-bottom: 15px; color: #555;">Save your exam questions to continue later or share with colleagues!</p>
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="saveToFile()">💾 Save Questions to File</button>
+                    <button class="btn btn-primary" onclick="document.getElementById('loadFile').click()">📂 Load Questions from File</button>
+                    <input type="file" id="loadFile" accept=".json" style="display:none;" onchange="loadFromFile(event)">
+                    <button class="btn btn-warning" onclick="clearAllQuestions()">🗑️ Clear All Questions</button>
+                </div>
             </div>
 
             <div class="section">
                 <h2 class="section-title">⚙️ Exam Settings</h2>
                 <div class="exam-settings">
                     <div class="input-group">
-                        <label for="examTitle">Exam Title</label>
+                        <label for="examTitle">📝 Exam Title</label>
                         <input type="text" id="examTitle" placeholder="e.g., Physics Mid-Term Exam">
                     </div>
                     <div class="input-group">
-                        <label for="examDuration">Duration (minutes)</label>
+                        <label for="examDuration">⏱️ Duration (minutes)</label>
                         <input type="number" id="examDuration" placeholder="e.g., 90" min="1" value="90">
                     </div>
                     <div class="input-group">
-                        <label for="examClass">Class/Grade</label>
+                        <label for="examClass">🎓 Class/Grade</label>
                         <input type="text" id="examClass" placeholder="e.g., XI IPA 1">
                     </div>
                 </div>
@@ -111,18 +134,19 @@
                 <h2 class="section-title">📤 Add Questions</h2>
                 
                 <div class="tabs">
-                    <button class="tab active" onclick="switchTab('bulk')">📊 Bulk Upload (Excel/CSV)</button>
+                    <button class="tab active" onclick="switchTab('bulk')">📊 Bulk Upload (CSV)</button>
                     <button class="tab" onclick="switchTab('manual')">✏️ Manual Entry</button>
                 </div>
 
                 <!-- Bulk Upload Tab -->
                 <div id="bulkTab" class="tab-content active">
                     <div class="alert alert-info">
-                        <strong>How to use Bulk Upload:</strong><br>
-                        1. Download the CSV template below<br>
-                        2. Fill in your questions using Excel, Google Sheets, or any spreadsheet app<br>
-                        3. Save as CSV and upload it here<br>
-                        4. Preview and confirm before importing
+                        <strong>📋 How to use Bulk Upload:</strong><br>
+                        1️⃣ Download the CSV template below<br>
+                        2️⃣ Fill in your questions using Excel or Google Sheets<br>
+                        3️⃣ (Optional) Upload images if your questions need them<br>
+                        4️⃣ Upload your CSV file<br>
+                        5️⃣ Preview and confirm import
                     </div>
 
                     <button class="btn btn-info" onclick="downloadTemplate()">📥 Download CSV Template</button>
@@ -130,15 +154,15 @@
                     <div style="margin-top: 20px; background: white; padding: 20px; border-radius: 8px; border: 2px solid #17a2b8;">
                         <h3 style="color: #17a2b8; margin-bottom: 15px;">📸 Upload Question Images (Optional)</h3>
                         <p style="color: #666; margin-bottom: 10px; font-size: 0.9em;">
-                            If your questions have images, upload them here first. Then reference the filename in your CSV.
+                            If your questions have images, upload them here first, then reference the filename in your CSV.
                         </p>
-                        <input type="file" id="imageFiles" accept="image/*" multiple style="margin-bottom: 10px; width: 100%;">
-                        <button class="btn btn-success" onclick="processImages()" id="uploadImagesBtn" style="width: 100%;">📤 Upload Images</button>
+                        <input type="file" id="imageFiles" accept="image/*" multiple style="margin-bottom: 10px; width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                        <button class="btn btn-success" onclick="processImages()" style="width: 100%;">📤 Upload Images</button>
                         <div id="uploadedImages" style="margin-top: 15px; display: none;"></div>
                     </div>
 
                     <div class="template-info">
-                        <h3 style="color: #667eea; margin-bottom: 15px;">Template Format:</h3>
+                        <h3 style="color: #667eea; margin-bottom: 15px;">📋 Template Format Guide:</h3>
                         <table>
                             <thead>
                                 <tr>
@@ -150,7 +174,7 @@
                             <tbody>
                                 <tr>
                                     <td><strong>Question</strong></td>
-                                    <td>Question text</td>
+                                    <td>The question text</td>
                                     <td>What is the capital of Indonesia?</td>
                                 </tr>
                                 <tr>
@@ -180,12 +204,12 @@
                                 </tr>
                                 <tr>
                                     <td><strong>Correct_Answers</strong></td>
-                                    <td>Correct option(s), separated by comma</td>
-                                    <td>A (or A,B for multiple correct answers)</td>
+                                    <td>Correct option(s), comma-separated</td>
+                                    <td>A (or A,B for multiple)</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Image_Filename</strong></td>
-                                    <td>Image filename (optional) - must match uploaded image</td>
+                                    <td>Image filename (optional)</td>
                                     <td>question1.jpg or leave empty</td>
                                 </tr>
                             </tbody>
@@ -194,15 +218,16 @@
 
                     <div class="upload-area" id="uploadArea">
                         <p style="font-size: 3em; margin-bottom: 10px;">📄</p>
-                        <h3 style="color: #667eea; margin-bottom: 10px;">Click to Upload CSV File</h3>
-                        <p style="color: #666;">Or drag and drop your CSV file here</p>
-                        <input type="file" id="csvFile" accept=".csv" style="display:none;">
+                        <h3 style="color: #667eea; margin-bottom: 10px;">Upload CSV File</h3>
+                        <p style="color: #666; margin-bottom: 15px;">Drag and drop your CSV file here or click the button below</p>
+                        <input type="file" id="csvFile" accept=".csv" style="display:none;" onchange="handleCSVUpload(event)">
+                        <button class="btn btn-primary" onclick="document.getElementById('csvFile').click()">📁 Choose CSV File</button>
                     </div>
 
                     <div id="previewSection" style="display:none; margin-top: 20px;">
-                        <h3 style="color: #667eea; margin-bottom: 15px;">Preview Imported Questions:</h3>
+                        <h3 style="color: #667eea; margin-bottom: 15px;">👀 Preview Imported Questions:</h3>
                         <div id="previewContent"></div>
-                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                        <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
                             <button class="btn btn-success" onclick="confirmImport()">✅ Import All Questions</button>
                             <button class="btn btn-danger" onclick="cancelImport()">❌ Cancel</button>
                         </div>
@@ -252,7 +277,7 @@
                             </div>
                         </div>
                     </div>
-                    <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
                         <button class="btn btn-primary" id="addQuestionBtn">➕ Add Question</button>
                         <button class="btn btn-secondary" id="clearBtn" style="display:none;">🔄 Clear Form</button>
                     </div>
@@ -268,14 +293,14 @@
 
             <div class="section">
                 <h2 class="section-title">⬇️ Download Exam</h2>
-                <p style="margin-bottom: 20px; color: #666;">Generate a secure exam file with QR Code result system compatible with Dashboard Scanner v3.0.</p>
+                <p style="margin-bottom: 20px; color: #666;">Generate a secure exam file with QR Code result system. The exam includes a "Ragu-ragu" (Doubt) feature for students!</p>
                 <button class="btn btn-success" id="downloadBtn" style="font-size: 1.1em;">💾 Download Exam File</button>
             </div>
         </div>
 
         <div class="footer">
             <p><strong>Created by Mr. Sugeng Mardiyanto | SMA Laboratorium UM</strong></p>
-            <p style="margin-top: 10px; opacity: 0.8;">Smart Exam Manager v4.0 - Bulk Upload Feature</p>
+            <p style="margin-top: 10px; opacity: 0.8;">Smart Exam Manager v5.0 - Enhanced Edition</p>
         </div>
     </div>
 
@@ -300,36 +325,27 @@
             var downloadBtn = document.getElementById('downloadBtn');
             if (downloadBtn) downloadBtn.addEventListener('click', downloadExam);
 
-            // CSV file input
-            var csvFileInput = document.getElementById('csvFile');
-            if (csvFileInput) {
-                csvFileInput.addEventListener('change', handleCSVUpload);
-            }
-
-            // Drag and drop
             var uploadArea = document.getElementById('uploadArea');
             if (uploadArea) {
-                uploadArea.addEventListener('click', function() {
-                    document.getElementById('csvFile').click();
-                });
-                
                 uploadArea.addEventListener('dragover', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     uploadArea.classList.add('dragover');
                 });
-                
-                uploadArea.addEventListener('dragleave', function() {
+                uploadArea.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
                     uploadArea.classList.remove('dragover');
                 });
-                
                 uploadArea.addEventListener('drop', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
                     uploadArea.classList.remove('dragover');
                     var file = e.dataTransfer.files[0];
                     if (file && file.name.endsWith('.csv')) {
                         handleCSVFile(file);
                     } else {
-                        alert('Please upload a CSV file!');
+                        alert('⚠️ Please upload a CSV file!');
                     }
                 });
             }
@@ -371,7 +387,7 @@
             var files = fileInput.files;
             
             if (files.length === 0) {
-                alert('Please select at least one image file!');
+                alert('⚠️ Please select at least one image file!');
                 return;
             }
             
@@ -415,14 +431,14 @@
                 skipEmptyLines: true,
                 complete: function(results) {
                     if (results.errors.length > 0) {
-                        alert('Error parsing CSV: ' + results.errors[0].message);
+                        alert('❌ Error parsing CSV: ' + results.errors[0].message);
                         return;
                     }
                     
                     processCSVData(results.data);
                 },
                 error: function(error) {
-                    alert('Error reading CSV file: ' + error.message);
+                    alert('❌ Error reading CSV file: ' + error.message);
                 }
             });
         }
@@ -470,7 +486,7 @@
                     if (uploadedImagesMap[imageFilename]) {
                         imageData = uploadedImagesMap[imageFilename];
                     } else {
-                        errors.push('Line ' + lineNum + ': Image "' + imageFilename + '" not found in uploaded images. Please upload it first.');
+                        errors.push('Line ' + lineNum + ': Image "' + imageFilename + '" not found. Please upload it first.');
                         return;
                     }
                 }
@@ -492,12 +508,12 @@
             });
 
             if (errors.length > 0) {
-                alert('Errors found in CSV:\n\n' + errors.join('\n') + '\n\nPlease fix these errors and try again.');
+                alert('❌ Errors found in CSV:\n\n' + errors.join('\n') + '\n\nPlease fix these errors and try again.');
                 return;
             }
 
             if (pendingImport.length === 0) {
-                alert('No valid questions found in CSV file!');
+                alert('⚠️ No valid questions found in CSV file!');
                 return;
             }
 
@@ -529,6 +545,7 @@
             });
 
             document.getElementById('previewSection').style.display = 'block';
+            document.getElementById('previewSection').scrollIntoView({ behavior: 'smooth' });
         }
 
         function confirmImport() {
@@ -570,12 +587,12 @@
             var optionE = document.getElementById('optionE').value.trim();
 
             if (!questionText) {
-                alert('Please enter a question text!');
+                alert('⚠️ Please enter a question text!');
                 return;
             }
 
             if (!optionA || !optionB || !optionC || !optionD || !optionE) {
-                alert('Please fill in all answer options!');
+                alert('⚠️ Please fill in all answer options!');
                 return;
             }
 
@@ -587,7 +604,7 @@
             if (document.getElementById('correctE').checked) correctAnswers.push('E');
 
             if (correctAnswers.length === 0) {
-                alert('Please select at least one correct answer!');
+                alert('⚠️ Please select at least one correct answer!');
                 return;
             }
 
@@ -601,8 +618,10 @@
             if (editingIndex >= 0) {
                 questions[editingIndex] = question;
                 editingIndex = -1;
+                alert('✅ Question updated successfully!');
             } else {
                 questions.push(question);
+                alert('✅ Question added successfully!');
             }
 
             updateQuestionsList();
@@ -691,9 +710,97 @@
         }
 
         function deleteQuestion(index) {
-            if (confirm('Are you sure you want to delete this question?')) {
+            if (confirm('⚠️ Are you sure you want to delete this question?')) {
                 questions.splice(index, 1);
                 updateQuestionsList();
+                alert('✅ Question deleted successfully!');
+            }
+        }
+
+        function saveToFile() {
+            if (questions.length === 0) {
+                alert('⚠️ No questions to save! Add some questions first.');
+                return;
+            }
+
+            var title = document.getElementById('examTitle').value.trim() || 'Untitled_Exam';
+            var duration = document.getElementById('examDuration').value;
+            var examClass = document.getElementById('examClass').value.trim();
+
+            var saveData = {
+                version: '5.0',
+                timestamp: new Date().toISOString(),
+                examInfo: {
+                    title: title,
+                    duration: duration,
+                    class: examClass
+                },
+                questions: questions
+            };
+
+            var json = JSON.stringify(saveData, null, 2);
+            var blob = new Blob([json], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = title.replace(/[^a-z0-9]/gi, '_') + '_Questions.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert('✅ Questions saved successfully!\n\nFile: ' + a.download);
+        }
+
+        function loadFromFile(event) {
+            var file = event.target.files[0];
+            if (!file) return;
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    var data = JSON.parse(e.target.result);
+                    
+                    if (!data.questions || !Array.isArray(data.questions)) {
+                        alert('❌ Invalid file format!');
+                        return;
+                    }
+
+                    if (questions.length > 0) {
+                        if (!confirm('⚠️ You have ' + questions.length + ' question(s) already.\n\nDo you want to REPLACE them with the loaded questions?')) {
+                            return;
+                        }
+                    }
+
+                    questions = data.questions;
+                    
+                    if (data.examInfo) {
+                        if (data.examInfo.title) document.getElementById('examTitle').value = data.examInfo.title;
+                        if (data.examInfo.duration) document.getElementById('examDuration').value = data.examInfo.duration;
+                        if (data.examInfo.class) document.getElementById('examClass').value = data.examInfo.class;
+                    }
+
+                    updateQuestionsList();
+                    alert('✅ Successfully loaded ' + questions.length + ' question(s)!');
+                    
+                } catch (err) {
+                    alert('❌ Error loading file: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function clearAllQuestions() {
+            if (questions.length === 0) {
+                alert('ℹ️ No questions to clear!');
+                return;
+            }
+
+            if (confirm('⚠️ Are you sure you want to delete ALL ' + questions.length + ' question(s)?\n\nThis cannot be undone!')) {
+                questions = [];
+                updateQuestionsList();
+                alert('✅ All questions cleared!');
             }
         }
 
@@ -703,12 +810,12 @@
             var examClass = document.getElementById('examClass').value.trim();
 
             if (!title) {
-                alert('Please enter an exam title!');
+                alert('⚠️ Please enter an exam title!');
                 return;
             }
 
             if (questions.length === 0) {
-                alert('Please add at least one question!');
+                alert('⚠️ Please add at least one question!');
                 return;
             }
 
@@ -724,7 +831,7 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
 
-            alert('✅ Exam file downloaded successfully!\n\nCompatible with Dashboard Scanner v3.0');
+            alert('✅ Exam file downloaded successfully!\n\n📝 File: ' + a.download + '\n🎯 Questions: ' + questions.length + '\n⏱️ Duration: ' + duration + ' minutes\n\n✨ New Feature: Students can mark questions as "Ragu-ragu" (Doubt)!');
         }
 
         function generateStudentExam(title, duration, examClass, questionsData) {
@@ -733,7 +840,7 @@
             
             var html = '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + escapeHtml(title) + '</title>';
             
-            html += '<style>*{margin:0;padding:0;box-sizing:border-box;user-select:none}body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh}.container{max-width:1400px;margin:0 auto;display:flex;gap:20px;padding:20px}.sidebar{width:280px;background:#fff;border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.2);position:sticky;top:20px;height:fit-content;max-height:calc(100vh - 40px);overflow-y:auto}.main{flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,.2)}.hdr{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:25px;border-radius:12px 12px 0 0;margin:-30px -30px 30px}.timer{font-size:2em;font-weight:700;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px}.timer.safe{background:#d4edda;color:#155724}.timer.warning{background:#fff3cd;color:#856404}.timer.danger{background:#f8d7da;color:#721c24}.info{background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:15px;font-size:0.9em}.info div{margin-bottom:5px}.violation{background:#f8d7da;color:#721c24;padding:10px;border-radius:6px;text-align:center;margin-bottom:15px;font-weight:700;display:none;font-size:0.9em}.status-summary{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);padding:15px;border-radius:8px;margin-bottom:15px;border-left:4px solid #28a745}.status-title{font-weight:700;color:#1b5e20;margin-bottom:12px;font-size:1em;display:flex;align-items:center;gap:5px}.status-item{font-size:0.95em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}.status-label{display:flex;align-items:center;gap:8px;font-weight:600}.status-indicator{width:14px;height:14px;border-radius:3px;display:inline-block}.status-answered{background:#28a745}.status-doubt{background:#ffc107}.status-unanswered{background:#9e9e9e}.status-count{font-weight:700;font-size:1.1em;color:#667eea;background:#f0f0f0;padding:2px 10px;border-radius:12px}.nav-title{font-size:1em;font-weight:700;color:#667eea;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e0e0e0}.nav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}.nav-btn{padding:12px 8px;border:none;border-radius:6px;font-weight:700;cursor:pointer;background:#e0e0e0;color:#333;transition:all 0.3s;font-size:0.95em;position:relative}.nav-btn:hover{transform:scale(1.05)}.nav-btn.answered{background:#28a745;color:#fff}.nav-btn.doubt{background:#ffc107;color:#000;font-weight:800}.nav-btn.active{background:#667eea;color:#fff;border:3px solid #4a5cd1;transform:scale(1.1)}.question{display:none}.question.active{display:block}.q-hdr{font-size:1.3em;color:#667eea;margin-bottom:15px;font-weight:700}.q-txt{font-size:1.1em;line-height:1.6;margin-bottom:20px;color:#333}.q-img{max-width:100%;border-radius:8px;margin:20px 0;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.1)}.opts{display:grid;gap:12px}.opt{display:flex;align-items:center;padding:15px;border:2px solid #e0e0e0;border-radius:8px;cursor:pointer;transition:all 0.3s;background:#fff}.opt:hover{border-color:#667eea;background:#f8f9ff;transform:translateX(5px)}.opt input{width:20px;height:20px;margin-right:15px;cursor:pointer;accent-color:#667eea}.opt-lbl{font-weight:700;color:#667eea;margin-right:10px;font-size:1.1em}.nav-btns{display:flex;justify-content:space-between;gap:10px;margin-top:30px;padding-top:20px;border-top:2px solid #e0e0e0;flex-wrap:wrap}.btn{padding:14px 28px;border:none;border-radius:8px;font-size:1em;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;transition:all 0.3s;box-shadow:0 4px 8px rgba(0,0,0,0.2)}.btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3)}.btn:active{transform:translateY(0)}.btn-success{background:#28a745}.btn-success:hover{background:#218838}.btn-doubt{background:#ffc107;color:#000;font-weight:700}.btn-doubt:hover{background:#e0a800}.btn-doubt.confirmed{background:#28a745;color:#fff}.btn-doubt.confirmed:hover{background:#1e7e34}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:#fff;padding:40px;border-radius:16px;max-width:600px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4)}.modal-content h2{color:#667eea;margin-bottom:20px;font-size:2em}.modal-content input{width:100%;padding:14px;margin:10px 0;border:2px solid #e0e0e0;border-radius:8px;font-size:1em}.start{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.warn{background:#fff3cd;border:2px solid #ffc107;color:#856404;padding:15px;border-radius:8px;margin-bottom:20px;text-align:center;font-weight:700}#qrcode{margin:20px auto;padding:20px;background:white;border-radius:12px;display:inline-block}@media(max-width:1024px){.container{flex-direction:column}.sidebar{width:100%;position:relative;top:0;max-height:none}.nav-btns{justify-content:center}.nav-grid{grid-template-columns:repeat(5,1fr)}}</style>';
+            html += '<style>*{margin:0;padding:0;box-sizing:border-box;user-select:none}body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh}.container{max-width:1400px;margin:0 auto;display:flex;gap:20px;padding:20px}.sidebar{width:280px;background:#fff;border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.2);position:sticky;top:20px;height:fit-content;max-height:calc(100vh - 40px);overflow-y:auto}.main{flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,.2)}.hdr{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:25px;border-radius:12px 12px 0 0;margin:-30px -30px 30px}.timer{font-size:2em;font-weight:700;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px}.timer.safe{background:#d4edda;color:#155724}.timer.warning{background:#fff3cd;color:#856404}.timer.danger{background:#f8d7da;color:#721c24}.info{background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:15px;font-size:0.9em}.info div{margin-bottom:5px}.violation{background:#f8d7da;color:#721c24;padding:10px;border-radius:6px;text-align:center;margin-bottom:15px;font-weight:700;display:none;font-size:0.9em}.status-summary{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);padding:15px;border-radius:8px;margin-bottom:15px;border-left:4px solid #28a745}.status-title{font-weight:700;color:#1b5e20;margin-bottom:12px;font-size:1em;display:flex;align-items:center;gap:5px}.status-item{font-size:0.95em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}.status-label{display:flex;align-items:center;gap:8px;font-weight:600}.status-indicator{width:14px;height:14px;border-radius:3px;display:inline-block}.status-answered{background:#28a745}.status-doubt{background:#ffc107}.status-unanswered{background:#9e9e9e}.status-count{font-weight:700;font-size:1.1em;color:#667eea;background:#f0f0f0;padding:2px 10px;border-radius:12px}.nav-title{font-size:1em;font-weight:700;color:#667eea;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e0e0e0}.nav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}.nav-btn{padding:12px 8px;border:none;border-radius:6px;font-weight:700;cursor:pointer;background:#e0e0e0;color:#333;transition:all 0.3s;font-size:0.95em}.nav-btn:hover{transform:scale(1.05)}.nav-btn.answered{background:#28a745;color:#fff}.nav-btn.doubt{background:#ffc107;color:#000;font-weight:800}.nav-btn.active{background:#667eea;color:#fff;border:3px solid #4a5cd1;transform:scale(1.1)}.question{display:none}.question.active{display:block}.q-hdr{font-size:1.3em;color:#667eea;margin-bottom:15px;font-weight:700}.q-txt{font-size:1.1em;line-height:1.6;margin-bottom:20px;color:#333}.q-img{max-width:100%;border-radius:8px;margin:20px 0;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.1)}.opts{display:grid;gap:12px}.opt{display:flex;align-items:center;padding:15px;border:2px solid #e0e0e0;border-radius:8px;cursor:pointer;transition:all 0.3s;background:#fff}.opt:hover{border-color:#667eea;background:#f8f9ff;transform:translateX(5px)}.opt input{width:20px;height:20px;margin-right:15px;cursor:pointer;accent-color:#667eea}.opt-lbl{font-weight:700;color:#667eea;margin-right:10px;font-size:1.1em}.nav-btns{display:flex;justify-content:space-between;gap:10px;margin-top:30px;padding-top:20px;border-top:2px solid #e0e0e0;flex-wrap:wrap}.btn{padding:14px 28px;border:none;border-radius:8px;font-size:1em;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;transition:all 0.3s;box-shadow:0 4px 8px rgba(0,0,0,0.2)}.btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3)}.btn:active{transform:translateY(0)}.btn-success{background:#28a745}.btn-success:hover{background:#218838}.btn-doubt{background:#ffc107;color:#000;font-weight:700}.btn-doubt:hover{background:#e0a800}.btn-doubt.confirmed{background:#28a745;color:#fff}.btn-doubt.confirmed:hover{background:#1e7e34}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:#fff;padding:40px;border-radius:16px;max-width:600px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4)}.modal-content h2{color:#667eea;margin-bottom:20px;font-size:2em}.modal-content input{width:100%;padding:14px;margin:10px 0;border:2px solid #e0e0e0;border-radius:8px;font-size:1em}.start{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.warn{background:#fff3cd;border:2px solid #ffc107;color:#856404;padding:15px;border-radius:8px;margin-bottom:20px;text-align:center;font-weight:700}#qrcode{margin:20px auto;padding:20px;background:white;border-radius:12px;display:inline-block}@media(max-width:1024px){.container{flex-direction:column}.sidebar{width:100%;position:relative;top:0;max-height:none}.nav-btns{justify-content:center}.nav-grid{grid-template-columns:repeat(5,1fr)}}</style>';
             
             html += '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>';
             
@@ -767,19 +874,7 @@
             html += 'function updateTimerDisplay(){var m=Math.floor(time/60);var s=time%60;var d=m+":"+(s<10?"0":"")+s;var t=document.getElementById("timer");t.textContent=d;var tot=dur*60;if(time>tot/2){t.className="timer safe"}else if(time>tot*0.25){t.className="timer warning"}else{t.className="timer danger"}}';
             html += 'function autoSubmitExam(){alert("⏰ Waktu Habis!\\n\\nUjian akan otomatis di-submit sekarang.");submitExam(true)}';
             html += 'function submitExam(auto){if(!auto){var unanswered=0;var doubtCount=0;for(var i=0;i<qs.length;i++){if(doubt[i]){doubtCount++}else if(!ans[i]||ans[i].length===0){unanswered++}}var msg="";if(unanswered>0){msg+="⚠️ Ada "+unanswered+" soal yang belum dijawab\\n"}if(doubtCount>0){msg+="❓ Ada "+doubtCount+" soal yang masih ragu-ragu\\n"}if(msg&&!confirm(msg+"\\nYakin ingin submit ujian?")){return}}clearInterval(timer);var cor=0;for(var i=0;i<qs.length;i++){var q=qs[i];var sa=ans[i]||[];var ca=q.correctAnswers.slice();sa.sort();ca.sort();if(JSON.stringify(sa)===JSON.stringify(ca)){cor++}}var sc=Math.round(cor/qs.length*100);var k="exam_' + examKey + '_"+std.nis;var r={name:std.name,nis:std.nis,class:std.class,score:sc,correct:cor,total:qs.length,violations:viols,timestamp:new Date().toISOString(),examTitle:"' + escapeHtml(title) + '"};localStorage.setItem(k,JSON.stringify(r));document.getElementById("rName").textContent=std.name;document.getElementById("rNis").textContent=std.nis;document.getElementById("rScore").textContent=sc;var qrData=JSON.stringify(r);new QRCode(document.getElementById("qrcode"),{text:qrData,width:256,height:256,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H});document.getElementById("result").classList.add("active");if(document.fullscreenElement){document.exitFullscreen().catch(function(){})}}';
-            html += '<\/script></body></html>';++){if(doubt[i]){doubtful++}else if(ans[i]&&ans[i].length>0){answered++}}var unanswered=qs.length-answered-doubtful;document.getElementById("statAnswered").textContent=answered;document.getElementById("statDoubt").textContent=doubtful;document.getElementById("statUnanswered").textContent=unanswered}';
-            html += 'function toggleDoubt(){doubt[cur]=!doubt[cur];var btn=document.getElementById("nb"+cur);var doubtBtn=document.getElementById("doubtBtn");if(doubt[cur]){btn.classList.add("doubt");btn.classList.remove("answered");doubtBtn.classList.add("confirmed");doubtBtn.innerHTML="✅ Yakin"}else{btn.classList.remove("doubt");doubtBtn.classList.remove("confirmed");if(ans[cur]&&ans[cur].length>0){btn.classList.add("answered")}doubtBtn.innerHTML="❓ Ragu-ragu"}upStats()}';
-            html += 'function start(){var n=document.getElementById("name").value.trim();var ni=document.getElementById("nis").value.trim();var c=document.getElementById("class").value.trim();if(!n||!ni||!c){alert("Isi semua data!");return}var k="exam_' + examKey + '_"+ni;if(localStorage.getItem(k)){alert("Anda sudah mengerjakan ujian ini!");return}std={name:n,nis:ni,class:c};document.getElementById("dName").textContent=n;document.getElementById("dNis").textContent=ni;document.getElementById("dClass").textContent=c;if(document.documentElement.requestFullscreen){document.documentElement.requestFullscreen().catch(function(){})}started=true;document.getElementById("start").style.display="none";document.getElementById("exam").style.display="block";init();startTimer()}';
-            html += 'function init(){var cont=document.getElementById("qCont");var nav=document.getElementById("nav");for(var i=0;i<qs.length;i++){(function(idx){var q=qs[idx];var d=document.createElement("div");d.className="question"+(idx===0?" active":"");d.id="q"+idx;var opts="";["A","B","C","D","E"].forEach(function(o){opts+=\'<label class="opt"><input type="checkbox" name="q\'+idx+\'" value="\'+o+\'" onchange="upAns(\'+idx+\')"><span class="opt-lbl">\'+o+\'.</span><span>\'+escapeHtml(q.options[o])+\'</span></label>\'});d.innerHTML=\'<div class="q-hdr">Soal \'+(idx+1)+\' dari \'+qs.length+\'</div><div class="q-txt">\'+escapeHtml(q.text)+\'</div>\'+(q.image?\'<img src="\'+q.image+\'" class="q-img">\':\'\')+(\'<div class="opts">\'+opts+\'</div>\');cont.appendChild(d);var b=document.createElement("button");b.className="nav-btn"+(idx===0?" active":"");b.textContent=idx+1;b.onclick=function(){goTo(idx)};b.id="nb"+idx;nav.appendChild(b)})(i)}upStats()}';
-            html += 'function escapeHtml(t){var m={"&":"&amp;","<":"&lt;",">":"&gt;","\\"":"&quot;","\'":"&#039;"};return String(t).replace(/[&<>"\']/g,function(c){return m[c]})}';
-            html += 'function upAns(i){var cbs=document.querySelectorAll(\'input[name="q\'+i+\'"]:checked\');var sel=[];for(var j=0;j<cbs.length;j++){sel.push(cbs[j].value)}if(sel.length>0){ans[i]=sel;if(!doubt[i]){document.getElementById("nb"+i).classList.add("answered");document.getElementById("nb"+i).classList.remove("doubt")}}else{delete ans[i];if(!doubt[i]){document.getElementById("nb"+i).classList.remove("answered")}}upStats()}';
-            html += 'function goTo(i){var qsDivs=document.querySelectorAll(".question");for(var j=0;j<qsDivs.length;j++){qsDivs[j].classList.remove("active")}var bs=document.querySelectorAll(".nav-btn");for(var j=0;j<bs.length;j++){bs[j].classList.remove("active")}document.getElementById("q"+i).classList.add("active");document.getElementById("nb"+i).classList.add("active");cur=i;var doubtBtn=document.getElementById("doubtBtn");if(doubt[i]){doubtBtn.classList.add("confirmed");doubtBtn.innerHTML="✅ Yakin"}else{doubtBtn.classList.remove("confirmed");doubtBtn.innerHTML="❓ Ragu-ragu"}window.scrollTo({top:0,behavior:"smooth"})}';
-            html += 'function prev(){if(cur>0)goTo(cur-1)}';
-            html += 'function next(){if(cur<qs.length-1)goTo(cur+1)}';
-            html += 'function startTimer(){upTime();timer=setInterval(function(){time--;upTime();if(time<=0){clearInterval(timer);autoSubmit()}},1000)}';
-            html += 'function upTime(){var m=Math.floor(time/60);var s=time%60;var d=m+":"+(s<10?"0":"")+s;var t=document.getElementById("timer");t.textContent=d;var tot=dur*60;if(time>tot/2)t.className="timer safe";else if(time>60)t.className="timer warning";else t.className="timer danger"}';
-            html += 'function autoSubmit(){alert("⏰ Waktu Habis! Ujian akan otomatis di-submit.");submit(true)}';
-            html += 'function submit(auto){if(!auto){var unanswered=0;for(var i=0;i<qs.length;i++){if(!ans[i]||ans[i].length===0){unanswered++}}if(unanswered>0&&!confirm("Ada "+unanswered+" soal yang belum dijawab.\\n\\nYakin ingin submit?")){return}}clearInterval(timer);var cor=0;for(var i=0;i<qs.length;i++){var q=qs[i];var sa=ans[i]||[];var ca=q.correctAnswers.slice();sa.sort();ca.sort();if(JSON.stringify(sa)===JSON.stringify(ca))cor++}var sc=Math.round(cor/qs.length*100);var k="exam_' + examKey + '_"+std.nis;var r={name:std.name,nis:std.nis,class:std.class,score:sc,correct:cor,total:qs.length,violations:viols,timestamp:new Date().toISOString(),examTitle:"' + escapeHtml(title) + '"};localStorage.setItem(k,JSON.stringify(r));document.getElementById("rName").textContent=std.name;document.getElementById("rNis").textContent=std.nis;document.getElementById("rScore").textContent=sc;var qrData=JSON.stringify(r);new QRCode(document.getElementById("qrcode"),{text:qrData,width:256,height:256,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.H});document.getElementById("result").classList.add("active");if(document.fullscreenElement){document.exitFullscreen().catch(function(){})}}';
+            html += '<\/script></body></html>';
             
             return html;
         }
