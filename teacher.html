@@ -192,11 +192,11 @@
                         </table>
                     </div>
 
-                    <div class="upload-area" id="uploadArea" onclick="document.getElementById('csvFile').click()">
+                    <div class="upload-area" id="uploadArea">
                         <p style="font-size: 3em; margin-bottom: 10px;">📄</p>
                         <h3 style="color: #667eea; margin-bottom: 10px;">Click to Upload CSV File</h3>
                         <p style="color: #666;">Or drag and drop your CSV file here</p>
-                        <input type="file" id="csvFile" accept=".csv" style="display:none;" onchange="handleCSVUpload(event)">
+                        <input type="file" id="csvFile" accept=".csv" style="display:none;">
                     </div>
 
                     <div id="previewSection" style="display:none; margin-top: 20px;">
@@ -300,25 +300,39 @@
             var downloadBtn = document.getElementById('downloadBtn');
             if (downloadBtn) downloadBtn.addEventListener('click', downloadExam);
 
+            // CSV file input
+            var csvFileInput = document.getElementById('csvFile');
+            if (csvFileInput) {
+                csvFileInput.addEventListener('change', handleCSVUpload);
+            }
+
             // Drag and drop
             var uploadArea = document.getElementById('uploadArea');
-            uploadArea.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                uploadArea.classList.add('dragover');
-            });
-            uploadArea.addEventListener('dragleave', function() {
-                uploadArea.classList.remove('dragover');
-            });
-            uploadArea.addEventListener('drop', function(e) {
-                e.preventDefault();
-                uploadArea.classList.remove('dragover');
-                var file = e.dataTransfer.files[0];
-                if (file && file.name.endsWith('.csv')) {
-                    handleCSVFile(file);
-                } else {
-                    alert('Please upload a CSV file!');
-                }
-            });
+            if (uploadArea) {
+                uploadArea.addEventListener('click', function() {
+                    document.getElementById('csvFile').click();
+                });
+                
+                uploadArea.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+                
+                uploadArea.addEventListener('dragleave', function() {
+                    uploadArea.classList.remove('dragover');
+                });
+                
+                uploadArea.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    var file = e.dataTransfer.files[0];
+                    if (file && file.name.endsWith('.csv')) {
+                        handleCSVFile(file);
+                    } else {
+                        alert('Please upload a CSV file!');
+                    }
+                });
+            }
         });
 
         function switchTab(tab) {
