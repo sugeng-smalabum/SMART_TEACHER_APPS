@@ -54,9 +54,43 @@
             line-height: 1.6;
         }
 
+        /* Navigation Styles */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 15px 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1001;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        nav a {
+            padding: 10px 20px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            display: inline-block;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
         .container {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 90px auto 0 auto;
             padding: 20px;
         }
 
@@ -645,6 +679,14 @@
     </style>
 </head>
 <body data-theme="light">
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="index.html">🏠 Home</a>
+        <a href="teacher.html">👨‍🏫 Teacher</a>
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="journal.html">📚 Journal</a>
+    </nav>
+
     <div class="container">
         <div class="header">
             <h1>📚 Teacher's Journal</h1>
@@ -875,6 +917,14 @@
                 <div class="form-group">
                     <label for="default-time">Default Time Setting</label>
                     <input type="time" id="default-time" value="08:00">
+                </div>
+
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid var(--glass-border);">
+                    <h3>Backup & Restore</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                        <button class="btn btn-secondary" onclick="exportAllData()">💾 Export Backup</button>
+                        <button class="btn btn-primary" onclick="importData()">📁 Import Backup</button>
+                    </div>
                 </div>
 
                 <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid var(--glass-border);">
@@ -1301,7 +1351,7 @@
             saveToStorage();
             updateTimePeriodDropdowns();
             updateTimePeriodList();
-            loadRecords(); // Refresh the records view
+            loadRecords();
             showNotification('Time period updated successfully', 'success');
         }
 
@@ -1440,7 +1490,7 @@
             saveToStorage();
             updateClassDropdowns();
             updateClassList();
-            loadRecords(); // Refresh the records view
+            loadRecords();
             showNotification('Class name updated successfully', 'success');
         }
 
@@ -1763,7 +1813,6 @@
         }
 
         function sortTable(column) {
-            // Simple sorting implementation
             journalEntries.sort((a, b) => {
                 let valueA = a[column] || '';
                 let valueB = b[column] || '';
@@ -1990,7 +2039,6 @@
                 return;
             }
             
-            // Create a simple HTML document for PDF conversion
             let htmlContent = `
                 <!DOCTYPE html>
                 <html>
@@ -2039,12 +2087,10 @@
                 </html>
             `;
             
-            // Create a new window for printing
             const printWindow = window.open('', '_blank');
             printWindow.document.write(htmlContent);
             printWindow.document.close();
             
-            // Wait for content to load, then print
             printWindow.onload = function() {
                 printWindow.print();
                 printWindow.close();
@@ -2102,7 +2148,6 @@
                     customTimePeriods = [];
                     localStorage.removeItem('teacherJournal');
                     
-                    // Reset UI
                     updateDashboard();
                     loadRecords();
                     updateClassDropdowns();
@@ -2113,192 +2158,7 @@
             }
         }
 
-        // Keyboard Shortcuts
-        document.addEventListener('keydown', function(e) {
-            // Ctrl/Cmd + S to save (prevent default and show notification)
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                saveToStorage();
-                showNotification('Data saved!', 'success');
-            }
-            
-            // Ctrl/Cmd + N to add new entry
-            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
-                e.preventDefault();
-                switchTab('add-entry');
-                document.getElementById('entry-activity').focus();
-            }
-            
-            // Escape to close modals
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal').forEach(modal => {
-                    if (modal.style.display === 'block') {
-                        modal.style.display = 'none';
-                    }
-                });
-            }
-        });
-
-        // Auto-save every 30 seconds
-        setInterval(() => {
-            saveToStorage();
-        }, 30000);
-
-        // Handle page visibility change to save data when tab becomes hidden
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden) {
-                saveToStorage();
-            }
-        });
-
-        // Handle beforeunload to save data before page close
-        window.addEventListener('beforeunload', function() {
-            saveToStorage();
-        });
-
-        // Initialize tooltips and help text
-        function initializeHelp() {
-            // Add help tooltips where needed
-            const helpButtons = document.querySelectorAll('[data-help]');
-            helpButtons.forEach(button => {
-                button.addEventListener('mouseenter', function() {
-                    // Show tooltip
-                });
-            });
-        }
-
-        // Mobile-specific enhancements
-        function initializeMobileFeatures() {
-            // Add touch gestures for mobile
-            let touchStartX = 0;
-            let touchStartY = 0;
-            
-            document.addEventListener('touchstart', function(e) {
-                touchStartX = e.touches[0].clientX;
-                touchStartY = e.touches[0].clientY;
-            });
-            
-            document.addEventListener('touchmove', function(e) {
-                if (!touchStartX || !touchStartY) return;
-                
-                const touchEndX = e.touches[0].clientX;
-                const touchEndY = e.touches[0].clientY;
-                const diffX = touchStartX - touchEndX;
-                const diffY = touchStartY - touchEndY;
-                
-                // Horizontal swipe detection (for tab switching)
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-                    // Implement swipe navigation between tabs
-                }
-            });
-        }
-
-        // Performance optimizations
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        // Debounced search function
-        const debouncedSearch = debounce(filterRecords, 300);
-        document.getElementById('search-text').addEventListener('input', debouncedSearch);
-
-        // Analytics and usage tracking (privacy-friendly, local only)
-        function trackUsage() {
-            const usage = JSON.parse(localStorage.getItem('teacherJournalUsage') || '{}');
-            const today = new Date().toDateString();
-            
-            if (!usage[today]) {
-                usage[today] = {
-                    entriesAdded: 0,
-                    tabSwitches: 0,
-                    exports: 0
-                };
-            }
-            
-            // Clean old usage data (keep only last 30 days)
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-            
-            Object.keys(usage).forEach(date => {
-                if (new Date(date) < thirtyDaysAgo) {
-                    delete usage[date];
-                }
-            });
-            
-            localStorage.setItem('teacherJournalUsage', JSON.stringify(usage));
-        }
-
-        // Initialize everything when DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeMobileFeatures();
-            trackUsage();
-        });
-
-        // Service Worker registration for offline support (if needed in the future)
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                // navigator.serviceWorker.register('/sw.js'); // Uncomment if you create a service worker
-            });
-        }
-
-        // Error handling and recovery
-        window.addEventListener('error', function(e) {
-            console.error('Application error:', e);
-            showNotification('An error occurred. Your data has been saved.', 'error');
-            saveToStorage();
-        });
-
-        // Accessibility improvements
-        function initializeAccessibility() {
-            // Add ARIA labels and roles where needed
-            document.querySelectorAll('button').forEach(button => {
-                if (!button.getAttribute('aria-label') && button.textContent) {
-                    button.setAttribute('aria-label', button.textContent.trim());
-                }
-            });
-            
-            // Improve focus management
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Tab') {
-                    document.body.classList.add('keyboard-navigation');
-                }
-            });
-            
-            document.addEventListener('mousedown', function() {
-                document.body.classList.remove('keyboard-navigation');
-            });
-        }
-
-        // Initialize accessibility features
-        document.addEventListener('DOMContentLoaded', initializeAccessibility);
-
-        // Data validation and sanitization
-        function validateEntry(entry) {
-            const required = ['day', 'date', 'time', 'period', 'class', 'activity'];
-            for (let field of required) {
-                if (!entry[field] || entry[field].trim() === '') {
-                    throw new Error(`${field} is required`);
-                }
-            }
-            
-            // Sanitize HTML content
-            entry.activity = entry.activity.replace(/<[^>]*>/g, '');
-            if (entry.notes) {
-                entry.notes = entry.notes.replace(/<[^>]*>/g, '');
-            }
-            
-            return entry;
-        }
-
-        // Backup and restore functionality
+        // Backup and Restore
         function exportAllData() {
             const data = {
                 journalEntries,
@@ -2350,25 +2210,66 @@
             input.click();
         }
 
-        // Add backup/restore buttons to settings
-        document.addEventListener('DOMContentLoaded', function() {
-            const settingsContent = document.getElementById('settings');
-            const backupSection = document.createElement('div');
-            backupSection.innerHTML = `
-                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--glass-border);">
-                    <h3>Backup & Restore</h3>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
-                        <button class="btn btn-secondary" onclick="exportAllData()">💾 Export Backup</button>
-                        <button class="btn btn-primary" onclick="importData()">📁 Import Backup</button>
-                    </div>
-                </div>
-            `;
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveToStorage();
+                showNotification('Data saved!', 'success');
+            }
             
-            const clearButton = settingsContent.querySelector('button[onclick="clearAllData()"]');
-            clearButton.parentNode.insertBefore(backupSection, clearButton.parentNode);
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                switchTab('add-entry');
+                document.getElementById('entry-activity').focus();
+            }
+            
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (modal.style.display === 'block') {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
         });
 
-        // Final initialization
+        // Auto-save
+        setInterval(() => {
+            saveToStorage();
+        }, 30000);
+
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                saveToStorage();
+            }
+        });
+
+        window.addEventListener('beforeunload', function() {
+            saveToStorage();
+        });
+
+        // Debounce function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        const debouncedSearch = debounce(filterRecords, 300);
+        document.getElementById('search-text').addEventListener('input', debouncedSearch);
+
+        window.addEventListener('error', function(e) {
+            console.error('Application error:', e);
+            showNotification('An error occurred. Your data has been saved.', 'error');
+            saveToStorage();
+        });
+
         console.log('Teacher\'s Journal Application Loaded Successfully! 🎓');
         console.log('Created by Sugeng Mardiyanto - SMA Laboratorium UM');
     </script>
