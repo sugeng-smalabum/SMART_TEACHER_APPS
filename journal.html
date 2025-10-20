@@ -1,0 +1,2376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher's Journal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #333;
+            --text-secondary: #666;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --glass-bg: rgba(0, 0, 0, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="pastel"] {
+            --primary-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            --secondary-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            --success-gradient: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
+            --warning-gradient: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+            --bg-primary: #fef7f0;
+            --bg-secondary: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .creator-info {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .nav-tab.active {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--primary-gradient);
+            color: white;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--glass-border);
+            border-radius: 10px;
+            font-size: 16px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-gradient);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-success {
+            background: var(--success-gradient);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-warning {
+            background: var(--warning-gradient);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-secondary);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        th {
+            background: var(--primary-gradient);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background: var(--glass-bg);
+        }
+
+        .calendar-container {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .calendar-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .calendar-day {
+            background: var(--bg-secondary);
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .calendar-day:hover {
+            background: var(--glass-bg);
+            transform: scale(1.05);
+        }
+
+        .calendar-day.has-entries {
+            background: var(--success-gradient);
+            color: white;
+            font-weight: 600;
+        }
+
+        .calendar-day.today {
+            background: var(--primary-gradient);
+            color: white;
+            font-weight: 600;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            margin: 2% auto;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-hover);
+            animation: modalSlideIn 0.3s ease;
+            position: relative;
+        }
+
+        .modal-content.draggable {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+            cursor: move;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--glass-border);
+            cursor: move;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            user-select: none;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close {
+            color: var(--text-secondary);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: var(--text-primary);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            z-index: 1001;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .notification.success {
+            background: var(--success-gradient);
+        }
+
+        .notification.error {
+            background: var(--warning-gradient);
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--glass-bg);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .theme-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--glass-border);
+            border-radius: 10px;
+            background: var(--bg-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .theme-btn.active {
+            border-color: #667eea;
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .class-manage-section {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .class-manage-section .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .manage-classes-btn {
+            height: fit-content;
+            white-space: nowrap;
+        }
+
+        .class-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .class-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--glass-bg);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .class-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .nav-tabs::-webkit-scrollbar {
+                display: none;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-container {
+                font-size: 0.8rem;
+            }
+
+            .calendar-day {
+                padding: 8px;
+                min-height: 60px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 20px;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .class-manage-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .class-manage-section .form-group {
+                margin-bottom: 15px;
+            }
+        }
+
+        .time-period-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .export-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .recent-entries {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .entry-item {
+            padding: 15px;
+            background: var(--glass-bg);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .entry-date {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .entry-activity {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .entry-notes {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .search-highlight {
+            background: yellow;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="container">
+        <div class="header">
+            <h1>📚 Teacher's Journal</h1>
+            <p>Track your daily classroom activities with style</p>
+            <div class="creator-info">
+                <strong>Created by Sugeng Mardiyanto</strong>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-tab="dashboard">📊 Dashboard</div>
+            <div class="nav-tab" data-tab="add-entry">➕ Add Entry</div>
+            <div class="nav-tab" data-tab="records">📋 Journal Records</div>
+            <div class="nav-tab" data-tab="reports">📈 Reports</div>
+            <div class="nav-tab" data-tab="settings">⚙️ Settings</div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-entries">0</div>
+                    <div class="stat-label">Total Entries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="week-entries">0</div>
+                    <div class="stat-label">This Week</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="month-entries">0</div>
+                    <div class="stat-label">This Month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="day-streak">0</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>📝 Recent Entries</h2>
+                <div class="recent-entries" id="recent-entries">
+                    <div class="loading">Loading recent entries...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Entry Tab -->
+        <div class="tab-content" id="add-entry">
+            <div class="card">
+                <h2>➕ Add New Entry</h2>
+                <form id="entry-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="entry-day">Day</label>
+                            <input type="text" id="entry-day" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="entry-date">Date</label>
+                            <input type="date" id="entry-date" required>
+                        </div>
+                    </div>
+                    
+                    <div class="time-period-section">
+                        <div class="form-group">
+                            <label for="entry-time">Time (AM/PM)</label>
+                            <input type="time" id="entry-time" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="time-period">Time Period</label>
+                            <div style="display: flex; align-items: flex-end; gap: 10px;">
+                                <select id="time-period" required style="flex: 1;">
+                                    <option value="">Select Period</option>
+                                </select>
+                                <button type="button" class="btn btn-secondary btn-small" onclick="openTimePeriodManager()" style="white-space: nowrap;">
+                                    ⏰ Manage Periods
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="class-manage-section">
+                        <div class="form-group">
+                            <label for="entry-class">Class</label>
+                            <select id="entry-class" required>
+                                <option value="">Select Class</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-secondary manage-classes-btn" onclick="openClassManager()">
+                            🏫 Manage Classes
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="entry-activity">Classroom Activity</label>
+                        <textarea id="entry-activity" rows="3" placeholder="Describe the classroom activity..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="entry-notes">Notes (Optional)</label>
+                        <textarea id="entry-notes" rows="3" placeholder="Additional notes..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">💾 Save Entry</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Records Tab -->
+        <div class="tab-content" id="records">
+            <div class="card">
+                <div class="filters">
+                    <div class="form-group">
+                        <label for="search-text">Search</label>
+                        <input type="text" id="search-text" placeholder="Search activities...">
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-class">Filter by Class</label>
+                        <select id="filter-class">
+                            <option value="">All Classes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-start-date">Start Date</label>
+                        <input type="date" id="filter-start-date">
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-end-date">End Date</label>
+                        <input type="date" id="filter-end-date">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="showTableView()">📊 Table View</button>
+                    <button class="btn btn-secondary" onclick="showCalendarView()">📅 Calendar View</button>
+                    <button class="btn btn-success" onclick="clearFilters()">🔄 Clear Filters</button>
+                </div>
+
+                <div id="table-view">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable('date')">Date 📅</th>
+                                    <th onclick="sortTable('day')">Day</th>
+                                    <th onclick="sortTable('time')">Time</th>
+                                    <th onclick="sortTable('period')">Period</th>
+                                    <th onclick="sortTable('class')">Class</th>
+                                    <th>Activity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="records-table">
+                                <tr>
+                                    <td colspan="7" class="loading">Loading entries...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="calendar-view" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <button class="btn btn-secondary" onclick="changeMonth(-1)">← Previous</button>
+                        <h2 id="calendar-month-year"></h2>
+                        <button class="btn btn-secondary" onclick="changeMonth(1)">Next →</button>
+                    </div>
+                    <div class="calendar-container" id="calendar-grid">
+                        <div class="loading">Loading calendar...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div class="tab-content" id="reports">
+            <div class="card">
+                <h2>📈 Export Reports</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="report-range">Time Range</label>
+                        <select id="report-range">
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="3months">Last 3 Months</option>
+                            <option value="6months">Last 6 Months</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="custom-range-group" style="display: none;">
+                        <label for="custom-start">Start Date</label>
+                        <input type="date" id="custom-start">
+                    </div>
+                    <div class="form-group" id="custom-range-group2" style="display: none;">
+                        <label for="custom-end">End Date</label>
+                        <input type="date" id="custom-end">
+                    </div>
+                </div>
+
+                <div class="export-options">
+                    <button class="btn btn-primary" onclick="exportToCSV()">📊 Export CSV</button>
+                    <button class="btn btn-secondary" onclick="exportToPDF()">📄 Export PDF</button>
+                </div>
+
+                <div class="card" style="margin-top: 20px;">
+                    <h3>Preview</h3>
+                    <div id="report-preview">
+                        <div class="loading">Select a time range to preview</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div class="tab-content" id="settings">
+            <div class="card">
+                <h2>⚙️ Settings</h2>
+                
+                <div class="form-group">
+                    <label>Theme</label>
+                    <div class="theme-selector">
+                        <button class="theme-btn active" data-theme="light">☀️ Light</button>
+                        <button class="theme-btn" data-theme="dark">🌙 Dark</button>
+                        <button class="theme-btn" data-theme="pastel">🎨 Pastel</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="default-time">Default Time Setting</label>
+                    <input type="time" id="default-time" value="08:00">
+                </div>
+
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid var(--glass-border);">
+                    <h3>Creator Information</h3>
+                    <div class="creator-info">
+                        <strong>Sugeng Mardiyanto</strong><br>
+                        SMA Laboratorium UM Copyright 2025
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-warning" onclick="clearAllData()">🗑️ Clear All Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Time Period Manager Modal -->
+    <div id="time-period-manager-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeTimePeriodManager()">&times;</span>
+            <h2>⏰ Time Period Management</h2>
+            
+            <div class="form-group">
+                <label for="new-time-period">Add New Time Period</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="new-time-period" placeholder="e.g., 1-2, 3rd Period, Morning Block..." style="flex: 1;">
+                    <button class="btn btn-primary" onclick="addTimePeriod()">Add</button>
+                </div>
+                <small style="color: var(--text-secondary); margin-top: 5px; display: block;">
+                    Examples: "1-2", "3rd Period", "Morning Block", "7-9", "Break Time", etc.
+                </small>
+            </div>
+
+            <div class="class-list" id="time-period-list">
+                <div class="loading">Loading time periods...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class Manager Modal -->
+    <div id="class-manager-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeClassManager()">&times;</span>
+            <h2>🏫 Class Management</h2>
+            
+            <div class="form-group">
+                <label for="new-class-name">Add New Class</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="new-class-name" placeholder="Enter class name..." style="flex: 1;">
+                    <button class="btn btn-primary" onclick="addClass()">Add</button>
+                </div>
+            </div>
+
+            <div class="class-list" id="class-list">
+                <div class="loading">Loading classes...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Entry Modal -->
+    <div id="edit-entry-modal" class="modal">
+        <div class="modal-content draggable" id="edit-modal-content">
+            <div class="modal-header" id="edit-modal-header">
+                <h2>✏️ Edit Entry</h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            
+            <form id="edit-entry-form">
+                <input type="hidden" id="edit-entry-id">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-entry-day">Day</label>
+                        <input type="text" id="edit-entry-day" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-entry-date">Date</label>
+                        <input type="date" id="edit-entry-date" required>
+                    </div>
+                </div>
+                
+                <div class="time-period-section">
+                    <div class="form-group">
+                        <label for="edit-entry-time">Time (AM/PM)</label>
+                        <input type="time" id="edit-entry-time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-time-period">Time Period</label>
+                        <select id="edit-time-period" required>
+                            <option value="">Select Period</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-entry-class">Class</label>
+                    <select id="edit-entry-class" required>
+                        <option value="">Select Class</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-entry-activity">Classroom Activity</label>
+                    <textarea id="edit-entry-activity" rows="3" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-entry-notes">Notes (Optional)</label>
+                    <textarea id="edit-entry-notes" rows="3"></textarea>
+                </div>
+
+                <div class="form-group" style="margin-top: 30px; padding-top: 20px; border-top: 2px solid var(--glass-border);">
+                    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                        <button type="submit" class="btn btn-primary" style="min-width: 150px; font-size: 16px; padding: 15px 20px;">
+                            💾 Update Entry
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()" style="min-width: 120px; font-size: 16px; padding: 15px 20px;">
+                            ❌ Cancel
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Calendar Day Modal -->
+    <div id="calendar-day-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCalendarDayModal()">&times;</span>
+            <h2 id="calendar-day-title">📅 Entries for Date</h2>
+            <div id="calendar-day-entries">
+                <div class="loading">Loading entries...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+        let journalEntries = [];
+        let customClasses = [];
+        let customTimePeriods = [];
+        let currentCalendarMonth = new Date().getMonth();
+        let currentCalendarYear = new Date().getFullYear();
+        let editingEntryId = null;
+
+        // Default Classes (now empty - users add manually)
+        const defaultClasses = [];
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromStorage();
+            initializeForm();
+            updateDashboard();
+            loadRecords();
+            setupEventListeners();
+            loadSettings();
+            updateClassDropdowns();
+            updateTimePeriodDropdowns();
+        });
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Tab Navigation
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+            });
+
+            // Theme Selector
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.addEventListener('click', () => changeTheme(btn.dataset.theme));
+            });
+
+            // Form Submission
+            document.getElementById('entry-form').addEventListener('submit', handleAddEntry);
+            document.getElementById('edit-entry-form').addEventListener('submit', handleEditEntry);
+
+            // Search and Filters
+            document.getElementById('search-text').addEventListener('input', filterRecords);
+            document.getElementById('filter-class').addEventListener('change', filterRecords);
+            document.getElementById('filter-start-date').addEventListener('change', filterRecords);
+            document.getElementById('filter-end-date').addEventListener('change', filterRecords);
+
+            // Report Range
+            document.getElementById('report-range').addEventListener('change', handleReportRangeChange);
+
+            // Date Change Auto-update Day
+            document.getElementById('entry-date').addEventListener('change', updateDayFromDate);
+            document.getElementById('edit-entry-date').addEventListener('change', updateEditDayFromDate);
+
+            // Settings
+            document.getElementById('default-time').addEventListener('change', saveSettings);
+
+            // Modal Click Outside to Close
+            window.addEventListener('click', function(event) {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Local Storage Functions
+        function saveToStorage() {
+            const data = {
+                journalEntries,
+                customClasses,
+                customTimePeriods,
+                settings: {
+                    theme: document.body.dataset.theme,
+                    defaultTime: document.getElementById('default-time').value
+                }
+            };
+            localStorage.setItem('teacherJournal', JSON.stringify(data));
+        }
+
+        function loadFromStorage() {
+            const saved = localStorage.getItem('teacherJournal');
+            if (saved) {
+                const data = JSON.parse(saved);
+                journalEntries = data.journalEntries || [];
+                customClasses = data.customClasses || [];
+                customTimePeriods = data.customTimePeriods || [];
+                if (data.settings) {
+                    if (data.settings.theme) {
+                        changeTheme(data.settings.theme);
+                    }
+                    if (data.settings.defaultTime) {
+                        document.getElementById('default-time').value = data.settings.defaultTime;
+                    }
+                }
+            }
+        }
+
+        function saveSettings() {
+            saveToStorage();
+        }
+
+        function loadSettings() {
+            // Settings are loaded in loadFromStorage
+        }
+
+        // Tab Management
+        function switchTab(tabName) {
+            // Update active tab
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+            // Show content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+
+            // Refresh content based on tab
+            if (tabName === 'dashboard') {
+                updateDashboard();
+            } else if (tabName === 'records') {
+                loadRecords();
+                updateTimePeriodDropdowns();
+            } else if (tabName === 'reports') {
+                updateReportPreview();
+            }
+        }
+
+        // Theme Management
+        function changeTheme(theme) {
+            document.body.dataset.theme = theme;
+            
+            // Update active theme button
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-theme="${theme}"]`).classList.add('active');
+            
+            saveToStorage();
+        }
+
+        // Form Initialization
+        function initializeForm() {
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+            const currentTime = now.toTimeString().slice(0, 5);
+            
+            document.getElementById('entry-date').value = today;
+            document.getElementById('entry-time').value = currentTime;
+            updateDayFromDate();
+        }
+
+        function updateDayFromDate() {
+            const dateInput = document.getElementById('entry-date');
+            const dayInput = document.getElementById('entry-day');
+            if (dateInput.value) {
+                const date = new Date(dateInput.value + 'T12:00:00');
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                dayInput.value = days[date.getDay()];
+            }
+        }
+
+        function updateEditDayFromDate() {
+            const dateInput = document.getElementById('edit-entry-date');
+            const dayInput = document.getElementById('edit-entry-day');
+            if (dateInput.value) {
+                const date = new Date(dateInput.value + 'T12:00:00');
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                dayInput.value = days[date.getDay()];
+            }
+        }
+
+        // Time Period Management
+        function updateTimePeriodDropdowns() {
+            const dropdowns = [
+                document.getElementById('time-period'),
+                document.getElementById('edit-time-period')
+            ];
+
+            dropdowns.forEach(dropdown => {
+                if (!dropdown) return;
+                
+                const currentValue = dropdown.value;
+                dropdown.innerHTML = '<option value="">Select Period</option>';
+                
+                customTimePeriods.forEach(period => {
+                    const option = document.createElement('option');
+                    option.value = period;
+                    option.textContent = period;
+                    dropdown.appendChild(option);
+                });
+                
+                // Restore selection
+                if (currentValue) {
+                    dropdown.value = currentValue;
+                }
+            });
+        }
+
+        function openTimePeriodManager() {
+            updateTimePeriodList();
+            document.getElementById('time-period-manager-modal').style.display = 'block';
+        }
+
+        function closeTimePeriodManager() {
+            document.getElementById('time-period-manager-modal').style.display = 'none';
+            document.getElementById('new-time-period').value = '';
+        }
+
+        function updateTimePeriodList() {
+            const periodList = document.getElementById('time-period-list');
+            
+            if (customTimePeriods.length === 0) {
+                periodList.innerHTML = '<div class="empty-state"><h3>No Time Periods Added Yet</h3><p>Start by adding your first time period using the form above. You can add any period names you need (e.g., 1-2, Morning Block, 3rd Period, etc.)</p></div>';
+                return;
+            }
+
+            let html = '';
+            customTimePeriods.forEach((period, index) => {
+                const usageCount = journalEntries.filter(entry => entry.period === period).length;
+                html += `
+                    <div class="class-item">
+                        <div>
+                            <strong>${period}</strong>
+                            <small style="color: var(--text-secondary); margin-left: 10px;">
+                                (${usageCount} entries)
+                            </small>
+                        </div>
+                        <div class="class-actions">
+                            <button class="btn btn-small btn-secondary" onclick="editTimePeriod(${index})">✏️ Edit</button>
+                            <button class="btn btn-small btn-warning" onclick="deleteTimePeriod(${index})">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            periodList.innerHTML = html;
+        }
+
+        function addTimePeriod() {
+            const input = document.getElementById('new-time-period');
+            const periodName = input.value.trim();
+            
+            if (!periodName) {
+                showNotification('Please enter a time period', 'error');
+                return;
+            }
+            
+            if (customTimePeriods.includes(periodName)) {
+                showNotification('Time period already exists', 'error');
+                return;
+            }
+            
+            customTimePeriods.push(periodName);
+            saveToStorage();
+            updateTimePeriodDropdowns();
+            updateTimePeriodList();
+            input.value = '';
+            showNotification('Time period added successfully', 'success');
+        }
+
+        function editTimePeriod(index) {
+            const oldName = customTimePeriods[index];
+            const newName = prompt('Enter new time period name:', oldName);
+            
+            if (!newName || newName.trim() === '') return;
+            
+            const trimmedName = newName.trim();
+            
+            if (customTimePeriods.filter((_, i) => i !== index).includes(trimmedName)) {
+                showNotification('Time period already exists', 'error');
+                return;
+            }
+            
+            // Update entries that use this time period
+            journalEntries.forEach(entry => {
+                if (entry.period === oldName) {
+                    entry.period = trimmedName;
+                }
+            });
+            
+            customTimePeriods[index] = trimmedName;
+            saveToStorage();
+            updateTimePeriodDropdowns();
+            updateTimePeriodList();
+            loadRecords(); // Refresh the records view
+            showNotification('Time period updated successfully', 'success');
+        }
+
+        function deleteTimePeriod(index) {
+            const periodName = customTimePeriods[index];
+            const usageCount = journalEntries.filter(entry => entry.period === periodName).length;
+            
+            let confirmMessage = `Are you sure you want to delete "${periodName}"?`;
+            if (usageCount > 0) {
+                confirmMessage += `\n\nWarning: This time period is used in ${usageCount} journal entries. The entries will keep the period name, but it won't be available for new entries.`;
+            }
+            
+            if (confirm(confirmMessage)) {
+                customTimePeriods.splice(index, 1);
+                saveToStorage();
+                updateTimePeriodDropdowns();
+                updateTimePeriodList();
+                showNotification('Time period deleted successfully', 'success');
+            }
+        }
+
+        // Class Management
+        function updateClassDropdowns() {
+            const allClasses = [...defaultClasses, ...customClasses];
+            const dropdowns = [
+                document.getElementById('entry-class'),
+                document.getElementById('edit-entry-class'),
+                document.getElementById('filter-class')
+            ];
+
+            dropdowns.forEach(dropdown => {
+                if (!dropdown) return;
+                
+                const currentValue = dropdown.value;
+                dropdown.innerHTML = dropdown.id === 'filter-class' ? '<option value="">All Classes</option>' : '<option value="">Select Class</option>';
+                
+                allClasses.forEach(className => {
+                    const option = document.createElement('option');
+                    option.value = className;
+                    option.textContent = className;
+                    dropdown.appendChild(option);
+                });
+                
+                // Restore selection
+                if (currentValue) {
+                    dropdown.value = currentValue;
+                }
+            });
+        }
+
+        function openClassManager() {
+            updateClassList();
+            document.getElementById('class-manager-modal').style.display = 'block';
+        }
+
+        function closeClassManager() {
+            document.getElementById('class-manager-modal').style.display = 'none';
+            document.getElementById('new-class-name').value = '';
+        }
+
+        function updateClassList() {
+            const classList = document.getElementById('class-list');
+            
+            if (customClasses.length === 0) {
+                classList.innerHTML = '<div class="empty-state"><h3>No Classes Added Yet</h3><p>Start by adding your first class using the form above. You can add any class names you need (e.g., X1, XI-IPA-1, XII-IPS-2, etc.)</p></div>';
+                return;
+            }
+
+            let html = '';
+            customClasses.forEach((className, index) => {
+                const usageCount = journalEntries.filter(entry => entry.class === className).length;
+                html += `
+                    <div class="class-item">
+                        <div>
+                            <strong>${className}</strong>
+                            <small style="color: var(--text-secondary); margin-left: 10px;">
+                                (${usageCount} entries)
+                            </small>
+                        </div>
+                        <div class="class-actions">
+                            <button class="btn btn-small btn-secondary" onclick="editClassName(${index})">✏️ Edit</button>
+                            <button class="btn btn-small btn-warning" onclick="deleteClass(${index})">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            classList.innerHTML = html;
+        }
+
+        function addClass() {
+            const input = document.getElementById('new-class-name');
+            const className = input.value.trim();
+            
+            if (!className) {
+                showNotification('Please enter a class name', 'error');
+                return;
+            }
+            
+            const allClasses = [...defaultClasses, ...customClasses];
+            if (allClasses.includes(className)) {
+                showNotification('Class name already exists', 'error');
+                return;
+            }
+            
+            customClasses.push(className);
+            saveToStorage();
+            updateClassDropdowns();
+            updateClassList();
+            input.value = '';
+            showNotification('Class added successfully', 'success');
+        }
+
+        function editClassName(index) {
+            const oldName = customClasses[index];
+            const newName = prompt('Enter new class name:', oldName);
+            
+            if (!newName || newName.trim() === '') return;
+            
+            const trimmedName = newName.trim();
+            const allClasses = [...defaultClasses, ...customClasses.filter((_, i) => i !== index)];
+            
+            if (allClasses.includes(trimmedName)) {
+                showNotification('Class name already exists', 'error');
+                return;
+            }
+            
+            // Update entries that use this class
+            journalEntries.forEach(entry => {
+                if (entry.class === oldName) {
+                    entry.class = trimmedName;
+                }
+            });
+            
+            customClasses[index] = trimmedName;
+            saveToStorage();
+            updateClassDropdowns();
+            updateClassList();
+            loadRecords(); // Refresh the records view
+            showNotification('Class name updated successfully', 'success');
+        }
+
+        function deleteClass(index) {
+            const className = customClasses[index];
+            const usageCount = journalEntries.filter(entry => entry.class === className).length;
+            
+            let confirmMessage = `Are you sure you want to delete "${className}"?`;
+            if (usageCount > 0) {
+                confirmMessage += `\n\nWarning: This class is used in ${usageCount} journal entries. The entries will keep the class name, but it won't be available for new entries.`;
+            }
+            
+            if (confirm(confirmMessage)) {
+                customClasses.splice(index, 1);
+                saveToStorage();
+                updateClassDropdowns();
+                updateClassList();
+                showNotification('Class deleted successfully', 'success');
+            }
+        }
+
+        // Entry Management
+        function handleAddEntry(e) {
+            e.preventDefault();
+            
+            const entry = {
+                id: Date.now().toString(),
+                day: document.getElementById('entry-day').value,
+                date: document.getElementById('entry-date').value,
+                time: document.getElementById('entry-time').value,
+                period: document.getElementById('time-period').value,
+                class: document.getElementById('entry-class').value,
+                activity: document.getElementById('entry-activity').value,
+                notes: document.getElementById('entry-notes').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            journalEntries.unshift(entry);
+            saveToStorage();
+            
+            // Reset form
+            document.getElementById('entry-form').reset();
+            initializeForm();
+            
+            showNotification('Entry added successfully!', 'success');
+            updateDashboard();
+        }
+
+        function handleEditEntry(e) {
+            e.preventDefault();
+            
+            const entryId = document.getElementById('edit-entry-id').value;
+            const entryIndex = journalEntries.findIndex(entry => entry.id === entryId);
+            
+            if (entryIndex === -1) return;
+            
+            journalEntries[entryIndex] = {
+                ...journalEntries[entryIndex],
+                day: document.getElementById('edit-entry-day').value,
+                date: document.getElementById('edit-entry-date').value,
+                time: document.getElementById('edit-entry-time').value,
+                period: document.getElementById('edit-time-period').value,
+                class: document.getElementById('edit-entry-class').value,
+                activity: document.getElementById('edit-entry-activity').value,
+                notes: document.getElementById('edit-entry-notes').value,
+                updatedAt: new Date().toISOString()
+            };
+            
+            saveToStorage();
+            closeEditModal();
+            loadRecords();
+            updateDashboard();
+            showNotification('Entry updated successfully!', 'success');
+        }
+
+        function openEditModal(entryId) {
+            const entry = journalEntries.find(e => e.id === entryId);
+            if (!entry) return;
+            
+            document.getElementById('edit-entry-id').value = entry.id;
+            document.getElementById('edit-entry-day').value = entry.day;
+            document.getElementById('edit-entry-date').value = entry.date;
+            document.getElementById('edit-entry-time').value = entry.time;
+            document.getElementById('edit-time-period').value = entry.period;
+            document.getElementById('edit-entry-class').value = entry.class;
+            document.getElementById('edit-entry-activity').value = entry.activity;
+            document.getElementById('edit-entry-notes').value = entry.notes || '';
+            
+            document.getElementById('edit-entry-modal').style.display = 'block';
+            
+            // Initialize modal dragging
+            initializeModalDragging();
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-entry-modal').style.display = 'none';
+        }
+
+        // Modal Dragging Functionality
+        function initializeModalDragging() {
+            const modal = document.getElementById('edit-modal-content');
+            const header = document.getElementById('edit-modal-header');
+            
+            let isDragging = false;
+            let startX, startY, initialX, initialY;
+            
+            header.addEventListener('mousedown', dragStart);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', dragEnd);
+            
+            function dragStart(e) {
+                if (e.target.classList.contains('close')) return;
+                
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                
+                const rect = modal.getBoundingClientRect();
+                initialX = rect.left;
+                initialY = rect.top;
+                
+                modal.style.position = 'fixed';
+                modal.style.left = initialX + 'px';
+                modal.style.top = initialY + 'px';
+                modal.style.transform = 'none';
+                modal.style.margin = '0';
+                
+                header.style.cursor = 'grabbing';
+                e.preventDefault();
+            }
+            
+            function drag(e) {
+                if (!isDragging) return;
+                
+                const deltaX = e.clientX - startX;
+                const deltaY = e.clientY - startY;
+                
+                let newX = initialX + deltaX;
+                let newY = initialY + deltaY;
+                
+                // Keep modal within viewport bounds
+                const modalRect = modal.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                
+                newX = Math.max(0, Math.min(newX, viewportWidth - modalRect.width));
+                newY = Math.max(0, Math.min(newY, viewportHeight - modalRect.height));
+                
+                modal.style.left = newX + 'px';
+                modal.style.top = newY + 'px';
+            }
+            
+            function dragEnd() {
+                isDragging = false;
+                header.style.cursor = 'move';
+            }
+        }
+
+        function deleteEntry(entryId) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                const index = journalEntries.findIndex(entry => entry.id === entryId);
+                if (index !== -1) {
+                    journalEntries.splice(index, 1);
+                    saveToStorage();
+                    loadRecords();
+                    updateDashboard();
+                    showNotification('Entry deleted successfully!', 'success');
+                }
+            }
+        }
+
+        // Dashboard Functions
+        function updateDashboard() {
+            const now = new Date();
+            const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+            
+            // Calculate statistics
+            const totalEntries = journalEntries.length;
+            const weekEntries = journalEntries.filter(entry => new Date(entry.date) >= weekStart).length;
+            const monthEntries = journalEntries.filter(entry => new Date(entry.date) >= monthStart).length;
+            const dayStreak = calculateDayStreak();
+            
+            // Update DOM
+            document.getElementById('total-entries').textContent = totalEntries;
+            document.getElementById('week-entries').textContent = weekEntries;
+            document.getElementById('month-entries').textContent = monthEntries;
+            document.getElementById('day-streak').textContent = dayStreak;
+            
+            // Load recent entries
+            loadRecentEntries();
+        }
+
+        function calculateDayStreak() {
+            if (journalEntries.length === 0) return 0;
+            
+            const sortedEntries = journalEntries
+                .map(entry => entry.date)
+                .filter((date, index, self) => self.indexOf(date) === index)
+                .sort((a, b) => new Date(b) - new Date(a));
+            
+            let streak = 0;
+            let currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+            
+            for (let dateStr of sortedEntries) {
+                const entryDate = new Date(dateStr + 'T12:00:00');
+                entryDate.setHours(0, 0, 0, 0);
+                
+                const diffDays = Math.floor((currentDate - entryDate) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === streak) {
+                    streak++;
+                    currentDate.setDate(currentDate.getDate() - 1);
+                } else {
+                    break;
+                }
+            }
+            
+            return streak;
+        }
+
+        function loadRecentEntries() {
+            const recentContainer = document.getElementById('recent-entries');
+            const recent = journalEntries.slice(0, 5);
+            
+            if (recent.length === 0) {
+                recentContainer.innerHTML = '<div class="empty-state"><h3>No entries yet</h3><p>Start by adding your first journal entry!</p></div>';
+                return;
+            }
+            
+            let html = '';
+            recent.forEach(entry => {
+                html += `
+                    <div class="entry-item">
+                        <div class="entry-date">${formatDate(entry.date)} - ${entry.day} - ${formatTime(entry.time)} (${entry.period}) - ${entry.class}</div>
+                        <div class="entry-activity">${entry.activity}</div>
+                        ${entry.notes ? `<div class="entry-notes">${entry.notes}</div>` : ''}
+                    </div>
+                `;
+            });
+            
+            recentContainer.innerHTML = html;
+        }
+
+        // Records Functions
+        function loadRecords() {
+            updateClassDropdowns();
+            filterRecords();
+        }
+
+        function filterRecords() {
+            const searchText = document.getElementById('search-text').value.toLowerCase();
+            const filterClass = document.getElementById('filter-class').value;
+            const filterStartDate = document.getElementById('filter-start-date').value;
+            const filterEndDate = document.getElementById('filter-end-date').value;
+            
+            let filtered = journalEntries.filter(entry => {
+                const matchesSearch = !searchText || 
+                    entry.activity.toLowerCase().includes(searchText) ||
+                    entry.notes.toLowerCase().includes(searchText) ||
+                    entry.class.toLowerCase().includes(searchText);
+                
+                const matchesClass = !filterClass || entry.class === filterClass;
+                
+                const matchesStartDate = !filterStartDate || entry.date >= filterStartDate;
+                const matchesEndDate = !filterEndDate || entry.date <= filterEndDate;
+                
+                return matchesSearch && matchesClass && matchesStartDate && matchesEndDate;
+            });
+            
+            displayRecords(filtered, searchText);
+        }
+
+        function displayRecords(entries, searchTerm = '') {
+            const tbody = document.getElementById('records-table');
+            
+            if (entries.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No entries found</td></tr>';
+                return;
+            }
+            
+            let html = '';
+            entries.forEach(entry => {
+                const activityText = searchTerm ? 
+                    highlightSearchTerm(entry.activity, searchTerm) : 
+                    entry.activity;
+                
+                html += `
+                    <tr>
+                        <td>${formatDate(entry.date)}</td>
+                        <td>${entry.day}</td>
+                        <td>${formatTime(entry.time)}</td>
+                        <td>${entry.period}</td>
+                        <td>${entry.class}</td>
+                        <td>${activityText}</td>
+                        <td>
+                            <button class="btn btn-small btn-secondary" onclick="openEditModal('${entry.id}')">✏️</button>
+                            <button class="btn btn-small btn-warning" onclick="deleteEntry('${entry.id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        function highlightSearchTerm(text, term) {
+            if (!term) return text;
+            const regex = new RegExp(`(${term})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        function clearFilters() {
+            document.getElementById('search-text').value = '';
+            document.getElementById('filter-class').value = '';
+            document.getElementById('filter-start-date').value = '';
+            document.getElementById('filter-end-date').value = '';
+            filterRecords();
+        }
+
+        function sortTable(column) {
+            // Simple sorting implementation
+            journalEntries.sort((a, b) => {
+                let valueA = a[column] || '';
+                let valueB = b[column] || '';
+                
+                if (column === 'date') {
+                    return new Date(valueB) - new Date(valueA);
+                }
+                
+                return valueA.localeCompare(valueB);
+            });
+            
+            filterRecords();
+        }
+
+        // Calendar View Functions
+        function showTableView() {
+            document.getElementById('table-view').style.display = 'block';
+            document.getElementById('calendar-view').style.display = 'none';
+        }
+
+        function showCalendarView() {
+            document.getElementById('table-view').style.display = 'none';
+            document.getElementById('calendar-view').style.display = 'block';
+            loadCalendar();
+        }
+
+        function loadCalendar() {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            document.getElementById('calendar-month-year').textContent = 
+                `${monthNames[currentCalendarMonth]} ${currentCalendarYear}`;
+            
+            const firstDay = new Date(currentCalendarYear, currentCalendarMonth, 1);
+            const lastDay = new Date(currentCalendarYear, currentCalendarMonth + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startDay = firstDay.getDay();
+            
+            const calendarGrid = document.getElementById('calendar-grid');
+            let html = '';
+            
+            // Headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                html += `<div class="calendar-header">${day}</div>`;
+            });
+            
+            // Empty cells for days before month starts
+            for (let i = 0; i < startDay; i++) {
+                html += '<div class="calendar-day"></div>';
+            }
+            
+            // Days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${currentCalendarYear}-${String(currentCalendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const hasEntries = journalEntries.some(entry => entry.date === dateStr);
+                const isToday = dateStr === new Date().toISOString().split('T')[0];
+                
+                let classes = 'calendar-day';
+                if (hasEntries) classes += ' has-entries';
+                if (isToday) classes += ' today';
+                
+                html += `<div class="${classes}" onclick="showCalendarDayEntries('${dateStr}')">${day}</div>`;
+            }
+            
+            calendarGrid.innerHTML = html;
+        }
+
+        function changeMonth(direction) {
+            currentCalendarMonth += direction;
+            if (currentCalendarMonth > 11) {
+                currentCalendarMonth = 0;
+                currentCalendarYear++;
+            } else if (currentCalendarMonth < 0) {
+                currentCalendarMonth = 11;
+                currentCalendarYear--;
+            }
+            loadCalendar();
+        }
+
+        function showCalendarDayEntries(date) {
+            const entries = journalEntries.filter(entry => entry.date === date);
+            const modal = document.getElementById('calendar-day-modal');
+            const title = document.getElementById('calendar-day-title');
+            const content = document.getElementById('calendar-day-entries');
+            
+            title.textContent = `📅 Entries for ${formatDate(date)}`;
+            
+            if (entries.length === 0) {
+                content.innerHTML = '<div class="empty-state"><h3>No entries</h3><p>No activities recorded for this day.</p></div>';
+            } else {
+                let html = '';
+                entries.forEach(entry => {
+                    html += `
+                        <div class="entry-item">
+                            <div class="entry-date">${formatTime(entry.time)} (${entry.period}) - ${entry.class}</div>
+                            <div class="entry-activity">${entry.activity}</div>
+                            ${entry.notes ? `<div class="entry-notes">${entry.notes}</div>` : ''}
+                        </div>
+                    `;
+                });
+                content.innerHTML = html;
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function closeCalendarDayModal() {
+            document.getElementById('calendar-day-modal').style.display = 'none';
+        }
+
+        // Report Functions
+        function handleReportRangeChange() {
+            const range = document.getElementById('report-range').value;
+            const customGroups = document.querySelectorAll('[id^="custom-range-group"]');
+            
+            if (range === 'custom') {
+                customGroups.forEach(group => group.style.display = 'block');
+            } else {
+                customGroups.forEach(group => group.style.display = 'none');
+            }
+            
+            updateReportPreview();
+        }
+
+        function updateReportPreview() {
+            const entries = getEntriesForReportRange();
+            const preview = document.getElementById('report-preview');
+            
+            if (entries.length === 0) {
+                preview.innerHTML = '<div class="empty-state"><h3>No entries</h3><p>No entries found for the selected time range.</p></div>';
+                return;
+            }
+            
+            let html = `<p><strong>Total entries:</strong> ${entries.length}</p>`;
+            html += '<div style="max-height: 300px; overflow-y: auto; margin-top: 15px;">';
+            
+            entries.slice(0, 10).forEach(entry => {
+                html += `
+                    <div class="entry-item">
+                        <div class="entry-date">${formatDate(entry.date)} - ${entry.day} - ${formatTime(entry.time)} (${entry.period}) - ${entry.class}</div>
+                        <div class="entry-activity">${entry.activity}</div>
+                        ${entry.notes ? `<div class="entry-notes">${entry.notes}</div>` : ''}
+                    </div>
+                `;
+            });
+            
+            if (entries.length > 10) {
+                html += `<div class="entry-item" style="text-align: center; color: var(--text-secondary);">... and ${entries.length - 10} more entries</div>`;
+            }
+            
+            html += '</div>';
+            preview.innerHTML = html;
+        }
+
+        function getEntriesForReportRange() {
+            const range = document.getElementById('report-range').value;
+            const now = new Date();
+            let startDate, endDate;
+            
+            switch (range) {
+                case 'today':
+                    startDate = endDate = now.toISOString().split('T')[0];
+                    break;
+                case 'week':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()).toISOString().split('T')[0];
+                    endDate = now.toISOString().split('T')[0];
+                    break;
+                case 'month':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+                    endDate = now.toISOString().split('T')[0];
+                    break;
+                case '3months':
+                    startDate = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate()).toISOString().split('T')[0];
+                    endDate = now.toISOString().split('T')[0];
+                    break;
+                case '6months':
+                    startDate = new Date(now.getFullYear(), now.getMonth() - 6, now.getDate()).toISOString().split('T')[0];
+                    endDate = now.toISOString().split('T')[0];
+                    break;
+                case 'custom':
+                    startDate = document.getElementById('custom-start').value;
+                    endDate = document.getElementById('custom-end').value;
+                    if (!startDate || !endDate) return [];
+                    break;
+                default:
+                    return [];
+            }
+            
+            return journalEntries.filter(entry => {
+                return entry.date >= startDate && entry.date <= endDate;
+            }).sort((a, b) => new Date(b.date) - new Date(a.date));
+        }
+
+        function exportToCSV() {
+            const entries = getEntriesForReportRange();
+            if (entries.length === 0) {
+                showNotification('No entries to export', 'error');
+                return;
+            }
+            
+            const headers = ['Date', 'Day', 'Time', 'Period', 'Class', 'Activity', 'Notes'];
+            const csvContent = [
+                headers.join(','),
+                ...entries.map(entry => [
+                    entry.date,
+                    entry.day,
+                    entry.time,
+                    entry.period,
+                    `"${entry.class}"`,
+                    `"${entry.activity.replace(/"/g, '""')}"`,
+                    `"${(entry.notes || '').replace(/"/g, '""')}"`
+                ].join(','))
+            ].join('\n');
+            
+            downloadFile(csvContent, 'teacher-journal-export.csv', 'text/csv');
+            showNotification('CSV exported successfully!', 'success');
+        }
+
+        function exportToPDF() {
+            const entries = getEntriesForReportRange();
+            if (entries.length === 0) {
+                showNotification('No entries to export', 'error');
+                return;
+            }
+            
+            // Create a simple HTML document for PDF conversion
+            let htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Teacher's Journal Report</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+                        .entry { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+                        .entry-header { font-weight: bold; color: #333; margin-bottom: 10px; }
+                        .entry-activity { margin-bottom: 5px; }
+                        .entry-notes { font-style: italic; color: #666; }
+                        .summary { margin-top: 30px; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>📚 Teacher's Journal Report</h1>
+                        <p>Created by Sugeng Mardiyanto</p>
+                        <p>Export Date: ${formatDate(new Date().toISOString().split('T')[0])}</p>
+                        <p>Total Entries: ${entries.length}</p>
+                    </div>
+            `;
+            
+            entries.forEach(entry => {
+                htmlContent += `
+                    <div class="entry">
+                        <div class="entry-header">
+                            ${formatDate(entry.date)} - ${entry.day} - ${formatTime(entry.time)} (${entry.period}) - ${entry.class}
+                        </div>
+                        <div class="entry-activity">${entry.activity}</div>
+                        ${entry.notes ? `<div class="entry-notes">Notes: ${entry.notes}</div>` : ''}
+                    </div>
+                `;
+            });
+            
+            htmlContent += `
+                    <div class="summary">
+                        <h3>Summary</h3>
+                        <p><strong>Total Entries:</strong> ${entries.length}</p>
+                        <p><strong>Date Range:</strong> ${formatDate(entries[entries.length - 1].date)} to ${formatDate(entries[0].date)}</p>
+                        <p><strong>Classes Involved:</strong> ${[...new Set(entries.map(e => e.class))].join(', ')}</p>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            // Create a new window for printing
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(htmlContent);
+            printWindow.document.close();
+            
+            // Wait for content to load, then print
+            printWindow.onload = function() {
+                printWindow.print();
+                printWindow.close();
+            };
+            
+            showNotification('PDF export opened in new window', 'success');
+        }
+
+        function downloadFile(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Utility Functions
+        function formatDate(dateString) {
+            const date = new Date(dateString + 'T12:00:00');
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const hour12 = hours % 12 || 12;
+            const ampm = hours < 12 ? 'AM' : 'PM';
+            return `${hour12}:${minutes} ${ampm}`;
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Clear All Data
+        function clearAllData() {
+            if (confirm('⚠️ WARNING: This will permanently delete all your journal entries, custom classes, and time periods. This action cannot be undone.\n\nAre you absolutely sure you want to continue?')) {
+                if (confirm('Last confirmation: All your data will be lost forever. Continue?')) {
+                    journalEntries = [];
+                    customClasses = [];
+                    customTimePeriods = [];
+                    localStorage.removeItem('teacherJournal');
+                    
+                    // Reset UI
+                    updateDashboard();
+                    loadRecords();
+                    updateClassDropdowns();
+                    updateTimePeriodDropdowns();
+                    
+                    showNotification('All data has been cleared', 'success');
+                }
+            }
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + S to save (prevent default and show notification)
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveToStorage();
+                showNotification('Data saved!', 'success');
+            }
+            
+            // Ctrl/Cmd + N to add new entry
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                switchTab('add-entry');
+                document.getElementById('entry-activity').focus();
+            }
+            
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    if (modal.style.display === 'block') {
+                        modal.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        // Auto-save every 30 seconds
+        setInterval(() => {
+            saveToStorage();
+        }, 30000);
+
+        // Handle page visibility change to save data when tab becomes hidden
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                saveToStorage();
+            }
+        });
+
+        // Handle beforeunload to save data before page close
+        window.addEventListener('beforeunload', function() {
+            saveToStorage();
+        });
+
+        // Initialize tooltips and help text
+        function initializeHelp() {
+            // Add help tooltips where needed
+            const helpButtons = document.querySelectorAll('[data-help]');
+            helpButtons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    // Show tooltip
+                });
+            });
+        }
+
+        // Mobile-specific enhancements
+        function initializeMobileFeatures() {
+            // Add touch gestures for mobile
+            let touchStartX = 0;
+            let touchStartY = 0;
+            
+            document.addEventListener('touchstart', function(e) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            });
+            
+            document.addEventListener('touchmove', function(e) {
+                if (!touchStartX || !touchStartY) return;
+                
+                const touchEndX = e.touches[0].clientX;
+                const touchEndY = e.touches[0].clientY;
+                const diffX = touchStartX - touchEndX;
+                const diffY = touchStartY - touchEndY;
+                
+                // Horizontal swipe detection (for tab switching)
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                    // Implement swipe navigation between tabs
+                }
+            });
+        }
+
+        // Performance optimizations
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Debounced search function
+        const debouncedSearch = debounce(filterRecords, 300);
+        document.getElementById('search-text').addEventListener('input', debouncedSearch);
+
+        // Analytics and usage tracking (privacy-friendly, local only)
+        function trackUsage() {
+            const usage = JSON.parse(localStorage.getItem('teacherJournalUsage') || '{}');
+            const today = new Date().toDateString();
+            
+            if (!usage[today]) {
+                usage[today] = {
+                    entriesAdded: 0,
+                    tabSwitches: 0,
+                    exports: 0
+                };
+            }
+            
+            // Clean old usage data (keep only last 30 days)
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            
+            Object.keys(usage).forEach(date => {
+                if (new Date(date) < thirtyDaysAgo) {
+                    delete usage[date];
+                }
+            });
+            
+            localStorage.setItem('teacherJournalUsage', JSON.stringify(usage));
+        }
+
+        // Initialize everything when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMobileFeatures();
+            trackUsage();
+        });
+
+        // Service Worker registration for offline support (if needed in the future)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // navigator.serviceWorker.register('/sw.js'); // Uncomment if you create a service worker
+            });
+        }
+
+        // Error handling and recovery
+        window.addEventListener('error', function(e) {
+            console.error('Application error:', e);
+            showNotification('An error occurred. Your data has been saved.', 'error');
+            saveToStorage();
+        });
+
+        // Accessibility improvements
+        function initializeAccessibility() {
+            // Add ARIA labels and roles where needed
+            document.querySelectorAll('button').forEach(button => {
+                if (!button.getAttribute('aria-label') && button.textContent) {
+                    button.setAttribute('aria-label', button.textContent.trim());
+                }
+            });
+            
+            // Improve focus management
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    document.body.classList.add('keyboard-navigation');
+                }
+            });
+            
+            document.addEventListener('mousedown', function() {
+                document.body.classList.remove('keyboard-navigation');
+            });
+        }
+
+        // Initialize accessibility features
+        document.addEventListener('DOMContentLoaded', initializeAccessibility);
+
+        // Data validation and sanitization
+        function validateEntry(entry) {
+            const required = ['day', 'date', 'time', 'period', 'class', 'activity'];
+            for (let field of required) {
+                if (!entry[field] || entry[field].trim() === '') {
+                    throw new Error(`${field} is required`);
+                }
+            }
+            
+            // Sanitize HTML content
+            entry.activity = entry.activity.replace(/<[^>]*>/g, '');
+            if (entry.notes) {
+                entry.notes = entry.notes.replace(/<[^>]*>/g, '');
+            }
+            
+            return entry;
+        }
+
+        // Backup and restore functionality
+        function exportAllData() {
+            const data = {
+                journalEntries,
+                customClasses,
+                customTimePeriods,
+                exportDate: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const jsonContent = JSON.stringify(data, null, 2);
+            downloadFile(jsonContent, `teacher-journal-backup-${new Date().toISOString().split('T')[0]}.json`, 'application/json');
+            showNotification('Backup exported successfully!', 'success');
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        if (confirm('This will replace all current data. Continue?')) {
+                            journalEntries = data.journalEntries || [];
+                            customClasses = data.customClasses || [];
+                            customTimePeriods = data.customTimePeriods || [];
+                            
+                            saveToStorage();
+                            updateDashboard();
+                            loadRecords();
+                            updateClassDropdowns();
+                            updateTimePeriodDropdowns();
+                            
+                            showNotification('Data imported successfully!', 'success');
+                        }
+                    } catch (error) {
+                        showNotification('Invalid backup file format', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        // Add backup/restore buttons to settings
+        document.addEventListener('DOMContentLoaded', function() {
+            const settingsContent = document.getElementById('settings');
+            const backupSection = document.createElement('div');
+            backupSection.innerHTML = `
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--glass-border);">
+                    <h3>Backup & Restore</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+                        <button class="btn btn-secondary" onclick="exportAllData()">💾 Export Backup</button>
+                        <button class="btn btn-primary" onclick="importData()">📁 Import Backup</button>
+                    </div>
+                </div>
+            `;
+            
+            const clearButton = settingsContent.querySelector('button[onclick="clearAllData()"]');
+            clearButton.parentNode.insertBefore(backupSection, clearButton.parentNode);
+        });
+
+        // Final initialization
+        console.log('Teacher\'s Journal Application Loaded Successfully! 🎓');
+        console.log('Created by Sugeng Mardiyanto - SMA Laboratorium UM');
+    </script>
+</body>
+</html>
