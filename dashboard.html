@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Results Dashboard - QR Scanner FIXED</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 10px; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; }
+        .header h1 { font-size: 2em; margin-bottom: 10px; }
+        .header p { font-size: 1em; opacity: 0.9; }
+        .main-content { padding: 15px; }
+        .section { margin-bottom: 20px; padding: 20px; background: #f8f9fa; border-radius: 12px; border-left: 4px solid #667eea; }
+        .section-title { font-size: 1.3em; color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center; border-left: 4px solid #667eea; }
+        .stat-value { font-size: 2em; font-weight: bold; color: #667eea; margin: 10px 0; }
+        .stat-label { color: #666; font-size: 0.85em; text-transform: uppercase; }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 0.95em; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; margin: 5px; white-space: nowrap; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 8px; color: #555; font-weight: 600; }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em; }
+        
+        .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 15px; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; background: white; min-width: 800px; }
+        thead { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; position: sticky; top: 0; z-index: 10; }
+        th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid #e0e0e0; font-size: 0.9em; }
+        th { font-weight: 600; white-space: nowrap; }
+        tbody tr:hover { background: #f8f9fa; }
+        .score-excellent { color: #28a745; font-weight: bold; }
+        .score-good { color: #17a2b8; font-weight: bold; }
+        .score-average { color: #ffc107; font-weight: bold; }
+        .score-poor { color: #dc3545; font-weight: bold; }
+        .alert-info { background: #d1ecf1; color: #0c5460; border-left: 4px solid #17a2b8; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9em; }
+        .alert-success { background: #d4edda; color: #155724; border-left: 4px solid #28a745; padding: 15px; border-radius: 8px; }
+        .alert-warning { background: #fff3cd; color: #856404; border-left: 4px solid #ffc107; padding: 15px; border-radius: 8px; }
+        .footer { background: #2c3e50; color: white; text-align: center; padding: 20px; margin-top: 20px; }
+        .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .search-box { flex: 1; min-width: 200px; }
+        #video { width: 100%; max-width: 500px; border: 3px solid #667eea; border-radius: 12px; margin: 15px auto; display: block; }
+        .scanner-container { text-align: center; padding: 15px; background: white; border-radius: 12px; margin: 15px 0; }
+        .qr-upload { margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px dashed #667eea; }
+        .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        @media (max-width: 768px) {
+            body { padding: 5px; }
+            .header h1 { font-size: 1.5em; }
+            .header p { font-size: 0.9em; }
+            .header { padding: 15px; }
+            .main-content { padding: 10px; }
+            .section { padding: 15px; margin-bottom: 15px; }
+            .section-title { font-size: 1.1em; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .stat-value { font-size: 1.8em; }
+            .stat-label { font-size: 0.75em; }
+            .btn { padding: 10px 15px; font-size: 0.85em; width: 100%; margin: 3px 0; }
+            .filter-bar { flex-direction: column; }
+            .filter-bar select, .filter-bar .search-box { width: 100%; min-width: 100%; }
+            th, td { padding: 8px 6px; font-size: 0.8em; }
+            .footer { padding: 15px; font-size: 0.9em; }
+            .alert-info, .alert-warning, .alert-success { font-size: 0.85em; padding: 12px; }
+            .qr-upload { padding: 12px; }
+            .qr-upload p { font-size: 0.9em; }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 { font-size: 1.3em; }
+            .stat-value { font-size: 1.5em; }
+            th, td { padding: 6px 4px; font-size: 0.75em; }
+            table { min-width: 700px; }
+        }
+
+        @media (max-width: 768px) and (orientation: landscape) {
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
+            #video { max-width: 400px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 QR Code Scanner Dashboard</h1>
+            <p>Scan Student QR Codes & Monitor Results - FIXED v5.1</p>
+        </div>
+
+        <div class="main-content">
+            <div class="alert alert-success">
+                <strong>✅ UPDATED:</strong> Now supports the new QR code format from Exam v5.1! Works with both old (JSON) and new (pipe-delimited) formats.
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">📸 Scan QR Code</h2>
+                <div class="alert alert-info">
+                    <strong>How to use:</strong><br>
+                    1. Click "Start Camera" to scan QR codes from student screens<br>
+                    2. OR upload a QR code image/screenshot<br>
+                    3. Results will be automatically added to the table below
+                </div>
+                
+                <div class="scanner-container">
+                    <button class="btn btn-primary" onclick="startScanner()" id="startBtn">📷 Start Camera Scanner</button>
+                    <button class="btn btn-danger" onclick="stopScanner()" id="stopBtn" style="display:none;">⏹️ Stop Scanner</button>
+                    
+                    <div id="scannerArea" style="display:none; margin-top:15px;">
+                        <video id="video" playsinline></video>
+                        <p style="color:#666; margin-top:10px; font-size:0.9em;">Point camera at student's QR code</p>
+                    </div>
+
+                    <div class="qr-upload">
+                        <p style="margin-bottom:10px; font-weight:600; color:#667eea;">📤 Or Upload QR Code Image:</p>
+                        <input type="file" id="qrImageUpload" accept="image/*" style="padding:10px; margin-bottom:10px; width:100%; font-size:0.9em;">
+                        <button class="btn btn-success" onclick="processUploadedQR()" id="processBtn" style="display:none; width:100%; margin-top:10px;">✅ Process QR Code</button>
+                        <canvas id="canvas" style="display:none;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">📈 Statistics Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Students</div>
+                        <div class="stat-value" id="totalStudents">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Average Score</div>
+                        <div class="stat-value" id="averageScore">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Highest Score</div>
+                        <div class="stat-value" id="highestScore">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Lowest Score</div>
+                        <div class="stat-value" id="lowestScore">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">📊 Student Results</h2>
+                
+                <div class="filter-bar">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="🔍 Search by name or NIS..." onkeyup="filterResults()">
+                    </div>
+                    <select id="classFilter" onchange="filterResults()">
+                        <option value="">All Classes</option>
+                    </select>
+                    <button class="btn btn-success" onclick="exportToCSV()">📊 Export to Excel</button>
+                    <button class="btn btn-danger" onclick="clearAllResults()">🗑️ Clear All</button>
+                </div>
+
+                <div id="resultsTableContainer">
+                    <div class="alert alert-warning">No results yet. Scan QR codes to add results.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Created by Mr. Sugeng Mardiyanto | SMA Laboratorium UM</strong></p>
+            <p style="margin-top: 10px; opacity: 0.8;">QR Scanner Dashboard v5.1 FIXED - Compatible with New Format</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script>
+        var allResults = [];
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var scanning = false;
+        var stream = null;
+        var uploadedImageData = null;
+        var jsQRLoaded = false;
+
+        function checkJsQR() {
+            if (typeof jsQR !== 'undefined') {
+                jsQRLoaded = true;
+                return true;
+            }
+            return false;
+        }
+
+        function waitForJsQR(callback, maxAttempts = 30) {
+            var attempts = 0;
+            var interval = setInterval(function() {
+                attempts++;
+                if (checkJsQR()) {
+                    clearInterval(interval);
+                    callback(true);
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(interval);
+                    loadJsQRFallback(callback);
+                }
+            }, 100);
+        }
+
+        function loadJsQRFallback(callback) {
+            var script = document.createElement('script');
+            script.src = 'https://unpkg.com/jsqr@1.4.0/dist/jsQR.js';
+            script.onload = function() {
+                if (checkJsQR()) {
+                    callback(true);
+                } else {
+                    callback(false);
+                }
+            };
+            script.onerror = function() {
+                callback(false);
+            };
+            document.head.appendChild(script);
+        }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            loadResults();
+            updateDisplay();
+            
+            document.getElementById('qrImageUpload').addEventListener('change', handleQRImageSelect);
+            
+            waitForJsQR(function(loaded) {
+                if (loaded) {
+                    console.log('✅ jsQR library loaded successfully');
+                } else {
+                    console.error('❌ Failed to load jsQR library');
+                    alert('⚠️ QR Scanner library failed to load.\n\nPossible solutions:\n1. Check your internet connection\n2. Refresh the page\n3. Try a different browser\n\nYou can still view existing results, but scanning new QR codes will not work.');
+                }
+            });
+        });
+
+        function loadResults() {
+            var saved = localStorage.getItem('teacherResults');
+            if (saved) {
+                allResults = JSON.parse(saved);
+            }
+        }
+
+        function saveResults() {
+            localStorage.setItem('teacherResults', JSON.stringify(allResults));
+        }
+
+        function startScanner() {
+            if (!checkJsQR()) {
+                alert('⚠️ QR Scanner library is still loading. Please wait a moment and try again.');
+                return;
+            }
+
+            document.getElementById('startBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'inline-flex';
+            document.getElementById('scannerArea').style.display = 'block';
+            
+            scanning = true;
+            
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                .then(function(s) {
+                    stream = s;
+                    video.srcObject = stream;
+                    video.setAttribute('playsinline', true);
+                    video.play();
+                    requestAnimationFrame(tick);
+                })
+                .catch(function(err) {
+                    alert('Error accessing camera: ' + err.message + '\n\nPlease allow camera permission or use image upload instead.');
+                    stopScanner();
+                });
+        }
+
+        function stopScanner() {
+            scanning = false;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            video.srcObject = null;
+            document.getElementById('startBtn').style.display = 'inline-flex';
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('scannerArea').style.display = 'none';
+        }
+
+        function tick() {
+            if (!scanning) return;
+            
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                canvas.height = video.videoHeight;
+                canvas.width = video.videoWidth;
+                var ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                var code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: 'dontInvert',
+                });
+                
+                if (code) {
+                    processQRData(code.data);
+                    stopScanner();
+                }
+            }
+            
+            requestAnimationFrame(tick);
+        }
+
+        function handleQRImageSelect(e) {
+            var file = e.target.files[0];
+            if (!file) {
+                document.getElementById('processBtn').style.display = 'none';
+                uploadedImageData = null;
+                return;
+            }
+            
+            document.getElementById('processBtn').style.display = 'block';
+            document.getElementById('processBtn').innerHTML = '<span class="loading"></span> Processing...';
+            document.getElementById('processBtn').disabled = true;
+            
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                uploadedImageData = event.target.result;
+                processUploadedQR();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function processUploadedQR() {
+            if (!uploadedImageData) {
+                alert('❌ No image selected!');
+                document.getElementById('processBtn').style.display = 'none';
+                return;
+            }
+
+            if (!checkJsQR()) {
+                alert('⚠️ QR Scanner library is still loading. Please wait a moment and try again.');
+                var btn = document.getElementById('processBtn');
+                btn.disabled = false;
+                btn.innerHTML = '✅ Process QR Code';
+                return;
+            }
+
+            var btn = document.getElementById('processBtn');
+
+            var img = new Image();
+            img.onload = function() {
+                try {
+                    var maxSize = 500;
+                    var width = img.width;
+                    var height = img.height;
+                    
+                    if (width > maxSize || height > maxSize) {
+                        if (width > height) {
+                            height = Math.floor(height * (maxSize / width));
+                            width = maxSize;
+                        } else {
+                            width = Math.floor(width * (maxSize / height));
+                            height = maxSize;
+                        }
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    var ctx = canvas.getContext('2d', { willReadFrequently: true });
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    var imageData = ctx.getImageData(0, 0, width, height);
+                    
+                    var code = jsQR(imageData.data, width, height, {
+                        inversionAttempts: 'dontInvert',
+                    });
+                    
+                    if (code) {
+                        processQRData(code.data);
+                        document.getElementById('qrImageUpload').value = '';
+                        btn.style.display = 'none';
+                        uploadedImageData = null;
+                    } else {
+                        alert('❌ No QR code found. Please ensure:\n1. Image is clear\n2. QR code is visible\n3. Good lighting in photo');
+                        btn.disabled = false;
+                        btn.innerHTML = '✅ Process QR Code';
+                        btn.style.display = 'block';
+                    }
+                } catch (error) {
+                    alert('❌ Error processing image: ' + error.message);
+                    btn.disabled = false;
+                    btn.innerHTML = '✅ Process QR Code';
+                    btn.style.display = 'block';
+                }
+            };
+            
+            img.onerror = function() {
+                alert('❌ Failed to load image. Please try another file.');
+                btn.disabled = false;
+                btn.innerHTML = '✅ Process QR Code';
+                btn.style.display = 'block';
+            };
+            
+            img.src = uploadedImageData;
+        }
+
+        function processQRData(data) {
+            try {
+                var result;
+                
+                // NEW FORMAT: EXAM|NIS|Name|Class|Score|Correct|Total|Violations|Timestamp|ExamTitle
+                if (data.startsWith('EXAM|')) {
+                    var parts = data.split('|');
+                    
+                    if (parts.length < 10) {
+                        alert('❌ Invalid QR code format! Not enough data fields.');
+                        return;
+                    }
+                    
+                    result = {
+                        nis: parts[1].trim(),
+                        name: parts[2].trim(),
+                        class: parts[3].trim(),
+                        score: parseInt(parts[4]),
+                        correct: parseInt(parts[5]),
+                        total: parseInt(parts[6]),
+                        violations: parseInt(parts[7]),
+                        timestamp: parts[8].trim(),
+                        examTitle: parts[9].trim()
+                    };
+                    
+                    console.log('✅ Parsed NEW format QR code:', result);
+                }
+                // OLD FORMAT: JSON
+                else {
+                    result = JSON.parse(data);
+                    console.log('✅ Parsed OLD format QR code (JSON):', result);
+                }
+                
+                // Validate required fields
+                if (!result.name || !result.nis || result.score === undefined) {
+                    alert('❌ Invalid QR code: Missing required fields (name, NIS, or score)!');
+                    return;
+                }
+
+                // Set defaults for missing fields
+                result.class = result.class || 'Unknown';
+                result.correct = result.correct || 0;
+                result.total = result.total || 0;
+                result.violations = result.violations || 0;
+                result.timestamp = result.timestamp || new Date().toISOString();
+                result.examTitle = result.examTitle || 'Unknown Exam';
+
+                // Check for duplicates
+                var existing = allResults.findIndex(function(r) { 
+                    return r.nis === result.nis && r.examTitle === result.examTitle; 
+                });
+                
+                if (existing !== -1) {
+                    if (confirm('Result for ' + result.name + ' (NIS: ' + result.nis + ') already exists.\n\nReplace with new scan?')) {
+                        allResults[existing] = result;
+                    } else {
+                        return;
+                    }
+                } else {
+                    allResults.push(result);
+                }
+
+                saveResults();
+                updateDisplay();
+                
+                alert('✅ QR Code Scanned Successfully!\n\n' +
+                      'Name: ' + result.name + '\n' +
+                      'NIS: ' + result.nis + '\n' +
+                      'Class: ' + result.class + '\n' +
+                      'Score: ' + result.score + '\n' +
+                      'Exam: ' + result.examTitle);
+            } catch (e) {
+                console.error('Error parsing QR code:', e);
+                alert('❌ Error reading QR code: ' + e.message + '\n\nThe QR code format may be invalid or corrupted.');
+            }
+        }
+
+        function updateDisplay() {
+            if (allResults.length === 0) {
+                document.getElementById('resultsTableContainer').innerHTML = '<div class="alert alert-warning">No results yet. Scan QR codes to add results.</div>';
+                document.getElementById('totalStudents').textContent = '0';
+                document.getElementById('averageScore').textContent = '0';
+                document.getElementById('highestScore').textContent = '0';
+                document.getElementById('lowestScore').textContent = '0';
+                return;
+            }
+
+            var scores = allResults.map(r => r.score);
+            var total = allResults.length;
+            var avg = Math.round(scores.reduce((a, b) => a + b, 0) / total);
+            var highest = Math.max.apply(null, scores);
+            var lowest = Math.min.apply(null, scores);
+
+            document.getElementById('totalStudents').textContent = total;
+            document.getElementById('averageScore').textContent = avg;
+            document.getElementById('highestScore').textContent = highest;
+            document.getElementById('lowestScore').textContent = lowest;
+
+            var classes = {};
+            allResults.forEach(r => classes[r.class] = true);
+            var classFilter = document.getElementById('classFilter');
+            var currentValue = classFilter.value;
+            classFilter.innerHTML = '<option value="">All Classes</option>';
+            Object.keys(classes).sort().forEach(c => {
+                var opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = c;
+                classFilter.appendChild(opt);
+            });
+            classFilter.value = currentValue;
+
+            filterResults();
+        }
+
+        function filterResults() {
+            var search = document.getElementById('searchInput').value.toLowerCase();
+            var classFilter = document.getElementById('classFilter').value;
+
+            var filtered = allResults.filter(function(r) {
+                var matchSearch = r.name.toLowerCase().includes(search) || r.nis.toLowerCase().includes(search);
+                var matchClass = !classFilter || r.class === classFilter;
+                return matchSearch && matchClass;
+            });
+
+            if (filtered.length === 0) {
+                document.getElementById('resultsTableContainer').innerHTML = '<div class="alert alert-warning">No results match your filter.</div>';
+                return;
+            }
+
+            filtered.sort((a, b) => b.score - a.score);
+
+            var html = '<div class="table-container"><table><thead><tr><th>#</th><th>Name</th><th>NIS</th><th>Class</th><th>Exam</th><th>Score</th><th>Correct</th><th>Total</th><th>Violations</th><th>Date</th></tr></thead><tbody>';
+
+            filtered.forEach(function(r, index) {
+                var scoreClass = 'score-poor';
+                if (r.score >= 85) scoreClass = 'score-excellent';
+                else if (r.score >= 70) scoreClass = 'score-good';
+                else if (r.score >= 60) scoreClass = 'score-average';
+
+                var dateStr;
+                try {
+                    var date = new Date(r.timestamp);
+                    if (isNaN(date.getTime())) {
+                        dateStr = r.timestamp;
+                    } else {
+                        dateStr = date.toLocaleDateString('id-ID') + ' ' + date.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+                    }
+                } catch (e) {
+                    dateStr = r.timestamp;
+                }
+
+                html += '<tr>';
+                html += '<td>' + (index + 1) + '</td>';
+                html += '<td>' + escapeHtml(r.name) + '</td>';
+                html += '<td>' + escapeHtml(r.nis) + '</td>';
+                html += '<td>' + escapeHtml(r.class) + '</td>';
+                html += '<td>' + escapeHtml(r.examTitle || 'N/A') + '</td>';
+                html += '<td class="' + scoreClass + '">' + r.score + '</td>';
+                html += '<td>' + r.correct + '</td>';
+                html += '<td>' + r.total + '</td>';
+                html += '<td>' + (r.violations || 0) + '</td>';
+                html += '<td style="font-size:0.85em">' + dateStr + '</td>';
+                html += '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+            document.getElementById('resultsTableContainer').innerHTML = html;
+        }
+
+        function exportToCSV() {
+            if (allResults.length === 0) {
+                alert('No results to export!');
+                return;
+            }
+
+            var csv = 'No,Name,NIS,Class,Exam,Score,Correct,Total,Violations,Date\n';
+            
+            var sorted = allResults.slice().sort((a, b) => b.score - a.score);
+            
+            sorted.forEach(function(r, index) {
+                var dateStr;
+                try {
+                    var date = new Date(r.timestamp);
+                    if (isNaN(date.getTime())) {
+                        dateStr = r.timestamp;
+                    } else {
+                        dateStr = date.toLocaleDateString('id-ID') + ' ' + date.toLocaleTimeString('id-ID');
+                    }
+                } catch (e) {
+                    dateStr = r.timestamp;
+                }
+                
+                csv += (index + 1) + ',';
+                csv += '"' + r.name + '",';
+                csv += r.nis + ',';
+                csv += '"' + r.class + '",';
+                csv += '"' + (r.examTitle || 'N/A') + '",';
+                csv += r.score + ',';
+                csv += r.correct + ',';
+                csv += r.total + ',';
+                csv += (r.violations || 0) + ',';
+                csv += '"' + dateStr + '"\n';
+            });
+
+            var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'Exam_Results_' + new Date().toISOString().slice(0, 10) + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert('✅ Results exported to CSV/Excel!');
+        }
+
+        function clearAllResults() {
+            if (confirm('Are you sure you want to delete ALL results? This cannot be undone!')) {
+                if (confirm('Really sure? All student data will be permanently deleted!')) {
+                    allResults = [];
+                    saveResults();
+                    updateDisplay();
+                    alert('All results cleared.');
+                }
+            }
+        }
+
+        function escapeHtml(text) {
+            var map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+    </script>
+</body>
+</html>
