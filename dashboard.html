@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam Results Dashboard - QR Scanner</title>
+    <title>Exam Results Dashboard - QR Scanner FIXED</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 10px; }
@@ -29,7 +29,6 @@
         .input-group label { display: block; margin-bottom: 8px; color: #555; font-weight: 600; }
         .input-group input, .input-group select { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em; }
         
-        /* Mobile-optimized table */
         .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 15px; border-radius: 8px; }
         table { width: 100%; border-collapse: collapse; background: white; min-width: 800px; }
         thead { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; position: sticky; top: 0; z-index: 10; }
@@ -52,7 +51,6 @@
         .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* Mobile-specific styles */
         @media (max-width: 768px) {
             body { padding: 5px; }
             .header h1 { font-size: 1.5em; }
@@ -74,7 +72,6 @@
             .qr-upload p { font-size: 0.9em; }
         }
 
-        /* Extra small mobile */
         @media (max-width: 480px) {
             .header h1 { font-size: 1.3em; }
             .stat-value { font-size: 1.5em; }
@@ -82,7 +79,6 @@
             table { min-width: 700px; }
         }
 
-        /* Landscape mobile */
         @media (max-width: 768px) and (orientation: landscape) {
             .stats-grid { grid-template-columns: repeat(4, 1fr); }
             #video { max-width: 400px; }
@@ -95,14 +91,18 @@
   <a href="teacher.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Teacher</a>
   <a href="dashboard.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Dashboard</a>
   <a href="journal.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Journal</a>  
-</nav>
+</nav>    
     <div class="container">
         <div class="header">
             <h1>📱 QR Code Scanner Dashboard</h1>
-            <p>Scan Student QR Codes & Monitor Results</p>
+            <p>Scan Student QR Codes & Monitor Results - FIXED v5.1</p>
         </div>
 
         <div class="main-content">
+            <div class="alert alert-success">
+                <strong>✅ UPDATED:</strong> Now supports the new QR code format from Exam v5.1! Works with both old (JSON) and new (pipe-delimited) formats.
+            </div>
+
             <div class="section">
                 <h2 class="section-title">📸 Scan QR Code</h2>
                 <div class="alert alert-info">
@@ -174,7 +174,7 @@
 
         <div class="footer">
             <p><strong>Created by Mr. Sugeng Mardiyanto | SMA Laboratorium UM</strong></p>
-            <p style="margin-top: 10px; opacity: 0.8;">QR Scanner Dashboard v3.1</p>
+            <p style="margin-top: 10px; opacity: 0.8;">QR Scanner Dashboard v5.1 FIXED - Compatible with New Format</p>
         </div>
     </div>
 
@@ -409,13 +409,44 @@
 
         function processQRData(data) {
             try {
-                var result = JSON.parse(data);
+                var result;
                 
+                // NEW FORMAT: EXAM|NIS|Name|Class|Score|Correct|Total|Violations|Timestamp|ExamTitle
+                if (data.startsWith('EXAM|')) {
+                    var parts = data.split('|');
+                    
+                    if (parts.length < 10) {
+                        alert('❌ Invalid QR code format! Not enough data fields.');
+                        return;
+                    }
+                    
+                    result = {
+                        nis: parts[1].trim(),
+                        name: parts[2].trim(),
+                        class: parts[3].trim(),
+                        score: parseInt(parts[4]),
+                        correct: parseInt(parts[5]),
+                        total: parseInt(parts[6]),
+                        violations: parseInt(parts[7]),
+                        timestamp: parts[8].trim(),
+                        examTitle: parts[9].trim()
+                    };
+                    
+                    console.log('✅ Parsed NEW format QR code:', result);
+                }
+                // OLD FORMAT: JSON
+                else {
+                    result = JSON.parse(data);
+                    console.log('✅ Parsed OLD format QR code (JSON):', result);
+                }
+                
+                // Validate required fields
                 if (!result.name || !result.nis || result.score === undefined) {
-                    alert('❌ Invalid QR code format!');
+                    alert('❌ Invalid QR code: Missing required fields (name, NIS, or score)!');
                     return;
                 }
 
+                // Set defaults for missing fields
                 result.class = result.class || 'Unknown';
                 result.correct = result.correct || 0;
                 result.total = result.total || 0;
@@ -423,7 +454,11 @@
                 result.timestamp = result.timestamp || new Date().toISOString();
                 result.examTitle = result.examTitle || 'Unknown Exam';
 
-                var existing = allResults.findIndex(function(r) { return r.nis === result.nis && r.examTitle === result.examTitle; });
+                // Check for duplicates
+                var existing = allResults.findIndex(function(r) { 
+                    return r.nis === result.nis && r.examTitle === result.examTitle; 
+                });
+                
                 if (existing !== -1) {
                     if (confirm('Result for ' + result.name + ' (NIS: ' + result.nis + ') already exists.\n\nReplace with new scan?')) {
                         allResults[existing] = result;
@@ -437,9 +472,15 @@
                 saveResults();
                 updateDisplay();
                 
-                alert('✅ QR Code Scanned Successfully!\n\nName: ' + result.name + '\nNIS: ' + result.nis + '\nScore: ' + result.score + '\nExam: ' + result.examTitle);
+                alert('✅ QR Code Scanned Successfully!\n\n' +
+                      'Name: ' + result.name + '\n' +
+                      'NIS: ' + result.nis + '\n' +
+                      'Class: ' + result.class + '\n' +
+                      'Score: ' + result.score + '\n' +
+                      'Exam: ' + result.examTitle);
             } catch (e) {
-                alert('❌ Error reading QR code: ' + e.message);
+                console.error('Error parsing QR code:', e);
+                alert('❌ Error reading QR code: ' + e.message + '\n\nThe QR code format may be invalid or corrupted.');
             }
         }
 
@@ -505,8 +546,17 @@
                 else if (r.score >= 70) scoreClass = 'score-good';
                 else if (r.score >= 60) scoreClass = 'score-average';
 
-                var date = new Date(r.timestamp);
-                var dateStr = date.toLocaleDateString('id-ID') + ' ' + date.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+                var dateStr;
+                try {
+                    var date = new Date(r.timestamp);
+                    if (isNaN(date.getTime())) {
+                        dateStr = r.timestamp;
+                    } else {
+                        dateStr = date.toLocaleDateString('id-ID') + ' ' + date.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+                    }
+                } catch (e) {
+                    dateStr = r.timestamp;
+                }
 
                 html += '<tr>';
                 html += '<td>' + (index + 1) + '</td>';
@@ -537,8 +587,17 @@
             var sorted = allResults.slice().sort((a, b) => b.score - a.score);
             
             sorted.forEach(function(r, index) {
-                var date = new Date(r.timestamp);
-                var dateStr = date.toLocaleDateString('id-ID') + ' ' + date.toLocaleTimeString('id-ID');
+                var dateStr;
+                try {
+                    var date = new Date(r.timestamp);
+                    if (isNaN(date.getTime())) {
+                        dateStr = r.timestamp;
+                    } else {
+                        dateStr = date.toLocaleDateString('id-ID') + ' ' + date.toLocaleTimeString('id-ID');
+                    }
+                } catch (e) {
+                    dateStr = r.timestamp;
+                }
                 
                 csv += (index + 1) + ',';
                 csv += '"' + r.name + '",';
