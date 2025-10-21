@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Exam Manager – Teacher Suite v5.1 FIXED</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; padding-top: 80px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.1em; opacity: 0.9; }
+        .main-content { padding: 30px; }
+        .section { margin-bottom: 30px; padding: 25px; background: #f8f9fa; border-radius: 12px; border-left: 4px solid #667eea; }
+        .section-title { font-size: 1.5em; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; color: #555; font-weight: 600; }
+        .input-group input[type="text"], .input-group input[type="number"], .input-group textarea { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em; transition: border-color 0.3s; }
+        .input-group input:focus, .input-group textarea:focus { outline: none; border-color: #667eea; }
+        .input-group textarea { min-height: 100px; resize: vertical; }
+        .options-container { display: grid; gap: 15px; }
+        .option-row { display: flex; align-items: center; gap: 10px; padding: 12px; background: white; border-radius: 8px; border: 2px solid #e0e0e0; }
+        .option-row input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+        .option-row input[type="text"] { flex: 1; padding: 10px; border: 1px solid #e0e0e0; border-radius: 6px; }
+        .option-label { font-weight: bold; color: #667eea; min-width: 30px; }
+        .image-preview { margin-top: 15px; max-width: 300px; border-radius: 8px; border: 2px solid #e0e0e0; }
+        .image-preview img { max-width: 100%; border-radius: 6px; }
+        .btn { padding: 12px 30px; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; margin: 5px; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        .btn-success { background: #28a745; color: white; }
+        .btn-success:hover { background: #218838; transform: translateY(-2px); }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; transform: translateY(-2px); }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-danger:hover { background: #c82333; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .btn-warning { background: #ffc107; color: #000; }
+        .btn-warning:hover { background: #e0a800; }
+        .question-item { background: white; padding: 20px; margin-bottom: 15px; border-radius: 8px; border-left: 4px solid #667eea; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .question-number { font-weight: bold; color: #667eea; font-size: 1.2em; }
+        .question-actions { display: flex; gap: 10px; }
+        .question-text { color: #333; margin-bottom: 10px; line-height: 1.6; }
+        .question-options { display: grid; gap: 8px; margin-top: 10px; }
+        .option-display { padding: 8px 12px; background: #f8f9fa; border-radius: 6px; display: flex; align-items: center; gap: 10px; }
+        .correct-answer { background: #d4edda; border-left: 3px solid #28a745; }
+        .footer { background: #2c3e50; color: white; text-align: center; padding: 20px; margin-top: 30px; }
+        .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .alert-info { background: #d1ecf1; color: #0c5460; border-left: 4px solid #17a2b8; }
+        .alert-success { background: #d4edda; color: #155724; border-left: 4px solid #28a745; }
+        .alert-warning { background: #fff3cd; color: #856404; border-left: 4px solid #ffc107; }
+        .exam-settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .upload-area { border: 3px dashed #667eea; border-radius: 12px; padding: 30px; text-align: center; background: white; transition: all 0.3s; margin-top: 20px; }
+        .upload-area:hover { background: #f8f9ff; border-color: #764ba2; }
+        .upload-area.dragover { background: #e8eaff; border-color: #764ba2; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e0e0e0; }
+        .tab { padding: 12px 24px; border: none; background: transparent; font-size: 1em; font-weight: 600; cursor: pointer; color: #666; border-bottom: 3px solid transparent; transition: all 0.3s; }
+        .tab.active { color: #667eea; border-bottom-color: #667eea; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .template-info { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .template-info table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .template-info th, .template-info td { padding: 10px; text-align: left; border: 1px solid #e0e0e0; }
+        .template-info th { background: #f8f9fa; font-weight: 600; }
+        nav { position: fixed; top: 0; left: 0; right: 0; padding: 15px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 1000; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        nav a { padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s; }
+        nav a:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .save-load-section { background: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745; margin-bottom: 20px; }
+        .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        @media (max-width: 768px) { 
+            body { padding-top: 140px; }
+            .header h1 { font-size: 1.8em; } 
+            .main-content { padding: 15px; } 
+            .exam-settings { grid-template-columns: 1fr; }
+            .tabs { flex-wrap: wrap; }
+            .tab { padding: 10px 16px; font-size: 0.9em; }
+            nav { padding: 10px; }
+            nav a { font-size: 0.85em; padding: 8px 16px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">🏠 Home</a>
+        <a href="teacher.html">👨‍🏫 Teacher</a>
+        <a href="dashboard.html">📊 Dashboard</a>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>📝 Smart Exam Manager</h1>
+            <p>Teacher Suite v5.1 FIXED - Submit Button & QR Code Issues Resolved!</p>
+        </div>
+
+        <div class="main-content">
+            <div class="alert alert-success">
+                <strong>✅ FIXED in v5.1:</strong> Submit button now works on all Android versions! QR Code scanning improved with smaller data format and manual backup option!
+            </div>
+
+            <!-- Save/Load Section -->
+            <div class="save-load-section">
+                <h3 style="color: #28a745; margin-bottom: 15px;">💾 Save & Load Your Work</h3>
+                <p style="margin-bottom: 15px; color: #555;">Save your exam questions to continue later or share with colleagues!</p>
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="saveToFile()">💾 Save Questions to File</button>
+                    <button class="btn btn-primary" onclick="document.getElementById('loadFile').click()">📂 Load Questions from File</button>
+                    <input type="file" id="loadFile" accept=".json" style="display:none;" onchange="loadFromFile(event)">
+                    <button class="btn btn-warning" onclick="clearAllQuestions()">🗑️ Clear All Questions</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">⚙️ Exam Settings</h2>
+                <div class="exam-settings">
+                    <div class="input-group">
+                        <label for="examTitle">📝 Exam Title</label>
+                        <input type="text" id="examTitle" placeholder="e.g., Physics Mid-Term Exam">
+                    </div>
+                    <div class="input-group">
+                        <label for="examDuration">⏱️ Duration (minutes)</label>
+                        <input type="number" id="examDuration" placeholder="e.g., 90" min="1" value="90">
+                    </div>
+                    <div class="input-group">
+                        <label for="examClass">🎓 Class/Grade</label>
+                        <input type="text" id="examClass" placeholder="e.g., XI IPA 1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">📤 Add Questions</h2>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('bulk')">📊 Bulk Upload (CSV)</button>
+                    <button class="tab" onclick="switchTab('manual')">✏️ Manual Entry</button>
+                </div>
+
+                <!-- Bulk Upload Tab -->
+                <div id="bulkTab" class="tab-content active">
+                    <div class="alert alert-info">
+                        <strong>📋 How to use Bulk Upload:</strong><br>
+                        1️⃣ Download the CSV template below<br>
+                        2️⃣ Fill in your questions using Excel or Google Sheets<br>
+                        3️⃣ (Optional) Upload images if your questions need them<br>
+                        4️⃣ Upload your CSV file<br>
+                        5️⃣ Preview and confirm import
+                    </div>
+
+                    <button class="btn btn-info" onclick="downloadTemplate()">📥 Download CSV Template</button>
+
+                    <div style="margin-top: 20px; background: white; padding: 20px; border-radius: 8px; border: 2px solid #17a2b8;">
+                        <h3 style="color: #17a2b8; margin-bottom: 15px;">📸 Upload Question Images (Optional)</h3>
+                        <p style="color: #666; margin-bottom: 10px; font-size: 0.9em;">
+                            If your questions have images, upload them here first, then reference the filename in your CSV.
+                        </p>
+                        <input type="file" id="imageFiles" accept="image/*" multiple style="margin-bottom: 10px; width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                        <button class="btn btn-success" onclick="processImages()" style="width: 100%;">📤 Upload Images</button>
+                        <div id="uploadedImages" style="margin-top: 15px; display: none;"></div>
+                    </div>
+
+                    <div class="template-info">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">📋 Template Format Guide:</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Column</th>
+                                    <th>Description</th>
+                                    <th>Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Question</strong></td>
+                                    <td>The question text</td>
+                                    <td>What is the capital of Indonesia?</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Option_A</strong></td>
+                                    <td>First answer option</td>
+                                    <td>Jakarta</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Option_B</strong></td>
+                                    <td>Second answer option</td>
+                                    <td>Bandung</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Option_C</strong></td>
+                                    <td>Third answer option</td>
+                                    <td>Surabaya</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Option_D</strong></td>
+                                    <td>Fourth answer option</td>
+                                    <td>Yogyakarta</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Option_E</strong></td>
+                                    <td>Fifth answer option</td>
+                                    <td>Malang</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Correct_Answers</strong></td>
+                                    <td>Correct option(s), comma-separated</td>
+                                    <td>A (or A,B for multiple)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Image_Filename</strong></td>
+                                    <td>Image filename (optional)</td>
+                                    <td>question1.jpg or leave empty</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="upload-area" id="uploadArea">
+                        <p style="font-size: 3em; margin-bottom: 10px;">📄</p>
+                        <h3 style="color: #667eea; margin-bottom: 10px;">Upload CSV File</h3>
+                        <p style="color: #666; margin-bottom: 15px;">Drag and drop your CSV file here or click the button below</p>
+                        <input type="file" id="csvFile" accept=".csv" style="display:none;" onchange="handleCSVUpload(event)">
+                        <button class="btn btn-primary" onclick="document.getElementById('csvFile').click()">📁 Choose CSV File</button>
+                    </div>
+
+                    <div id="previewSection" style="display:none; margin-top: 20px;">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">👀 Preview Imported Questions:</h3>
+                        <div id="previewContent"></div>
+                        <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn btn-success" onclick="confirmImport()">✅ Import All Questions</button>
+                            <button class="btn btn-danger" onclick="cancelImport()">❌ Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manual Entry Tab -->
+                <div id="manualTab" class="tab-content">
+                    <div class="input-group">
+                        <label for="questionText">Question Text</label>
+                        <textarea id="questionText" placeholder="Enter your question here..."></textarea>
+                    </div>
+                    <div class="input-group">
+                        <label for="questionImage">Question Image (Optional)</label>
+                        <input type="file" id="questionImage" accept="image/*">
+                        <div id="imagePreview" class="image-preview" style="display:none;">
+                            <img id="previewImg" src="" alt="Preview">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Answer Options (Check the correct answer(s))</label>
+                        <div class="options-container">
+                            <div class="option-row">
+                                <input type="checkbox" id="correctA">
+                                <span class="option-label">A.</span>
+                                <input type="text" id="optionA" placeholder="Option A">
+                            </div>
+                            <div class="option-row">
+                                <input type="checkbox" id="correctB">
+                                <span class="option-label">B.</span>
+                                <input type="text" id="optionB" placeholder="Option B">
+                            </div>
+                            <div class="option-row">
+                                <input type="checkbox" id="correctC">
+                                <span class="option-label">C.</span>
+                                <input type="text" id="optionC" placeholder="Option C">
+                            </div>
+                            <div class="option-row">
+                                <input type="checkbox" id="correctD">
+                                <span class="option-label">D.</span>
+                                <input type="text" id="optionD" placeholder="Option D">
+                            </div>
+                            <div class="option-row">
+                                <input type="checkbox" id="correctE">
+                                <span class="option-label">E.</span>
+                                <input type="text" id="optionE" placeholder="Option E">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" id="addQuestionBtn">➕ Add Question</button>
+                        <button class="btn btn-secondary" id="clearBtn" style="display:none;">🔄 Clear Form</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">📋 Questions List (<span id="questionCount">0</span>)</h2>
+                <div id="questionsList">
+                    <div class="alert alert-info">No questions added yet. Add questions using bulk upload or manual entry above.</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">⬇️ Download Exam</h2>
+                <p style="margin-bottom: 20px; color: #666;">Generate a secure exam file with improved QR Code system. Fixed for all Android versions!</p>
+                <button class="btn btn-success" id="downloadBtn" style="font-size: 1.1em;">💾 Download Exam File</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Created by Mr. Sugeng Mardiyanto | SMA Laboratorium UM</strong></p>
+            <p style="margin-top: 10px; opacity: 0.8;">Smart Exam Manager v5.1 FIXED - Submit & QR Issues Resolved!</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script>
+        var questions = [];
+        var editingIndex = -1;
+        var currentImageData = null;
+        var pendingImport = [];
+        var uploadedImagesMap = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var imgInput = document.getElementById('questionImage');
+            if (imgInput) imgInput.addEventListener('change', handleImageUpload);
+            
+            var addBtn = document.getElementById('addQuestionBtn');
+            if (addBtn) addBtn.addEventListener('click', addQuestion);
+            
+            var clearBtn = document.getElementById('clearBtn');
+            if (clearBtn) clearBtn.addEventListener('click', clearForm);
+            
+            var downloadBtn = document.getElementById('downloadBtn');
+            if (downloadBtn) downloadBtn.addEventListener('click', downloadExam);
+
+            var uploadArea = document.getElementById('uploadArea');
+            if (uploadArea) {
+                uploadArea.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    uploadArea.classList.add('dragover');
+                });
+                uploadArea.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    uploadArea.classList.remove('dragover');
+                });
+                uploadArea.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    uploadArea.classList.remove('dragover');
+                    var file = e.dataTransfer.files[0];
+                    if (file && file.name.endsWith('.csv')) {
+                        handleCSVFile(file);
+                    } else {
+                        alert('⚠️ Please upload a CSV file!');
+                    }
+                });
+            }
+        });
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'bulk') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('bulkTab').classList.add('active');
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('manualTab').classList.add('active');
+            }
+        }
+
+        function downloadTemplate() {
+            var csv = 'Question,Option_A,Option_B,Option_C,Option_D,Option_E,Correct_Answers,Image_Filename\n';
+            csv += '"What is 2+2?","3","4","5","6","7","B",""\n';
+            csv += '"What is the capital of Indonesia?","Bandung","Jakarta","Surabaya","Malang","Yogyakarta","B",""\n';
+            csv += '"Which are primary colors? (Multiple answers)","Red","Green","Blue","Yellow","Purple","A,C,D",""\n';
+            csv += '"Look at the diagram. What is X?","5","10","15","20","25","B","diagram1.jpg"\n';
+            
+            var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'Exam_Questions_Template.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function processImages() {
+            var fileInput = document.getElementById('imageFiles');
+            var files = fileInput.files;
+            
+            if (files.length === 0) {
+                alert('⚠️ Please select at least one image file!');
+                return;
+            }
+            
+            var uploadedDiv = document.getElementById('uploadedImages');
+            uploadedDiv.innerHTML = '<h4 style="color: #28a745; margin-bottom: 10px;">✅ Uploaded Images:</h4>';
+            uploadedDiv.style.display = 'block';
+            
+            var processed = 0;
+            
+            for (var i = 0; i < files.length; i++) {
+                (function(file) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        uploadedImagesMap[file.name] = e.target.result;
+                        
+                        var imgDiv = document.createElement('div');
+                        imgDiv.style.cssText = 'display: flex; align-items: center; gap: 10px; padding: 8px; background: #f8f9fa; border-radius: 6px; margin-bottom: 8px;';
+                        imgDiv.innerHTML = '<img src="' + e.target.result + '" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;"><span style="font-weight: 600;">' + escapeHtml(file.name) + '</span><span style="color: #28a745; margin-left: auto;">✓</span>';
+                        uploadedDiv.appendChild(imgDiv);
+                        
+                        processed++;
+                        if (processed === files.length) {
+                            alert('✅ Successfully uploaded ' + files.length + ' image(s)!\n\nYou can now reference these images in your CSV using the exact filenames.');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                })(files[i]);
+            }
+        }
+
+        function handleCSVUpload(event) {
+            var file = event.target.files[0];
+            if (file) {
+                handleCSVFile(file);
+            }
+        }
+
+        function handleCSVFile(file) {
+            Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    if (results.errors.length > 0) {
+                        alert('❌ Error parsing CSV: ' + results.errors[0].message);
+                        return;
+                    }
+                    
+                    processCSVData(results.data);
+                },
+                error: function(error) {
+                    alert('❌ Error reading CSV file: ' + error.message);
+                }
+            });
+        }
+
+        function processCSVData(data) {
+            pendingImport = [];
+            var errors = [];
+
+            data.forEach(function(row, index) {
+                var lineNum = index + 2;
+                
+                if (!row.Question || !row.Question.trim()) {
+                    errors.push('Line ' + lineNum + ': Missing question text');
+                    return;
+                }
+
+                if (!row.Option_A || !row.Option_B || !row.Option_C || !row.Option_D || !row.Option_E) {
+                    errors.push('Line ' + lineNum + ': Missing one or more options');
+                    return;
+                }
+
+                if (!row.Correct_Answers || !row.Correct_Answers.trim()) {
+                    errors.push('Line ' + lineNum + ': Missing correct answers');
+                    return;
+                }
+
+                var correctAnswers = row.Correct_Answers.toUpperCase().split(',').map(function(a) { 
+                    return a.trim(); 
+                });
+
+                var validOptions = ['A', 'B', 'C', 'D', 'E'];
+                var invalidAnswers = correctAnswers.filter(function(a) { 
+                    return validOptions.indexOf(a) === -1; 
+                });
+
+                if (invalidAnswers.length > 0) {
+                    errors.push('Line ' + lineNum + ': Invalid correct answer(s): ' + invalidAnswers.join(', '));
+                    return;
+                }
+
+                var imageData = null;
+                var imageFilename = row.Image_Filename ? row.Image_Filename.trim() : '';
+                
+                if (imageFilename) {
+                    if (uploadedImagesMap[imageFilename]) {
+                        imageData = uploadedImagesMap[imageFilename];
+                    } else {
+                        errors.push('Line ' + lineNum + ': Image "' + imageFilename + '" not found. Please upload it first.');
+                        return;
+                    }
+                }
+
+                var question = {
+                    text: row.Question.trim(),
+                    image: imageData,
+                    options: {
+                        A: row.Option_A.trim(),
+                        B: row.Option_B.trim(),
+                        C: row.Option_C.trim(),
+                        D: row.Option_D.trim(),
+                        E: row.Option_E.trim()
+                    },
+                    correctAnswers: correctAnswers
+                };
+
+                pendingImport.push(question);
+            });
+
+            if (errors.length > 0) {
+                alert('❌ Errors found in CSV:\n\n' + errors.join('\n') + '\n\nPlease fix these errors and try again.');
+                return;
+            }
+
+            if (pendingImport.length === 0) {
+                alert('⚠️ No valid questions found in CSV file!');
+                return;
+            }
+
+            showPreview();
+        }
+
+        function showPreview() {
+            var preview = document.getElementById('previewContent');
+            preview.innerHTML = '';
+
+            pendingImport.forEach(function(q, index) {
+                var div = document.createElement('div');
+                div.className = 'question-item';
+                
+                var optionsHtml = '';
+                ['A', 'B', 'C', 'D', 'E'].forEach(function(opt) {
+                    var isCorrect = q.correctAnswers.indexOf(opt) !== -1;
+                    optionsHtml += '<div class="option-display ' + (isCorrect ? 'correct-answer' : '') + '"><strong>' + opt + '.</strong> ' + escapeHtml(q.options[opt]) + (isCorrect ? ' ✓' : '') + '</div>';
+                });
+
+                var imgHtml = '';
+                if (q.image) {
+                    imgHtml = '<img src="' + q.image + '" style="max-width: 300px; margin: 10px 0; border-radius: 8px;">';
+                }
+
+                div.innerHTML = '<div class="question-header"><span class="question-number">Question ' + (index + 1) + '</span></div><div class="question-text">' + escapeHtml(q.text) + '</div>' + imgHtml + '<div class="question-options">' + optionsHtml + '</div>';
+                
+                preview.appendChild(div);
+            });
+
+            document.getElementById('previewSection').style.display = 'block';
+            document.getElementById('previewSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function confirmImport() {
+            pendingImport.forEach(function(q) {
+                questions.push(q);
+            });
+
+            updateQuestionsList();
+            cancelImport();
+
+            alert('✅ Successfully imported ' + pendingImport.length + ' questions!');
+        }
+
+        function cancelImport() {
+            pendingImport = [];
+            document.getElementById('previewSection').style.display = 'none';
+            document.getElementById('csvFile').value = '';
+        }
+
+        function handleImageUpload(e) {
+            var file = e.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    currentImageData = event.target.result;
+                    document.getElementById('previewImg').src = currentImageData;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addQuestion() {
+            var questionText = document.getElementById('questionText').value.trim();
+            var optionA = document.getElementById('optionA').value.trim();
+            var optionB = document.getElementById('optionB').value.trim();
+            var optionC = document.getElementById('optionC').value.trim();
+            var optionD = document.getElementById('optionD').value.trim();
+            var optionE = document.getElementById('optionE').value.trim();
+
+            if (!questionText) {
+                alert('⚠️ Please enter a question text!');
+                return;
+            }
+
+            if (!optionA || !optionB || !optionC || !optionD || !optionE) {
+                alert('⚠️ Please fill in all answer options!');
+                return;
+            }
+
+            var correctAnswers = [];
+            if (document.getElementById('correctA').checked) correctAnswers.push('A');
+            if (document.getElementById('correctB').checked) correctAnswers.push('B');
+            if (document.getElementById('correctC').checked) correctAnswers.push('C');
+            if (document.getElementById('correctD').checked) correctAnswers.push('D');
+            if (document.getElementById('correctE').checked) correctAnswers.push('E');
+
+            if (correctAnswers.length === 0) {
+                alert('⚠️ Please select at least one correct answer!');
+                return;
+            }
+
+            var question = {
+                text: questionText,
+                image: currentImageData,
+                options: { A: optionA, B: optionB, C: optionC, D: optionD, E: optionE },
+                correctAnswers: correctAnswers
+            };
+
+            if (editingIndex >= 0) {
+                questions[editingIndex] = question;
+                editingIndex = -1;
+                alert('✅ Question updated successfully!');
+            } else {
+                questions.push(question);
+                alert('✅ Question added successfully!');
+            }
+
+            updateQuestionsList();
+            clearForm();
+        }
+
+        function clearForm() {
+            document.getElementById('questionText').value = '';
+            document.getElementById('optionA').value = '';
+            document.getElementById('optionB').value = '';
+            document.getElementById('optionC').value = '';
+            document.getElementById('optionD').value = '';
+            document.getElementById('optionE').value = '';
+            document.getElementById('correctA').checked = false;
+            document.getElementById('correctB').checked = false;
+            document.getElementById('correctC').checked = false;
+            document.getElementById('correctD').checked = false;
+            document.getElementById('correctE').checked = false;
+            document.getElementById('questionImage').value = '';
+            document.getElementById('imagePreview').style.display = 'none';
+            currentImageData = null;
+            editingIndex = -1;
+            document.getElementById('clearBtn').style.display = 'none';
+        }
+
+        function updateQuestionsList() {
+            var container = document.getElementById('questionsList');
+            document.getElementById('questionCount').textContent = questions.length;
+
+            if (questions.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">No questions added yet.</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            for (var i = 0; i < questions.length; i++) {
+                var q = questions[i];
+                var div = document.createElement('div');
+                div.className = 'question-item';
+                
+                var optionsHtml = '';
+                var opts = ['A', 'B', 'C', 'D', 'E'];
+                for (var j = 0; j < opts.length; j++) {
+                    var opt = opts[j];
+                    var isCorrect = q.correctAnswers.indexOf(opt) !== -1;
+                    optionsHtml += '<div class="option-display ' + (isCorrect ? 'correct-answer' : '') + '"><strong>' + opt + '.</strong> ' + escapeHtml(q.options[opt]) + (isCorrect ? ' ✓' : '') + '</div>';
+                }
+
+                var imgHtml = '';
+                if (q.image) {
+                    imgHtml = '<img src="' + q.image + '" style="max-width: 300px; margin: 10px 0; border-radius: 8px;">';
+                }
+
+                div.innerHTML = '<div class="question-header"><span class="question-number">Question ' + (i + 1) + '</span><div class="question-actions"><button class="btn btn-secondary" style="padding: 8px 16px;" onclick="editQuestion(' + i + ')">✏️ Edit</button><button class="btn btn-danger" style="padding: 8px 16px;" onclick="deleteQuestion(' + i + ')">🗑️ Delete</button></div></div><div class="question-text">' + escapeHtml(q.text) + '</div>' + imgHtml + '<div class="question-options">' + optionsHtml + '</div>';
+                
+                container.appendChild(div);
+            }
+        }
+
+        function editQuestion(index) {
+            switchTab('manual');
+            
+            var q = questions[index];
+            document.getElementById('questionText').value = q.text;
+            document.getElementById('optionA').value = q.options.A;
+            document.getElementById('optionB').value = q.options.B;
+            document.getElementById('optionC').value = q.options.C;
+            document.getElementById('optionD').value = q.options.D;
+            document.getElementById('optionE').value = q.options.E;
+            
+            document.getElementById('correctA').checked = q.correctAnswers.indexOf('A') !== -1;
+            document.getElementById('correctB').checked = q.correctAnswers.indexOf('B') !== -1;
+            document.getElementById('correctC').checked = q.correctAnswers.indexOf('C') !== -1;
+            document.getElementById('correctD').checked = q.correctAnswers.indexOf('D') !== -1;
+            document.getElementById('correctE').checked = q.correctAnswers.indexOf('E') !== -1;
+
+            if (q.image) {
+                currentImageData = q.image;
+                document.getElementById('previewImg').src = q.image;
+                document.getElementById('imagePreview').style.display = 'block';
+            }
+
+            editingIndex = index;
+            document.getElementById('clearBtn').style.display = 'inline-flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteQuestion(index) {
+            if (confirm('⚠️ Are you sure you want to delete this question?')) {
+                questions.splice(index, 1);
+                updateQuestionsList();
+                alert('✅ Question deleted successfully!');
+            }
+        }
+
+        function saveToFile() {
+            if (questions.length === 0) {
+                alert('⚠️ No questions to save! Add some questions first.');
+                return;
+            }
+
+            var title = document.getElementById('examTitle').value.trim() || 'Untitled_Exam';
+            var duration = document.getElementById('examDuration').value;
+            var examClass = document.getElementById('examClass').value.trim();
+
+            var saveData = {
+                version: '5.1',
+                timestamp: new Date().toISOString(),
+                examInfo: {
+                    title: title,
+                    duration: duration,
+                    class: examClass
+                },
+                questions: questions
+            };
+
+            var json = JSON.stringify(saveData, null, 2);
+            var blob = new Blob([json], { type: 'application/json' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = title.replace(/[^a-z0-9]/gi, '_') + '_Questions.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert('✅ Questions saved successfully!\n\nFile: ' + a.download);
+        }
+
+        function loadFromFile(event) {
+            var file = event.target.files[0];
+            if (!file) return;
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    var data = JSON.parse(e.target.result);
+                    
+                    if (!data.questions || !Array.isArray(data.questions)) {
+                        alert('❌ Invalid file format!');
+                        return;
+                    }
+
+                    if (questions.length > 0) {
+                        if (!confirm('⚠️ You have ' + questions.length + ' question(s) already.\n\nDo you want to REPLACE them with the loaded questions?')) {
+                            return;
+                        }
+                    }
+
+                    questions = data.questions;
+                    
+                    if (data.examInfo) {
+                        if (data.examInfo.title) document.getElementById('examTitle').value = data.examInfo.title;
+                        if (data.examInfo.duration) document.getElementById('examDuration').value = data.examInfo.duration;
+                        if (data.examInfo.class) document.getElementById('examClass').value = data.examInfo.class;
+                    }
+
+                    updateQuestionsList();
+                    alert('✅ Successfully loaded ' + questions.length + ' question(s)!');
+                    
+                } catch (err) {
+                    alert('❌ Error loading file: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function clearAllQuestions() {
+            if (questions.length === 0) {
+                alert('ℹ️ No questions to clear!');
+                return;
+            }
+
+            if (confirm('⚠️ Are you sure you want to delete ALL ' + questions.length + ' question(s)?\n\nThis cannot be undone!')) {
+                questions = [];
+                updateQuestionsList();
+                alert('✅ All questions cleared!');
+            }
+        }
+
+        function downloadExam() {
+            var title = document.getElementById('examTitle').value.trim();
+            var duration = document.getElementById('examDuration').value;
+            var examClass = document.getElementById('examClass').value.trim();
+
+            if (!title) {
+                alert('⚠️ Please enter an exam title!');
+                return;
+            }
+
+            if (questions.length === 0) {
+                alert('⚠️ Please add at least one question!');
+                return;
+            }
+
+            var examHTML = generateStudentExam(title, duration, examClass, questions);
+            
+            var blob = new Blob([examHTML], { type: 'text/html; charset=utf-8' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = title.replace(/[^a-z0-9]/gi, '_') + '_Exam.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert('✅ Exam file downloaded successfully!\n\n📝 File: ' + a.download + '\n🎯 Questions: ' + questions.length + '\n⏱️ Duration: ' + duration + ' minutes\n\n✨ FIXED: Submit button & QR Code now work on all Android versions!');
+        }
+
+        function generateStudentExam(title, duration, examClass, questionsData) {
+            var examKey = title.replace(/[^a-z0-9]/gi, '_');
+            var qJson = JSON.stringify(questionsData);
+            
+            var html = '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + escapeHtml(title) + '</title>';
+            
+            html += '<style>*{margin:0;padding:0;box-sizing:border-box;user-select:none}body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh}.container{max-width:1400px;margin:0 auto;display:flex;gap:20px;padding:20px}.sidebar{width:280px;background:#fff;border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.2);position:sticky;top:20px;height:fit-content;max-height:calc(100vh - 40px);overflow-y:auto}.main{flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,.2)}.hdr{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:25px;border-radius:12px 12px 0 0;margin:-30px -30px 30px}.timer{font-size:2em;font-weight:700;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px}.timer.safe{background:#d4edda;color:#155724}.timer.warning{background:#fff3cd;color:#856404}.timer.danger{background:#f8d7da;color:#721c24}.info{background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:15px;font-size:0.9em}.info div{margin-bottom:5px}.violation{background:#f8d7da;color:#721c24;padding:10px;border-radius:6px;text-align:center;margin-bottom:15px;font-weight:700;display:none;font-size:0.9em}.status-summary{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);padding:15px;border-radius:8px;margin-bottom:15px;border-left:4px solid #28a745}.status-title{font-weight:700;color:#1b5e20;margin-bottom:12px;font-size:1em;display:flex;align-items:center;gap:5px}.status-item{font-size:0.95em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}.status-label{display:flex;align-items:center;gap:8px;font-weight:600}.status-indicator{width:14px;height:14px;border-radius:3px;display:inline-block}.status-answered{background:#28a745}.status-doubt{background:#ffc107}.status-unanswered{background:#9e9e9e}.status-count{font-weight:700;font-size:1.1em;color:#667eea;background:#f0f0f0;padding:2px 10px;border-radius:12px}.nav-title{font-size:1em;font-weight:700;color:#667eea;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e0e0e0}.nav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}.nav-btn{padding:12px 8px;border:none;border-radius:6px;font-weight:700;cursor:pointer;background:#e0e0e0;color:#333;transition:all 0.3s;font-size:0.95em;-webkit-tap-highlight-color:transparent;touch-action:manipulation}.nav-btn:hover{transform:scale(1.05)}.nav-btn.answered{background:#28a745;color:#fff}.nav-btn.doubt{background:#ffc107;color:#000;font-weight:800}.nav-btn.active{background:#667eea;color:#fff;border:3px solid #4a5cd1;transform:scale(1.1)}.question{display:none}.question.active{display:block}.q-hdr{font-size:1.3em;color:#667eea;margin-bottom:15px;font-weight:700}.q-txt{font-size:1.1em;line-height:1.6;margin-bottom:20px;color:#333}.q-img{max-width:100%;border-radius:8px;margin:20px 0;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.1)}.opts{display:grid;gap:12px}.opt{display:flex;align-items:center;padding:15px;border:2px solid #e0e0e0;border-radius:8px;cursor:pointer;transition:all 0.3s;background:#fff}.opt:hover{border-color:#667eea;background:#f8f9ff;transform:translateX(5px)}.opt input{width:20px;height:20px;margin-right:15px;cursor:pointer;accent-color:#667eea}.opt-lbl{font-weight:700;color:#667eea;margin-right:10px;font-size:1.1em}.nav-btns{display:flex;justify-content:space-between;gap:10px;margin-top:30px;padding-top:20px;border-top:2px solid #e0e0e0;flex-wrap:wrap}.btn{padding:14px 28px;border:none;border-radius:8px;font-size:1em;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;transition:all 0.3s;box-shadow:0 4px 8px rgba(0,0,0,0.2);-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}.btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3)}.btn:active{transform:translateY(0);background:linear-gradient(135deg,#5568d3,#6a3f8f)}.btn-success{background:#28a745}.btn-success:hover{background:#218838}.btn-success:active{background:#1e7e34}.btn-doubt{background:#ffc107;color:#000;font-weight:700}.btn-doubt:hover{background:#e0a800}.btn-doubt:active{background:#d39e00}.btn-doubt.confirmed{background:#28a745;color:#fff}.btn-doubt.confirmed:hover{background:#1e7e34}.btn-doubt.confirmed:active{background:#1c7430}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:#fff;padding:40px;border-radius:16px;max-width:600px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);max-height:90vh;overflow-y:auto}.modal-content h2{color:#667eea;margin-bottom:20px;font-size:2em}.modal-content input{width:100%;padding:14px;margin:10px 0;border:2px solid #e0e0e0;border-radius:8px;font-size:1em}.start{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.warn{background:#fff3cd;border:2px solid #ffc107;color:#856404;padding:15px;border-radius:8px;margin-bottom:20px;text-align:center;font-weight:700}#qrcode{margin:20px auto;padding:20px;background:white;border-radius:12px;display:inline-block}@media(max-width:1024px){.container{flex-direction:column}.sidebar{width:100%;position:relative;top:0;max-height:none}.nav-btns{justify-content:center}.nav-grid{grid-template-columns:repeat(5,1fr)}}</style>';
+            
+            html += '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>';
+            
+            html += '</head><body><div id="start" class="start"><div class="modal-content"><h2>🎓 ' + escapeHtml(title) + '</h2><p style="color:#666;margin-bottom:20px;font-size:1.1em">Kelas: ' + escapeHtml(examClass) + '</p><p style="color:#666;margin-bottom:20px;font-size:1.1em">Durasi: ' + duration + ' menit</p><div class="warn">⚠️ PERHATIAN: Ujian akan fullscreen. Jangan keluar atau berganti tab!</div><input type="text" id="name" placeholder="Nama Lengkap" required autocomplete="off"><input type="text" id="nis" placeholder="NIS" required autocomplete="off"><input type="text" id="class" placeholder="Kelas" value="' + escapeHtml(examClass) + '" autocomplete="off"><button class="btn btn-success" onclick="start()" style="margin-top:20px;width:100%;font-size:1.1em">🚀 Mulai Ujian</button></div></div>';
+            
+            html += '<div id="exam" style="display:none"><div class="container"><div class="sidebar"><div class="timer safe" id="timer">90:00</div><div class="info"><div style="margin-bottom:8px"><strong>📝 Nama:</strong> <span id="dName"></span></div><div style="margin-bottom:8px"><strong>🆔 NIS:</strong> <span id="dNis"></span></div><div><strong>🎓 Kelas:</strong> <span id="dClass"></span></div></div><div class="violation" id="viol">⚠️ Pelanggaran: <span id="vCount">0</span></div><div class="status-summary"><div class="status-title">📊 Status Pengerjaan</div><div class="status-item"><div class="status-label"><span class="status-indicator status-answered"></span>Sudah Terjawab</div><span class="status-count" id="statAnswered">0</span></div><div class="status-item"><div class="status-label"><span class="status-indicator status-doubt"></span>Ragu-ragu</div><span class="status-count" id="statDoubt">0</span></div><div class="status-item"><div class="status-label"><span class="status-indicator status-unanswered"></span>Belum Terjawab</div><span class="status-count" id="statUnanswered">' + questionsData.length + '</span></div></div><div class="nav-title">🧭 Navigasi Soal</div><div class="nav-grid" id="nav"></div><button class="btn btn-success" onclick="submitExam()" style="width:100%;margin-top:20px;font-size:1em">✅ Submit Ujian</button></div><div class="main"><div class="hdr"><h1>📝 ' + escapeHtml(title) + '</h1><p style="font-size:1.1em;margin-top:10px">🎓 Kelas: ' + escapeHtml(examClass) + ' | 📋 Total: ' + questionsData.length + ' soal</p></div><div id="qCont"></div><div class="nav-btns"><button class="btn" onclick="prevQuestion()" style="flex:1">⬅️ Sebelumnya</button><button class="btn btn-doubt" onclick="toggleDoubtStatus()" id="doubtBtn" style="flex:1.2">❓ Ragu-ragu</button><button class="btn" onclick="nextQuestion()" style="flex:1">Selanjutnya ➡️</button></div></div></div></div>';
+            
+            html += '<div id="result" class="modal"><div class="modal-content"><h2>🎉 Ujian Selesai!</h2><p style="font-size:1.2em;margin:20px 0"><strong>Nama:</strong> <span id="rName"></span><br><strong>NIS:</strong> <span id="rNis"></span><br><strong>Nilai:</strong> <span id="rScore" style="font-size:2em;color:#667eea;font-weight:bold"></span></p><div style="margin-top:30px;padding:20px;background:#f8f9fa;border-radius:8px;border:2px solid #667eea"><p style="margin-bottom:15px;font-weight:bold;color:#667eea;font-size:1.2em">📱 Scan QR Code ini untuk mengirim hasil ke guru:</p><div id="qrcode"></div><p style="margin-top:15px;font-size:0.9em;color:#666">Format: NIS | Nama | Kelas | Nilai | Waktu</p><p style="margin-top:10px;font-size:0.85em;color:#dc3545;font-weight:600">🔒 QR Code ini tidak bisa diedit atau diubah</p><div style="margin-top:15px;padding:10px;background:#fff;border-radius:6px;border:1px solid #ddd"><p style="font-size:0.85em;color:#666;margin-bottom:5px"><strong>Data Manual (jika QR gagal):</strong></p><p style="font-size:0.8em;font-family:monospace;word-break:break-all" id="manualData"></p></div></div></div></div>';
+            
+            html += '<script>';
+            html += 'var qs=' + qJson + ';';
+            html += 'var dur=' + duration + ';var cur=0;var ans={};var doubt={};var time=dur*60;var timer=null;var viols=0;var std={};var started=false;var submitInProgress=false;';
+            html += 'document.addEventListener("contextmenu",function(e){e.preventDefault()});';
+            html += 'document.addEventListener("selectstart",function(e){e.preventDefault()});';
+            html += 'document.addEventListener("copy",function(e){e.preventDefault()});';
+            html += 'document.addEventListener("cut",function(e){e.preventDefault()});';
+            html += 'document.addEventListener("keydown",function(e){if(started&&(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&(e.key==="I"||e.key==="J"||e.key==="C"))||e.ctrlKey&&(e.key==="u"||e.key==="s"||e.key==="U"||e.key==="S"))){e.preventDefault();viols++;upViol()}});';
+            html += 'window.addEventListener("blur",function(){if(started){viols++;upViol()}});';
+            html += 'document.addEventListener("visibilitychange",function(){if(document.hidden&&started){viols++;upViol()}});';
+            html += 'function upViol(){document.getElementById("vCount").textContent=viols;document.getElementById("viol").style.display="block"}';
+            html += 'function updateStatusStats(){var answered=0;var doubtful=0;for(var i=0;i<qs.length;i++){if(doubt[i]){doubtful++}else if(ans[i]&&ans[i].length>0){answered++}}var unanswered=qs.length-answered-doubtful;document.getElementById("statAnswered").textContent=answered;document.getElementById("statDoubt").textContent=doubtful;document.getElementById("statUnanswered").textContent=unanswered}';
+            html += 'function toggleDoubtStatus(){doubt[cur]=!doubt[cur];var btn=document.getElementById("nb"+cur);var doubtBtn=document.getElementById("doubtBtn");if(doubt[cur]){btn.classList.add("doubt");btn.classList.remove("answered");doubtBtn.classList.add("confirmed");doubtBtn.innerHTML="✅ Yakin";doubtBtn.style.background="#28a745";doubtBtn.style.color="#fff"}else{btn.classList.remove("doubt");doubtBtn.classList.remove("confirmed");doubtBtn.innerHTML="❓ Ragu-ragu";doubtBtn.style.background="#ffc107";doubtBtn.style.color="#000";if(ans[cur]&&ans[cur].length>0){btn.classList.add("answered")}}updateStatusStats()}';
+            html += 'function start(){var n=document.getElementById("name").value.trim();var ni=document.getElementById("nis").value.trim();var c=document.getElementById("class").value.trim();if(!n||!ni||!c){alert("❌ Mohon isi semua data terlebih dahulu!");return}var k="exam_' + examKey + '_"+ni;if(localStorage.getItem(k)){alert("⚠️ Anda sudah mengerjakan ujian ini sebelumnya!");return}std={name:n,nis:ni,class:c};document.getElementById("dName").textContent=n;document.getElementById("dNis").textContent=ni;document.getElementById("dClass").textContent=c;if(document.documentElement.requestFullscreen){document.documentElement.requestFullscreen().catch(function(){})}started=true;document.getElementById("start").style.display="none";document.getElementById("exam").style.display="block";initializeExam();startTimer()}';
+            html += 'function initializeExam(){var cont=document.getElementById("qCont");var nav=document.getElementById("nav");for(var i=0;i<qs.length;i++){(function(idx){var q=qs[idx];var d=document.createElement("div");d.className="question"+(idx===0?" active":"");d.id="q"+idx;var opts="";["A","B","C","D","E"].forEach(function(o){opts+=\'<label class="opt"><input type="checkbox" name="q\'+idx+\'" value="\'+o+\'" onchange="updateAnswer(\'+idx+\')"><span class="opt-lbl">\'+o+\'.</span><span>\'+escapeHtml(q.options[o])+\'</span></label>\'});d.innerHTML=\'<div class="q-hdr">📝 Soal \'+(idx+1)+\' dari \'+qs.length+\'</div><div class="q-txt">\'+escapeHtml(q.text)+\'</div>\'+(q.image?\'<img src="\'+q.image+\'" class="q-img">\':\'\')+(\'<div class="opts">\'+opts+\'</div>\');cont.appendChild(d);var b=document.createElement("button");b.className="nav-btn"+(idx===0?" active":"");b.textContent=idx+1;b.onclick=function(){goToQuestion(idx)};b.id="nb"+idx;nav.appendChild(b)})(i)}updateStatusStats()}';
+            html += 'function escapeHtml(t){var m={"&":"&amp;","<":"&lt;",">":"&gt;","\\"":"&quot;","\'":"&#039;"};return String(t).replace(/[&<>"\']/g,function(c){return m[c]})}';
+            html += 'function updateAnswer(i){var cbs=document.querySelectorAll(\'input[name="q\'+i+\'"]:checked\');var sel=[];for(var j=0;j<cbs.length;j++){sel.push(cbs[j].value)}if(sel.length>0){ans[i]=sel;if(!doubt[i]){document.getElementById("nb"+i).classList.add("answered");document.getElementById("nb"+i).classList.remove("doubt")}}else{delete ans[i];if(!doubt[i]){document.getElementById("nb"+i).classList.remove("answered")}}updateStatusStats()}';
+            html += 'function goToQuestion(i){var qsDivs=document.querySelectorAll(".question");for(var j=0;j<qsDivs.length;j++){qsDivs[j].classList.remove("active")}var bs=document.querySelectorAll(".nav-btn");for(var j=0;j<bs.length;j++){bs[j].classList.remove("active")}document.getElementById("q"+i).classList.add("active");document.getElementById("nb"+i).classList.add("active");cur=i;var doubtBtn=document.getElementById("doubtBtn");if(doubt[i]){doubtBtn.classList.add("confirmed");doubtBtn.innerHTML="✅ Yakin";doubtBtn.style.background="#28a745";doubtBtn.style.color="#fff"}else{doubtBtn.classList.remove("confirmed");doubtBtn.innerHTML="❓ Ragu-ragu";doubtBtn.style.background="#ffc107";doubtBtn.style.color="#000"}window.scrollTo({top:0,behavior:"smooth"})}';
+            html += 'function prevQuestion(){if(cur>0){goToQuestion(cur-1)}}';
+            html += 'function nextQuestion(){if(cur<qs.length-1){goToQuestion(cur+1)}}';
+            html += 'function startTimer(){updateTimerDisplay();timer=setInterval(function(){time--;updateTimerDisplay();if(time<=0){clearInterval(timer);autoSubmitExam()}},1000)}';
+            html += 'function updateTimerDisplay(){var m=Math.floor(time/60);var s=time%60;var d=m+":"+(s<10?"0":"")+s;var t=document.getElementById("timer");t.textContent=d;var tot=dur*60;if(time>tot/2){t.className="timer safe"}else if(time>tot*0.25){t.className="timer warning"}else{t.className="timer danger"}}';
+            html += 'function autoSubmitExam(){alert("⏰ Waktu Habis!\\n\\nUjian akan otomatis di-submit sekarang.");submitExam(true)}';
+            html += 'function submitExam(auto){if(submitInProgress){return}submitInProgress=true;try{if(!auto){var unanswered=0;var doubtCount=0;for(var i=0;i<qs.length;i++){if(doubt[i]){doubtCount++}else if(!ans[i]||ans[i].length===0){unanswered++}}var msg="";if(unanswered>0){msg+="⚠️ Ada "+unanswered+" soal yang belum dijawab\\n"}if(doubtCount>0){msg+="❓ Ada "+doubtCount+" soal yang masih ragu-ragu\\n"}if(msg&&!confirm(msg+"\\nYakin ingin submit ujian?")){submitInProgress=false;return}}if(timer){clearInterval(timer);timer=null}var cor=0;for(var i=0;i<qs.length;i++){var q=qs[i];var sa=ans[i]||[];var ca=q.correctAnswers.slice();sa.sort();ca.sort();if(JSON.stringify(sa)===JSON.stringify(ca)){cor++}}var sc=Math.round(cor/qs.length*100);var k="exam_' + examKey + '_"+std.nis;var dt=new Date();var ts=dt.getFullYear()+"-"+pad(dt.getMonth()+1)+"-"+pad(dt.getDate())+" "+pad(dt.getHours())+":"+pad(dt.getMinutes());var r={name:std.name,nis:std.nis,class:std.class,score:sc,correct:cor,total:qs.length,violations:viols,timestamp:ts,examTitle:"' + escapeHtml(title) + '"};try{localStorage.setItem(k,JSON.stringify(r))}catch(e){console.error("Storage error:",e)}document.getElementById("rName").textContent=std.name;document.getElementById("rNis").textContent=std.nis;document.getElementById("rScore").textContent=sc;var qrText="EXAM|"+std.nis+"|"+std.name+"|"+std.class+"|"+sc+"|"+cor+"|"+qs.length+"|"+viols+"|"+ts+"|' + escapeHtml(title) + '";document.getElementById("manualData").textContent=qrText;try{document.getElementById("qrcode").innerHTML="";new QRCode(document.getElementById("qrcode"),{text:qrText,width:280,height:280,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M})}catch(qrErr){console.error("QR Error:",qrErr);document.getElementById("qrcode").innerHTML="<p style=\\"color:red;padding:20px\\">⚠️ QR Code gagal dibuat.<br>Gunakan data manual di bawah.</p>"}document.getElementById("exam").style.display="none";document.getElementById("result").classList.add("active");if(document.fullscreenElement){try{document.exitFullscreen()}catch(e){}}submitInProgress=false}catch(err){alert("⚠️ Error saat submit: "+err.message+"\\n\\nSilakan screenshot hasil Anda dan hubungi guru.");console.error(err);submitInProgress=false}};function pad(n){return n<10?"0"+n:n};';
+            html += '<\/script></body></html>';
+            
+            return html;
+        }
+
+        function escapeHtml(text) {
+            var map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+    </script>
+</body>
+</html>
