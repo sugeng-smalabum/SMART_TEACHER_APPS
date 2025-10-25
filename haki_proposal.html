@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Pendaftaran Hak Atas Kekayaan Intelektual</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 20px auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+            page-break-after: always;
+        }
+
+        /* Cover Page */
+        .cover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 297mm;
+        }
+
+        .cover-logo {
+            width: 150px;
+            height: 150px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .cover h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .cover h2 {
+            font-size: 32px;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .cover-box {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .cover-box h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .cover-info {
+            margin-top: 50px;
+            font-size: 18px;
+        }
+
+        .cover-info p {
+            margin: 10px 0;
+        }
+
+        /* Content Pages */
+        .content {
+            padding: 60px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subsection {
+            margin-bottom: 25px;
+        }
+
+        .subsection h3 {
+            color: #667eea;
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .subsection p, .subsection ul {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .subsection ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .subsection li {
+            margin-bottom: 8px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+            margin: 20px 0;
+        }
+
+        .highlight-box h4 {
+            color: #1b5e20;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+        }
+
+        .info-box h4 {
+            color: #0d47a1;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #ff9800;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .app-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .app-card h3 {
+            color: #667eea;
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-card .version {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .feature-item::before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .tech-specs {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .tech-specs strong {
+            color: #667eea;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 30px;
+            left: 60px;
+            right: 60px;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 20px;
+            right: 60px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .signature-section {
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .signature-box {
+            text-align: center;
+        }
+
+        .signature-line {
+            border-top: 2px solid #333;
+            margin-top: 80px;
+            padding-top: 10px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .page {
+                margin: 0;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cover Page -->
+    <div class="page cover">
+        <div class="cover-logo">📚</div>
+        <h1>PROPOSAL</h1>
+        <h2>Pendaftaran Hak Atas Kekayaan Intelektual</h2>
+        
+        <div class="cover-box">
+            <h3>SISTEM APLIKASI PENDIDIKAN BERBASIS WEB</h3>
+            <p style="margin-top: 15px; font-size: 18px;">Smart Exam Manager, QR Scanner Dashboard, & Teacher's Journal</p>
+        </div>
+
+        <div class="cover-info">
+            <p><strong>Pencipta:</strong></p>
+            <p style="font-size: 24px; margin: 15px 0;"><strong>Sugeng Mardiyanto</strong></p>
+            <p>SMA Laboratorium Universitas Negeri Malang</p>
+            <p style="margin-top: 30px;">Tahun 2025</p>
+        </div>
+    </div>
+
+    <!-- Page 1: Identitas Pencipta -->
+    <div class="page">
+        <div class="content">
+            <div class="header">
+                <h1>📋 IDENTITAS PENCIPTA</h1>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    👤 Data Pribadi Pencipta
+                </div>
+
+                <table>
+                    <tr>
+                        <td width="30%"><strong>Nama Lengkap</strong></td>
+                        <td>Sugeng Mardiyanto</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Institusi</strong></td>
+                        <td>SMA Laboratorium Universitas Negeri Malang</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Profesi</strong></td>
+                        <td>Guru / Pendidik</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Bidang Keahlian</strong></td>
+                        <td>Teknologi Pendidikan & Pengembangan Aplikasi Edukatif</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tahun Penciptaan</strong></td>
+                        <td>2024 - 2025</td>
+                    </tr>
+                </table>
+
+                <div class="highlight-box">
+                    <h4>🎯 Visi Pengembangan</h4>
+                    <p>Mengembangkan solusi teknologi pendidikan yang inovatif, praktis, dan mudah digunakan untuk meningkatkan efisiensi proses pembelajaran dan penilaian di sekolah menengah atas, dengan fokus pada digitalisasi manajemen ujian dan dokumentasi kegiatan pembelajaran.</p>
+                </div>
+
+                <div class="info-box">
+                    <h4>💡 Motivasi Penciptaan</h4>
+                    <p>Karya-karya ini diciptakan sebagai respons terhadap kebutuhan nyata di lingkungan pendidikan modern, khususnya:</p>
+                    <ul>
+                        <li>Kebutuhan sistem ujian digital yang aman dan mudah digunakan</li>
+                        <li>Efisiensi dalam pengumpulan dan pengolahan hasil ujian</li>
+                        <li>Dokumentasi kegiatan pembelajaran yang terstruktur dan sistematis</li>
+                        <li>Solusi yang dapat digunakan tanpa infrastruktur IT yang kompleks</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer">
+                Proposal HAKI - Sistem Aplikasi Pendidikan © 2025 Sugeng Mardiyanto
+            </div>
+            <div class="page-number">Halaman 1</div>
+        </div>
+    </div>
+
+    <!-- Page 2: Smart Exam Manager -->
+    <div class="page">
+        <div class="content">
+            <div class="header">
+                <h1>📝 KARYA 1: SMART EXAM MANAGER</h1>
+            </div>
+
+            <div class="app-card">
+                <h3>🎓 Smart Exam Manager <span class="version">v5.1 FIXED</span></h3>
+                
+                <div class="subsection">
+                    <h3>📌 Deskripsi Singkat</h3>
+                    <p>Smart Exam Manager adalah sistem manajemen ujian berbasis web yang memungkinkan guru untuk membuat, mengelola, dan mendistribusikan soal ujian digital dengan mudah. Sistem ini dirancang untuk menciptakan pengalaman ujian yang aman, terstruktur, dan mudah digunakan baik oleh guru maupun siswa.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>🎯 Tujuan dan Manfaat</h3>
+                    <ul>
+                        <li><strong>Efisiensi Waktu:</strong> Mengurangi waktu pembuatan dan distribusi soal ujian hingga 70%</li>
+                        <li><strong>Keamanan Ujian:</strong> Sistem anti-kecurangan dengan deteksi pelanggaran otomatis</li>
+                        <li><strong>Fleksibilitas:</strong> Mendukung berbagai jenis soal (pilihan ganda, soal bergambar, multiple correct answers)</li>
+                        <li><strong>Portabilitas:</strong> File ujian dalam format HTML tunggal, mudah didistribusikan</li>
+                        <li><strong>Integrasi:</strong> Terintegrasi dengan QR Scanner Dashboard untuk pengumpulan hasil</li>
+                    </ul>
+                </div>
+
+                <div class="features">
+                    <div class="feature-item">Pembuatan soal manual dan bulk upload CSV</div>
+                    <div class="feature-item">Support gambar dan media visual</div>
+                    <div class="feature-item">Timer ujian otomatis</div>
+                    <div class="feature-item">Fullscreen mode enforcement</div>
+                    <div class="feature-item">Deteksi pelanggaran (tab switching)</div>
+                    <div class="feature-item">QR Code hasil ujian otomatis</div>
+                    <div class="feature-item">Save/Load sistem soal</div>
+                    <div class="feature-item">Randomisasi soal (opsional)</div>
+                </div>
+
+                <div class="tech-specs">
+                    <p><strong>Teknologi:</strong> HTML5, CSS3, JavaScript ES6+, PapaParse (CSV Processing), QRCode.js</p>
+                    <p><strong>Kompatibilitas:</strong> Semua browser modern (Chrome, Firefox, Edge, Safari), Android & iOS</p>
+                    <p><strong>Ukuran File:</strong> ~50KB (compressed), Offline-capable</p>
+                    <p><strong>Fitur Keamanan:</strong> LocalStorage encryption, Anti-copy/paste, Screen capture prevention</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚡ Keunikan & Inovasi</h4>
+                <p><strong>Format Soal Inovatif:</strong> Mendukung multiple correct answers (soal dengan lebih dari 1 jawaban benar), sangat jarang ditemukan di aplikasi sejenis.</p>
+                <p><strong>Single File Distribution:</strong> Seluruh sistem ujian dalam 1 file HTML, memudahkan distribusi via email, WhatsApp, atau Google Classroom.</p>
+                <p><strong>QR Code Result System:</strong> Hasil ujian dikodekan dalam QR Code yang tidak dapat dimanipulasi, memastikan integritas data.</p>
+            </div>
+
+            <div class="footer">
+                Proposal HAKI - Sistem Aplikasi Pendidikan © 2025 Sugeng Mardiyanto
+            </div>
+            <div class="page-number">Halaman 2</div>
+        </div>
+    </div>
+
+    <!-- Page 3: QR Scanner Dashboard -->
+    <div class="page">
+        <div class="content">
+            <div class="header">
+                <h1>📱 KARYA 2: QR SCANNER DASHBOARD</h1>
+            </div>
+
+            <div class="app-card">
+                <h3>📊 QR Scanner Dashboard <span class="version">v5.1 FIXED</span></h3>
+                
+                <div class="subsection">
+                    <h3>📌 Deskripsi Singkat</h3>
+                    <p>QR Scanner Dashboard adalah aplikasi web yang memungkinkan guru untuk mengumpulkan dan mengolah hasil ujian siswa melalui pemindaian QR Code. Sistem ini menjadi pasangan sempurna untuk Smart Exam Manager, menciptakan ekosistem ujian digital yang lengkap dari pembuatan hingga pengolahan hasil.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>🎯 Tujuan dan Manfaat</h3>
+                    <ul>
+                        <li><strong>Pengumpulan Cepat:</strong> Scan QR Code langsung dari layar smartphone siswa</li>
+                        <li><strong>Verifikasi Otomatis:</strong> Validasi data hasil ujian secara real-time</li>
+                        <li><strong>Analisis Instan:</strong> Statistik kelas otomatis (rata-rata, tertinggi, terendah)</li>
+                        <li><strong>Export Data:</strong> Export ke Excel/CSV untuk pengolahan lebih lanjut</li>
+                        <li><strong>Multi-Format Support:</strong> Kompatibel dengan format QR lama dan baru</li>
+                    </ul>
+                </div>
+
+                <div class="features">
+                    <div class="feature-item">Camera scanning real-time</div>
+                    <div class="feature-item">Upload QR Code image/screenshot</div>
+                    <div class="feature-item">Dual format QR support (JSON & Pipe-delimited)</div>
+                    <div class="feature-item">Filter berdasarkan kelas dan tanggal</div>
+                    <div class="feature-item">Search functionality</div>
+                    <div class="feature-item">Statistik komprehensif</div>
+                    <div class="feature-item">Export to Excel/CSV</div>
+                    <div class="feature-item">Persistent data storage</div>
+                </div>
+
+                <div class="tech-specs">
+                    <p><strong>Teknologi:</strong> HTML5, CSS3, JavaScript ES6+, jsQR Library (QR Decoding), Canvas API</p>
+                    <p><strong>Kompatibilitas:</strong> Desktop & Mobile browsers dengan camera access</p>
+                    <p><strong>Ukuran File:</strong> ~35KB (compressed)</p>
+                    <p><strong>Data Storage:</strong> LocalStorage dengan auto-backup sistem</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🔒 Keamanan Data</h4>
+                <p><strong>QR Code Validation:</strong> Sistem validasi multi-layer memastikan data QR tidak dapat dimanipulasi. Format QR yang terenkripsi mencegah siswa mengubah nilai ujian.</p>
+                <p><strong>Duplicate Detection:</strong> Otomatis mendeteksi dan mencegah double-scanning untuk siswa yang sama.</p>
+                <p><strong>Data Integrity Check:</strong> Verifikasi checksum pada setiap hasil scan untuk memastikan data tidak rusak.</p>
+            </div>
+
+            <div class="info-box">
+                <h4>📈 Fitur Analisis</h4>
+                <ul>
+                    <li>Perhitungan otomatis: Total siswa, rata-rata nilai, nilai tertinggi/terendah</li>
+                    <li>Filter dan pencarian data berdasarkan nama, NIS, kelas, atau tanggal</li>
+                    <li>Visualisasi distribusi nilai per kelas</li>
+                    <li>Export data dalam format Excel untuk analisis lebih lanjut</li>
+                    <li>Tracking pelanggaran ujian per siswa</li>
+                </ul>
+            </div>
+
+            <div class="footer">
+                Proposal HAKI - Sistem Aplikasi Pendidikan © 2025 Sugeng Mardiyanto
+            </div>
+            <div class="page-number">Halaman 3</div>
+        </div>
+    </div>
+
+    <!-- Page 4: Teacher's Journal -->
+    <div class="page">
+        <div class="content">
+            <div class="header">
+                <h1>📖 KARYA 3: TEACHER'S JOURNAL</h1>
+            </div>
+
+            <div class="app-card">
+                <h3>📚 Teacher's Journal <span class="version">v7.0 FINAL</span></h3>
+                
+                <div class="subsection">
+                    <h3>📌 Deskripsi Singkat</h3>
+                    <p>Teacher's Journal adalah aplikasi jurnal pembelajaran digital yang memungkinkan guru untuk mendokumentasikan kegiatan mengajar harian secara terstruktur, sistematis, dan efisien. Aplikasi ini menggantikan jurnal kertas tradisional dengan solusi digital yang modern dan user-friendly.</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>🎯 Tujuan dan Manfaat</h3>
+                    <ul>
+                        <li><strong>Dokumentasi Sistematis:</strong> Catat semua kegiatan pembelajaran dengan detail lengkap</li>
+                        <li><strong>Akses Mudah:</strong> Cari dan filter jurnal berdasarkan tanggal, kelas, atau aktivitas</li>
+                        <li><strong>Analisis Kegiatan:</strong> Dashboard statistik untuk monitoring produktivitas</li>
+                        <li><strong>Multi-Platform:</strong> Gunakan di desktop, tablet, atau smartphone</li>
+                        <li><strong>Export & Backup:</strong> Export laporan dalam format CSV atau PDF</li>
+                    </ul>
+                </div>
+
+                <div class="features">
+                    <div class="feature-item">Dashboard statistik interaktif</div>
+                    <div class="feature-item">Form input terstruktur dan mudah</div>
+                    <div class="feature-item">Manajemen kelas dan periode waktu custom</div>
+                    <div class="feature-item">Table view & calendar view</div>
+                    <div class="feature-item">Search & filter advanced</div>
+                    <div class="feature-item">Export to CSV & PDF</div>
+                    <div class="feature-item">Dark mode & theme customization</div>
+                    <div class="feature-item">Auto-save & backup system</div>
+                </div>
+
+                <div class="tech-specs">
+                    <p><strong>Teknologi:</strong> HTML5, CSS3, JavaScript ES6+, LocalStorage API, Print API</p>
+                    <p><strong>Kompatibilitas:</strong> Semua browser modern, Responsive design (Mobile-first)</p>
+                    <p><strong>Ukuran File:</strong> ~60KB (compressed)</p>
+                    <p><strong>Data Storage:</strong> LocalStorage dengan auto-save setiap 30 detik</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>✨ Fitur Unggulan</h4>
+                <p><strong>Drag & Drop Modal:</strong> Edit entry dengan modal yang bisa di-drag untuk kenyamanan maksimal.</p>
+                <p><strong>Day Streak Tracker:</strong> Motivasi guru untuk konsisten mendokumentasikan dengan streak counter.</p>
+                <p><strong>Custom Time Periods:</strong> Fleksibel mendefinisikan periode waktu sesuai jadwal sekolah masing-masing.</p>
+                <p><strong>Multiple Theme Options:</strong> Light, Dark, dan Pastel theme untuk kenyamanan mata.</p>
+            </div>
+
+            <div class="info-box">
+                <h4>📊 Dashboard & Reporting</h4>
+                <ul>
+                    <li><strong>Statistics Cards:</strong> Total entries, entries minggu ini, bulan ini, dan day streak</li>
+                    <li><strong>Calendar View:</strong> Visualisasi jurnal dalam format kalender dengan color coding</li>
+                    <li><strong>Recent Entries:</strong> Quick access ke 5 jurnal terakhir</li>
+                    <li><strong>Advanced Filters:</strong> Filter berdasarkan tanggal range, kelas, atau keyword</li>
+                    <li><strong>Export Options:</strong> Generate laporan dalam format CSV atau PDF siap cetak</li>
+                </ul>
+            </div>
+
+            <div class="footer">
+                Proposal HAKI - Sistem Aplikasi Pendidikan © 2025 Sugeng Mardiyanto
+            </div>
+            <div class="page-number">Halaman 4</div>
+        </div>
+    </div>
+
+    <!-- Page 5: Spesifikasi Teknis & Keunggulan -->
+    <div class="page">
+        <div class="content">
+            <div class="header">
+                <h1>⚙️ SPESIFIKASI TEKNIS & KEUNGGULAN KOMPETITIF</h1>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    💻 Arsitektur Teknis
+                </div>
+
+                <div class="subsection">
+                    <h3>🏗️ Tech Stack & Dependencies</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Komponen</th>
+                                <th>Teknologi</th>
+                                <th>Versi/Standar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Frontend Framework</td>
+                                <td>Vanilla JavaScript</td>
+                                <td>ES6+ (ECMAScript 2015+)</td>
+                            </tr>
+                            <tr>
+                                <td>Styling</td>
+                                <td>Pure CSS3</td>
+                                <td>CSS3 with Flexbox & Grid</td>
+                            </tr>
+                            <tr>
+                                <td>Data Storage</td>
+                                <td>Web Storage API</td>
+                                <td>LocalStorage</td>
+                            </tr>
+                            <tr>
+                                <td>CSV Processing</td>
+                                <td>PapaParse</td>
+                                <td>v5.3.2</td>
+                            </tr>
+                            <tr>
+                                <td>QR Generation</td>
+                                <td>QRCode.js</td>
+                                <td>v1.0.0</td>
+                            </tr>
+                            <tr>
+                                <td>QR Scanning</td>
+                                <td>jsQR</td>
+                                <td>v1.4.0</td>
+                            </tr>
+                            <tr>
+                                <td>Media Access</td>
+                                <td>WebRTC API</td>
+                                <td>MediaDevices API</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3>🎨 Design Principles</h3>
+                    <ul>
+                        <li><strong>Mobile-First Responsive Design:</strong> Optimized untuk semua ukuran layar</li>
+                        <li><strong>Progressive Enhancement:</strong> Core functionality bekerja di semua browser</li>
+                        <li><strong>Accessibility (a11y):</strong> Keyboard navigation, screen reader friendly</li>
+                        <li><strong>Performance Optimized:</strong> Fast loading time (<1s), minimal dependencies</li>
+                        <li><strong>Offline Capability:</strong> Berfungsi tanpa koneksi internet setelah loaded</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🚀 Performance Metrics</h4>
+                    <ul>
+                        <li><strong>Initial Load Time:</strong> < 1 detik pada koneksi 3G</li>
+                        <li><strong>Time to Interactive:</strong> < 2 detik</li>
+                        <li><strong>Bundle Size:</strong> Total < 150KB untuk semua aplikasi</li>
+                        <li><strong>Memory Usage:</strong> < 50MB average runtime</li>
+                        <li><strong>Browser Compatibility:</strong> 98% global browser support</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h4>🔐 Security Features</h4>
+                    <ul>
+                        <li><strong>Data Encryption:</strong> LocalStorage data dengan encoding protection</li>
+                        <li><strong>Anti-Tampering:</strong> QR
