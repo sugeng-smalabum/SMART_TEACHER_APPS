@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Exam Manager – Teacher Suite v5.1 FIXED</title>
+    <title>Smart Exam Manager – Teacher Suite v5.2 AUDIO</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; padding-top: 80px; }
@@ -26,6 +26,9 @@
         .option-label { font-weight: bold; color: #667eea; min-width: 30px; }
         .image-preview { margin-top: 15px; max-width: 300px; border-radius: 8px; border: 2px solid #e0e0e0; }
         .image-preview img { max-width: 100%; border-radius: 6px; }
+        .audio-preview { margin-top: 15px; padding: 15px; background: white; border-radius: 8px; border: 2px solid #667eea; }
+        .audio-preview audio { width: 100%; margin-top: 10px; }
+        .audio-info { color: #666; font-size: 0.9em; margin-top: 5px; }
         .btn { padding: 12px 30px; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; margin: 5px; }
         .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
@@ -70,6 +73,7 @@
         nav a:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
         .save-load-section { background: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745; margin-bottom: 20px; }
         .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+        .audio-upload-section { background: white; padding: 20px; border-radius: 8px; border: 2px solid #667eea; margin-top: 20px; }
         @media (max-width: 768px) { 
             body { padding-top: 140px; }
             .header h1 { font-size: 1.8em; } 
@@ -83,22 +87,22 @@
     </style>
 </head>
 <body>
-<nav style="position: fixed; top: 0; left: 0; right: 0; padding: 15px 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 1000; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;">
-  <a href="index.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Home</a>
-  <a href="welcome.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Credit</a>
-  <a href="teacher.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Teacher</a>
-  <a href="dashboard.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Dashboard</a>
-  <a href="journal.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Journal</a>  
+<nav>
+  <a href="index.html">Home</a>
+  <a href="welcome.html">Credit</a>
+  <a href="teacher.html">Teacher</a>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="journal.html">Journal</a>  
 </nav>
     <div class="container">
         <div class="header">
-            <h1>📝 Smart Exam Manager</h1>
-            <p>Teacher Suite v5.1 FIXED - Submit Button & QR Code Issues Resolved!</p>
+            <h1>🎵 Smart Exam Manager</h1>
+            <p>Teacher Suite v5.2 AUDIO - Now with Audio Support!</p>
         </div>
 
         <div class="main-content">
             <div class="alert alert-success">
-                <strong>✅ FIXED in v5.1:</strong> Submit button now works on all Android versions! QR Code scanning improved with smaller data format and manual backup option!
+                <strong>✨ NEW in v5.2:</strong> Upload audio files (MP3, WAV, OGG) untuk soal listening! Audio akan diputar otomatis di ujian siswa.
             </div>
 
             <!-- Save/Load Section -->
@@ -118,7 +122,7 @@
                 <div class="exam-settings">
                     <div class="input-group">
                         <label for="examTitle">📝 Exam Title</label>
-                        <input type="text" id="examTitle" placeholder="e.g., Physics Mid-Term Exam">
+                        <input type="text" id="examTitle" placeholder="e.g., English Listening Test">
                     </div>
                     <div class="input-group">
                         <label for="examDuration">⏱️ Duration (minutes)</label>
@@ -135,112 +139,17 @@
                 <h2 class="section-title">📤 Add Questions</h2>
                 
                 <div class="tabs">
-                    <button class="tab active" onclick="switchTab('bulk')">📊 Bulk Upload (CSV)</button>
-                    <button class="tab" onclick="switchTab('manual')">✏️ Manual Entry</button>
-                </div>
-
-                <!-- Bulk Upload Tab -->
-                <div id="bulkTab" class="tab-content active">
-                    <div class="alert alert-info">
-                        <strong>📋 How to use Bulk Upload:</strong><br>
-                        1️⃣ Download the CSV template below<br>
-                        2️⃣ Fill in your questions using Excel or Google Sheets<br>
-                        3️⃣ (Optional) Upload images if your questions need them<br>
-                        4️⃣ Upload your CSV file<br>
-                        5️⃣ Preview and confirm import
-                    </div>
-
-                    <button class="btn btn-info" onclick="downloadTemplate()">📥 Download CSV Template</button>
-
-                    <div style="margin-top: 20px; background: white; padding: 20px; border-radius: 8px; border: 2px solid #17a2b8;">
-                        <h3 style="color: #17a2b8; margin-bottom: 15px;">📸 Upload Question Images (Optional)</h3>
-                        <p style="color: #666; margin-bottom: 10px; font-size: 0.9em;">
-                            If your questions have images, upload them here first, then reference the filename in your CSV.
-                        </p>
-                        <input type="file" id="imageFiles" accept="image/*" multiple style="margin-bottom: 10px; width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px;">
-                        <button class="btn btn-success" onclick="processImages()" style="width: 100%;">📤 Upload Images</button>
-                        <div id="uploadedImages" style="margin-top: 15px; display: none;"></div>
-                    </div>
-
-                    <div class="template-info">
-                        <h3 style="color: #667eea; margin-bottom: 15px;">📋 Template Format Guide:</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Column</th>
-                                    <th>Description</th>
-                                    <th>Example</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Question</strong></td>
-                                    <td>The question text</td>
-                                    <td>What is the capital of Indonesia?</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Option_A</strong></td>
-                                    <td>First answer option</td>
-                                    <td>Jakarta</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Option_B</strong></td>
-                                    <td>Second answer option</td>
-                                    <td>Bandung</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Option_C</strong></td>
-                                    <td>Third answer option</td>
-                                    <td>Surabaya</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Option_D</strong></td>
-                                    <td>Fourth answer option</td>
-                                    <td>Yogyakarta</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Option_E</strong></td>
-                                    <td>Fifth answer option</td>
-                                    <td>Malang</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Correct_Answers</strong></td>
-                                    <td>Correct option(s), comma-separated</td>
-                                    <td>A (or A,B for multiple)</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Image_Filename</strong></td>
-                                    <td>Image filename (optional)</td>
-                                    <td>question1.jpg or leave empty</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="upload-area" id="uploadArea">
-                        <p style="font-size: 3em; margin-bottom: 10px;">📄</p>
-                        <h3 style="color: #667eea; margin-bottom: 10px;">Upload CSV File</h3>
-                        <p style="color: #666; margin-bottom: 15px;">Drag and drop your CSV file here or click the button below</p>
-                        <input type="file" id="csvFile" accept=".csv" style="display:none;" onchange="handleCSVUpload(event)">
-                        <button class="btn btn-primary" onclick="document.getElementById('csvFile').click()">📁 Choose CSV File</button>
-                    </div>
-
-                    <div id="previewSection" style="display:none; margin-top: 20px;">
-                        <h3 style="color: #667eea; margin-bottom: 15px;">👀 Preview Imported Questions:</h3>
-                        <div id="previewContent"></div>
-                        <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-                            <button class="btn btn-success" onclick="confirmImport()">✅ Import All Questions</button>
-                            <button class="btn btn-danger" onclick="cancelImport()">❌ Cancel</button>
-                        </div>
-                    </div>
+                    <button class="tab active" onclick="switchTab('manual')">✏️ Manual Entry</button>
+                    <button class="tab" onclick="switchTab('bulk')">📊 Bulk Upload (CSV)</button>
                 </div>
 
                 <!-- Manual Entry Tab -->
-                <div id="manualTab" class="tab-content">
+                <div id="manualTab" class="tab-content active">
                     <div class="input-group">
                         <label for="questionText">Question Text</label>
                         <textarea id="questionText" placeholder="Enter your question here..."></textarea>
                     </div>
+                    
                     <div class="input-group">
                         <label for="questionImage">Question Image (Optional)</label>
                         <input type="file" id="questionImage" accept="image/*">
@@ -248,6 +157,22 @@
                             <img id="previewImg" src="" alt="Preview">
                         </div>
                     </div>
+
+                    <div class="input-group">
+                        <label for="questionAudio">🎵 Question Audio (Optional - MP3, WAV, OGG)</label>
+                        <input type="file" id="questionAudio" accept="audio/*">
+                        <div id="audioPreview" class="audio-preview" style="display:none;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                <span style="font-size: 2em;">🎵</span>
+                                <div>
+                                    <strong id="audioFileName" style="color: #667eea;"></strong>
+                                    <div class="audio-info" id="audioFileInfo"></div>
+                                </div>
+                            </div>
+                            <audio id="previewAudio" controls></audio>
+                        </div>
+                    </div>
+                    
                     <div class="input-group">
                         <label>Answer Options (Check the correct answer(s))</label>
                         <div class="options-container">
@@ -283,25 +208,121 @@
                         <button class="btn btn-secondary" id="clearBtn" style="display:none;">🔄 Clear Form</button>
                     </div>
                 </div>
+
+                <!-- Bulk Upload Tab -->
+                <div id="bulkTab" class="tab-content">
+                    <div class="alert alert-info">
+                        <strong>📋 How to use Bulk Upload:</strong><br>
+                        1️⃣ Download the CSV template below<br>
+                        2️⃣ Fill in your questions using Excel or Google Sheets<br>
+                        3️⃣ (Optional) Upload images/audio if your questions need them<br>
+                        4️⃣ Upload your CSV file<br>
+                        5️⃣ Preview and confirm import
+                    </div>
+
+                    <button class="btn btn-info" onclick="downloadTemplate()">📥 Download CSV Template</button>
+
+                    <div class="audio-upload-section">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">🎵 Upload Question Audio Files (Optional)</h3>
+                        <p style="color: #666; margin-bottom: 10px; font-size: 0.9em;">
+                            If your questions have audio (listening comprehension), upload them here first, then reference the filename in your CSV.
+                        </p>
+                        <input type="file" id="audioFiles" accept="audio/*" multiple style="margin-bottom: 10px; width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                        <button class="btn btn-success" onclick="processAudioFiles()" style="width: 100%;">📤 Upload Audio Files</button>
+                        <div id="uploadedAudios" style="margin-top: 15px; display: none;"></div>
+                    </div>
+
+                    <div style="margin-top: 20px; background: white; padding: 20px; border-radius: 8px; border: 2px solid #17a2b8;">
+                        <h3 style="color: #17a2b8; margin-bottom: 15px;">📸 Upload Question Images (Optional)</h3>
+                        <p style="color: #666; margin-bottom: 10px; font-size: 0.9em;">
+                            If your questions have images, upload them here first, then reference the filename in your CSV.
+                        </p>
+                        <input type="file" id="imageFiles" accept="image/*" multiple style="margin-bottom: 10px; width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                        <button class="btn btn-success" onclick="processImages()" style="width: 100%;">📤 Upload Images</button>
+                        <div id="uploadedImages" style="margin-top: 15px; display: none;"></div>
+                    </div>
+
+                    <div class="template-info">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">📋 Template Format Guide:</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Column</th>
+                                    <th>Description</th>
+                                    <th>Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Question</strong></td>
+                                    <td>The question text</td>
+                                    <td>Listen to the audio. What is the speaker saying?</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Option_A</strong></td>
+                                    <td>First answer option</td>
+                                    <td>Good morning</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Option_B to E</strong></td>
+                                    <td>Other answer options</td>
+                                    <td>Good afternoon, etc.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Correct_Answers</strong></td>
+                                    <td>Correct option(s), comma-separated</td>
+                                    <td>A (or A,B for multiple)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Image_Filename</strong></td>
+                                    <td>Image filename (optional)</td>
+                                    <td>question1.jpg or leave empty</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Audio_Filename</strong></td>
+                                    <td>Audio filename (optional)</td>
+                                    <td>audio1.mp3 or leave empty</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="upload-area" id="uploadArea">
+                        <p style="font-size: 3em; margin-bottom: 10px;">📄</p>
+                        <h3 style="color: #667eea; margin-bottom: 10px;">Upload CSV File</h3>
+                        <p style="color: #666; margin-bottom: 15px;">Drag and drop your CSV file here or click the button below</p>
+                        <input type="file" id="csvFile" accept=".csv" style="display:none;" onchange="handleCSVUpload(event)">
+                        <button class="btn btn-primary" onclick="document.getElementById('csvFile').click()">📁 Choose CSV File</button>
+                    </div>
+
+                    <div id="previewSection" style="display:none; margin-top: 20px;">
+                        <h3 style="color: #667eea; margin-bottom: 15px;">👀 Preview Imported Questions:</h3>
+                        <div id="previewContent"></div>
+                        <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn btn-success" onclick="confirmImport()">✅ Import All Questions</button>
+                            <button class="btn btn-danger" onclick="cancelImport()">❌ Cancel</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="section">
                 <h2 class="section-title">📋 Questions List (<span id="questionCount">0</span>)</h2>
                 <div id="questionsList">
-                    <div class="alert alert-info">No questions added yet. Add questions using bulk upload or manual entry above.</div>
+                    <div class="alert alert-info">No questions added yet. Add questions using manual entry or bulk upload above.</div>
                 </div>
             </div>
 
             <div class="section">
                 <h2 class="section-title">⬇️ Download Exam</h2>
-                <p style="margin-bottom: 20px; color: #666;">Generate a secure exam file with improved QR Code system. Fixed for all Android versions!</p>
+                <p style="margin-bottom: 20px; color: #666;">Generate a secure exam file with audio support. Students can listen to audio during the exam!</p>
                 <button class="btn btn-success" id="downloadBtn" style="font-size: 1.1em;">💾 Download Exam File</button>
             </div>
         </div>
 
         <div class="footer">
             <p><strong>Created by Sugeng M|Rosdiana Amini|Wahyudi Utomo</strong></p>
-            <p style="margin-top: 10px; opacity: 0.8;">Smart Exam Manager v5.1 FIXED - Submit & QR Issues Resolved!</p>
+            <p style="margin-top: 10px; opacity: 0.8;">Smart Exam Manager v5.2 AUDIO - With Audio Support!</p>
         </div>
     </div>
 
@@ -310,12 +331,18 @@
         var questions = [];
         var editingIndex = -1;
         var currentImageData = null;
+        var currentAudioData = null;
+        var currentAudioName = null;
         var pendingImport = [];
         var uploadedImagesMap = {};
+        var uploadedAudiosMap = {};
 
         document.addEventListener('DOMContentLoaded', function() {
             var imgInput = document.getElementById('questionImage');
             if (imgInput) imgInput.addEventListener('change', handleImageUpload);
+            
+            var audioInput = document.getElementById('questionAudio');
+            if (audioInput) audioInput.addEventListener('change', handleAudioUpload);
             
             var addBtn = document.getElementById('addQuestionBtn');
             if (addBtn) addBtn.addEventListener('click', addQuestion);
@@ -352,31 +379,89 @@
             }
         });
 
+        function handleAudioUpload(e) {
+            var file = e.target.files[0];
+            if (file) {
+                currentAudioName = file.name;
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    currentAudioData = event.target.result;
+                    document.getElementById('previewAudio').src = currentAudioData;
+                    document.getElementById('audioFileName').textContent = file.name;
+                    document.getElementById('audioFileInfo').textContent = formatFileSize(file.size) + ' • ' + file.type;
+                    document.getElementById('audioPreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        function processAudioFiles() {
+            var fileInput = document.getElementById('audioFiles');
+            var files = fileInput.files;
+            
+            if (files.length === 0) {
+                alert('⚠️ Please select at least one audio file!');
+                return;
+            }
+            
+            var uploadedDiv = document.getElementById('uploadedAudios');
+            uploadedDiv.innerHTML = '<h4 style="color: #28a745; margin-bottom: 10px;">✅ Uploaded Audio Files:</h4>';
+            uploadedDiv.style.display = 'block';
+            
+            var processed = 0;
+            
+            for (var i = 0; i < files.length; i++) {
+                (function(file) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        uploadedAudiosMap[file.name] = e.target.result;
+                        
+                        var audioDiv = document.createElement('div');
+                        audioDiv.style.cssText = 'padding: 12px; background: #f8f9fa; border-radius: 6px; margin-bottom: 10px; border-left: 3px solid #667eea;';
+                        audioDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span style="font-size: 1.5em;">🎵</span><strong style="color: #667eea;">' + escapeHtml(file.name) + '</strong><span style="color: #28a745; margin-left: auto;">✓</span></div><audio controls style="width: 100%; height: 35px;"><source src="' + e.target.result + '" type="' + file.type + '"></audio>';
+                        uploadedDiv.appendChild(audioDiv);
+                        
+                        processed++;
+                        if (processed === files.length) {
+                            alert('✅ Successfully uploaded ' + files.length + ' audio file(s)!\n\nYou can now reference these audio files in your CSV using the exact filenames.');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                })(files[i]);
+            }
+        }
+
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             
             if (tab === 'bulk') {
-                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
                 document.getElementById('bulkTab').classList.add('active');
             } else {
-                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
                 document.getElementById('manualTab').classList.add('active');
             }
         }
 
         function downloadTemplate() {
-            var csv = 'Question,Option_A,Option_B,Option_C,Option_D,Option_E,Correct_Answers,Image_Filename\n';
-            csv += '"What is 2+2?","3","4","5","6","7","B",""\n';
-            csv += '"What is the capital of Indonesia?","Bandung","Jakarta","Surabaya","Malang","Yogyakarta","B",""\n';
-            csv += '"Which are primary colors? (Multiple answers)","Red","Green","Blue","Yellow","Purple","A,C,D",""\n';
-            csv += '"Look at the diagram. What is X?","5","10","15","20","25","B","diagram1.jpg"\n';
+            var csv = 'Question,Option_A,Option_B,Option_C,Option_D,Option_E,Correct_Answers,Image_Filename,Audio_Filename\n';
+            csv += '"What is 2+2?","3","4","5","6","7","B","",""\n';
+            csv += '"Listen to the audio. What do you hear?","Hello","Goodbye","Thank you","Please","Sorry","A","","greeting.mp3"\n';
+            csv += '"Look at the image. What color is it?","Red","Blue","Green","Yellow","Purple","B","color.jpg",""\n';
+            csv += '"Listen and look. Complete the sentence.","Go","Come","Run","Walk","Jump","C","scene.jpg","audio2.mp3"\n';
             
             var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url;
-            a.download = 'Exam_Questions_Template.csv';
+            a.download = 'Exam_Questions_Template_Audio.csv';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -492,9 +577,23 @@
                     }
                 }
 
+                var audioData = null;
+                var audioFilename = row.Audio_Filename ? row.Audio_Filename.trim() : '';
+                
+                if (audioFilename) {
+                    if (uploadedAudiosMap[audioFilename]) {
+                        audioData = uploadedAudiosMap[audioFilename];
+                    } else {
+                        errors.push('Line ' + lineNum + ': Audio "' + audioFilename + '" not found. Please upload it first.');
+                        return;
+                    }
+                }
+
                 var question = {
                     text: row.Question.trim(),
                     image: imageData,
+                    audio: audioData,
+                    audioName: audioFilename || null,
                     options: {
                         A: row.Option_A.trim(),
                         B: row.Option_B.trim(),
@@ -540,7 +639,12 @@
                     imgHtml = '<img src="' + q.image + '" style="max-width: 300px; margin: 10px 0; border-radius: 8px;">';
                 }
 
-                div.innerHTML = '<div class="question-header"><span class="question-number">Question ' + (index + 1) + '</span></div><div class="question-text">' + escapeHtml(q.text) + '</div>' + imgHtml + '<div class="question-options">' + optionsHtml + '</div>';
+                var audioHtml = '';
+                if (q.audio) {
+                    audioHtml = '<div style="margin: 10px 0; padding: 12px; background: #f0f8ff; border-radius: 8px; border-left: 3px solid #667eea;"><div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span style="font-size: 1.3em;">🎵</span><strong style="color: #667eea;">Audio: ' + escapeHtml(q.audioName || 'audio file') + '</strong></div><audio controls style="width: 100%;"><source src="' + q.audio + '"></audio></div>';
+                }
+
+                div.innerHTML = '<div class="question-header"><span class="question-number">Question ' + (index + 1) + '</span></div><div class="question-text">' + escapeHtml(q.text) + '</div>' + audioHtml + imgHtml + '<div class="question-options">' + optionsHtml + '</div>';
                 
                 preview.appendChild(div);
             });
@@ -612,6 +716,8 @@
             var question = {
                 text: questionText,
                 image: currentImageData,
+                audio: currentAudioData,
+                audioName: currentAudioName,
                 options: { A: optionA, B: optionB, C: optionC, D: optionD, E: optionE },
                 correctAnswers: correctAnswers
             };
@@ -642,8 +748,12 @@
             document.getElementById('correctD').checked = false;
             document.getElementById('correctE').checked = false;
             document.getElementById('questionImage').value = '';
+            document.getElementById('questionAudio').value = '';
             document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('audioPreview').style.display = 'none';
             currentImageData = null;
+            currentAudioData = null;
+            currentAudioName = null;
             editingIndex = -1;
             document.getElementById('clearBtn').style.display = 'none';
         }
@@ -676,7 +786,12 @@
                     imgHtml = '<img src="' + q.image + '" style="max-width: 300px; margin: 10px 0; border-radius: 8px;">';
                 }
 
-                div.innerHTML = '<div class="question-header"><span class="question-number">Question ' + (i + 1) + '</span><div class="question-actions"><button class="btn btn-secondary" style="padding: 8px 16px;" onclick="editQuestion(' + i + ')">✏️ Edit</button><button class="btn btn-danger" style="padding: 8px 16px;" onclick="deleteQuestion(' + i + ')">🗑️ Delete</button></div></div><div class="question-text">' + escapeHtml(q.text) + '</div>' + imgHtml + '<div class="question-options">' + optionsHtml + '</div>';
+                var audioHtml = '';
+                if (q.audio) {
+                    audioHtml = '<div style="margin: 10px 0; padding: 12px; background: #f0f8ff; border-radius: 8px; border-left: 3px solid #667eea;"><div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><span style="font-size: 1.3em;">🎵</span><strong style="color: #667eea;">Audio: ' + escapeHtml(q.audioName || 'audio file') + '</strong></div><audio controls style="width: 100%;"><source src="' + q.audio + '"></audio></div>';
+                }
+
+                div.innerHTML = '<div class="question-header"><span class="question-number">Question ' + (i + 1) + '</span><div class="question-actions"><button class="btn btn-secondary" style="padding: 8px 16px;" onclick="editQuestion(' + i + ')">✏️ Edit</button><button class="btn btn-danger" style="padding: 8px 16px;" onclick="deleteQuestion(' + i + ')">🗑️ Delete</button></div></div><div class="question-text">' + escapeHtml(q.text) + '</div>' + audioHtml + imgHtml + '<div class="question-options">' + optionsHtml + '</div>';
                 
                 container.appendChild(div);
             }
@@ -705,6 +820,15 @@
                 document.getElementById('imagePreview').style.display = 'block';
             }
 
+            if (q.audio) {
+                currentAudioData = q.audio;
+                currentAudioName = q.audioName;
+                document.getElementById('previewAudio').src = q.audio;
+                document.getElementById('audioFileName').textContent = q.audioName || 'audio file';
+                document.getElementById('audioFileInfo').textContent = 'Previously uploaded';
+                document.getElementById('audioPreview').style.display = 'block';
+            }
+
             editingIndex = index;
             document.getElementById('clearBtn').style.display = 'inline-flex';
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -729,7 +853,7 @@
             var examClass = document.getElementById('examClass').value.trim();
 
             var saveData = {
-                version: '5.1',
+                version: '5.2',
                 timestamp: new Date().toISOString(),
                 examInfo: {
                     title: title,
@@ -832,7 +956,8 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
 
-            alert('✅ Exam file downloaded successfully!\n\n📝 File: ' + a.download + '\n🎯 Questions: ' + questions.length + '\n⏱️ Duration: ' + duration + ' minutes\n\n✨ FIXED: Submit button & QR Code now work on all Android versions!');
+            var audioCount = questions.filter(q => q.audio).length;
+            alert('✅ Exam file downloaded successfully!\n\n📝 File: ' + a.download + '\n🎯 Questions: ' + questions.length + '\n🎵 Audio questions: ' + audioCount + '\n⏱️ Duration: ' + duration + ' minutes\n\n✨ Students can listen to audio during the exam!');
         }
 
         function generateStudentExam(title, duration, examClass, questionsData) {
@@ -841,7 +966,7 @@
             
             var html = '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + escapeHtml(title) + '</title>';
             
-            html += '<style>*{margin:0;padding:0;box-sizing:border-box;user-select:none}body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh}.container{max-width:1400px;margin:0 auto;display:flex;gap:20px;padding:20px}.sidebar{width:280px;background:#fff;border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.2);position:sticky;top:20px;height:fit-content;max-height:calc(100vh - 40px);overflow-y:auto}.main{flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,.2)}.hdr{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:25px;border-radius:12px 12px 0 0;margin:-30px -30px 30px}.timer{font-size:2em;font-weight:700;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px}.timer.safe{background:#d4edda;color:#155724}.timer.warning{background:#fff3cd;color:#856404}.timer.danger{background:#f8d7da;color:#721c24}.info{background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:15px;font-size:0.9em}.info div{margin-bottom:5px}.violation{background:#f8d7da;color:#721c24;padding:10px;border-radius:6px;text-align:center;margin-bottom:15px;font-weight:700;display:none;font-size:0.9em}.status-summary{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);padding:15px;border-radius:8px;margin-bottom:15px;border-left:4px solid #28a745}.status-title{font-weight:700;color:#1b5e20;margin-bottom:12px;font-size:1em;display:flex;align-items:center;gap:5px}.status-item{font-size:0.95em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}.status-label{display:flex;align-items:center;gap:8px;font-weight:600}.status-indicator{width:14px;height:14px;border-radius:3px;display:inline-block}.status-answered{background:#28a745}.status-doubt{background:#ffc107}.status-unanswered{background:#9e9e9e}.status-count{font-weight:700;font-size:1.1em;color:#667eea;background:#f0f0f0;padding:2px 10px;border-radius:12px}.nav-title{font-size:1em;font-weight:700;color:#667eea;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e0e0e0}.nav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}.nav-btn{padding:12px 8px;border:none;border-radius:6px;font-weight:700;cursor:pointer;background:#e0e0e0;color:#333;transition:all 0.3s;font-size:0.95em;-webkit-tap-highlight-color:transparent;touch-action:manipulation}.nav-btn:hover{transform:scale(1.05)}.nav-btn.answered{background:#28a745;color:#fff}.nav-btn.doubt{background:#ffc107;color:#000;font-weight:800}.nav-btn.active{background:#667eea;color:#fff;border:3px solid #4a5cd1;transform:scale(1.1)}.question{display:none}.question.active{display:block}.q-hdr{font-size:1.3em;color:#667eea;margin-bottom:15px;font-weight:700}.q-txt{font-size:1.1em;line-height:1.6;margin-bottom:20px;color:#333}.q-img{max-width:100%;border-radius:8px;margin:20px 0;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.1)}.opts{display:grid;gap:12px}.opt{display:flex;align-items:center;padding:15px;border:2px solid #e0e0e0;border-radius:8px;cursor:pointer;transition:all 0.3s;background:#fff}.opt:hover{border-color:#667eea;background:#f8f9ff;transform:translateX(5px)}.opt input{width:20px;height:20px;margin-right:15px;cursor:pointer;accent-color:#667eea}.opt-lbl{font-weight:700;color:#667eea;margin-right:10px;font-size:1.1em}.nav-btns{display:flex;justify-content:space-between;gap:10px;margin-top:30px;padding-top:20px;border-top:2px solid #e0e0e0;flex-wrap:wrap}.btn{padding:14px 28px;border:none;border-radius:8px;font-size:1em;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;transition:all 0.3s;box-shadow:0 4px 8px rgba(0,0,0,0.2);-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}.btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3)}.btn:active{transform:translateY(0);background:linear-gradient(135deg,#5568d3,#6a3f8f)}.btn-success{background:#28a745}.btn-success:hover{background:#218838}.btn-success:active{background:#1e7e34}.btn-doubt{background:#ffc107;color:#000;font-weight:700}.btn-doubt:hover{background:#e0a800}.btn-doubt:active{background:#d39e00}.btn-doubt.confirmed{background:#28a745;color:#fff}.btn-doubt.confirmed:hover{background:#1e7e34}.btn-doubt.confirmed:active{background:#1c7430}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:#fff;padding:40px;border-radius:16px;max-width:600px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);max-height:90vh;overflow-y:auto}.modal-content h2{color:#667eea;margin-bottom:20px;font-size:2em}.modal-content input{width:100%;padding:14px;margin:10px 0;border:2px solid #e0e0e0;border-radius:8px;font-size:1em}.start{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.warn{background:#fff3cd;border:2px solid #ffc107;color:#856404;padding:15px;border-radius:8px;margin-bottom:20px;text-align:center;font-weight:700}#qrcode{margin:20px auto;padding:20px;background:white;border-radius:12px;display:inline-block}@media(max-width:1024px){.container{flex-direction:column}.sidebar{width:100%;position:relative;top:0;max-height:none}.nav-btns{justify-content:center}.nav-grid{grid-template-columns:repeat(5,1fr)}}</style>';
+            html += '<style>*{margin:0;padding:0;box-sizing:border-box;user-select:none}body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh}.container{max-width:1400px;margin:0 auto;display:flex;gap:20px;padding:20px}.sidebar{width:280px;background:#fff;border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.2);position:sticky;top:20px;height:fit-content;max-height:calc(100vh - 40px);overflow-y:auto}.main{flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,.2)}.hdr{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:25px;border-radius:12px 12px 0 0;margin:-30px -30px 30px}.timer{font-size:2em;font-weight:700;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px}.timer.safe{background:#d4edda;color:#155724}.timer.warning{background:#fff3cd;color:#856404}.timer.danger{background:#f8d7da;color:#721c24}.info{background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:15px;font-size:0.9em}.info div{margin-bottom:5px}.violation{background:#f8d7da;color:#721c24;padding:10px;border-radius:6px;text-align:center;margin-bottom:15px;font-weight:700;display:none;font-size:0.9em}.status-summary{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);padding:15px;border-radius:8px;margin-bottom:15px;border-left:4px solid #28a745}.status-title{font-weight:700;color:#1b5e20;margin-bottom:12px;font-size:1em;display:flex;align-items:center;gap:5px}.status-item{font-size:0.95em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}.status-label{display:flex;align-items:center;gap:8px;font-weight:600}.status-indicator{width:14px;height:14px;border-radius:3px;display:inline-block}.status-answered{background:#28a745}.status-doubt{background:#ffc107}.status-unanswered{background:#9e9e9e}.status-count{font-weight:700;font-size:1.1em;color:#667eea;background:#f0f0f0;padding:2px 10px;border-radius:12px}.nav-title{font-size:1em;font-weight:700;color:#667eea;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e0e0e0}.nav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}.nav-btn{padding:12px 8px;border:none;border-radius:6px;font-weight:700;cursor:pointer;background:#e0e0e0;color:#333;transition:all 0.3s;font-size:0.95em;-webkit-tap-highlight-color:transparent;touch-action:manipulation}.nav-btn:hover{transform:scale(1.05)}.nav-btn.answered{background:#28a745;color:#fff}.nav-btn.doubt{background:#ffc107;color:#000;font-weight:800}.nav-btn.active{background:#667eea;color:#fff;border:3px solid #4a5cd1;transform:scale(1.1)}.question{display:none}.question.active{display:block}.q-hdr{font-size:1.3em;color:#667eea;margin-bottom:15px;font-weight:700}.q-txt{font-size:1.1em;line-height:1.6;margin-bottom:20px;color:#333}.q-audio{margin:15px 0;padding:15px;background:#f0f8ff;border-radius:8px;border-left:4px solid #667eea}.q-audio-label{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-weight:600;color:#667eea;font-size:1.05em}.q-audio audio{width:100%;margin-top:5px}.q-img{max-width:100%;border-radius:8px;margin:20px 0;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.1)}.opts{display:grid;gap:12px}.opt{display:flex;align-items:center;padding:15px;border:2px solid #e0e0e0;border-radius:8px;cursor:pointer;transition:all 0.3s;background:#fff}.opt:hover{border-color:#667eea;background:#f8f9ff;transform:translateX(5px)}.opt input{width:20px;height:20px;margin-right:15px;cursor:pointer;accent-color:#667eea}.opt-lbl{font-weight:700;color:#667eea;margin-right:10px;font-size:1.1em}.nav-btns{display:flex;justify-content:space-between;gap:10px;margin-top:30px;padding-top:20px;border-top:2px solid #e0e0e0;flex-wrap:wrap}.btn{padding:14px 28px;border:none;border-radius:8px;font-size:1em;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;transition:all 0.3s;box-shadow:0 4px 8px rgba(0,0,0,0.2);-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}.btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3)}.btn:active{transform:translateY(0);background:linear-gradient(135deg,#5568d3,#6a3f8f)}.btn-success{background:#28a745}.btn-success:hover{background:#218838}.btn-success:active{background:#1e7e34}.btn-doubt{background:#ffc107;color:#000;font-weight:700}.btn-doubt:hover{background:#e0a800}.btn-doubt:active{background:#d39e00}.btn-doubt.confirmed{background:#28a745;color:#fff}.btn-doubt.confirmed:hover{background:#1e7e34}.btn-doubt.confirmed:active{background:#1c7430}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:#fff;padding:40px;border-radius:16px;max-width:600px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);max-height:90vh;overflow-y:auto}.modal-content h2{color:#667eea;margin-bottom:20px;font-size:2em}.modal-content input{width:100%;padding:14px;margin:10px 0;border:2px solid #e0e0e0;border-radius:8px;font-size:1em}.start{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.warn{background:#fff3cd;border:2px solid #ffc107;color:#856404;padding:15px;border-radius:8px;margin-bottom:20px;text-align:center;font-weight:700}#qrcode{margin:20px auto;padding:20px;background:white;border-radius:12px;display:inline-block}@media(max-width:1024px){.container{flex-direction:column}.sidebar{width:100%;position:relative;top:0;max-height:none}.nav-btns{justify-content:center}.nav-grid{grid-template-columns:repeat(5,1fr)}}</style>';
             
             html += '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>';
             
@@ -865,7 +990,7 @@
             html += 'function updateStatusStats(){var answered=0;var doubtful=0;for(var i=0;i<qs.length;i++){if(doubt[i]){doubtful++}else if(ans[i]&&ans[i].length>0){answered++}}var unanswered=qs.length-answered-doubtful;document.getElementById("statAnswered").textContent=answered;document.getElementById("statDoubt").textContent=doubtful;document.getElementById("statUnanswered").textContent=unanswered}';
             html += 'function toggleDoubtStatus(){doubt[cur]=!doubt[cur];var btn=document.getElementById("nb"+cur);var doubtBtn=document.getElementById("doubtBtn");if(doubt[cur]){btn.classList.add("doubt");btn.classList.remove("answered");doubtBtn.classList.add("confirmed");doubtBtn.innerHTML="✅ Yakin";doubtBtn.style.background="#28a745";doubtBtn.style.color="#fff"}else{btn.classList.remove("doubt");doubtBtn.classList.remove("confirmed");doubtBtn.innerHTML="❓ Ragu-ragu";doubtBtn.style.background="#ffc107";doubtBtn.style.color="#000";if(ans[cur]&&ans[cur].length>0){btn.classList.add("answered")}}updateStatusStats()}';
             html += 'function start(){var n=document.getElementById("name").value.trim();var ni=document.getElementById("nis").value.trim();var c=document.getElementById("class").value.trim();if(!n||!ni||!c){alert("❌ Mohon isi semua data terlebih dahulu!");return}var k="exam_' + examKey + '_"+ni;if(localStorage.getItem(k)){alert("⚠️ Anda sudah mengerjakan ujian ini sebelumnya!");return}std={name:n,nis:ni,class:c};document.getElementById("dName").textContent=n;document.getElementById("dNis").textContent=ni;document.getElementById("dClass").textContent=c;if(document.documentElement.requestFullscreen){document.documentElement.requestFullscreen().catch(function(){})}started=true;document.getElementById("start").style.display="none";document.getElementById("exam").style.display="block";initializeExam();startTimer()}';
-            html += 'function initializeExam(){var cont=document.getElementById("qCont");var nav=document.getElementById("nav");for(var i=0;i<qs.length;i++){(function(idx){var q=qs[idx];var d=document.createElement("div");d.className="question"+(idx===0?" active":"");d.id="q"+idx;var opts="";["A","B","C","D","E"].forEach(function(o){opts+=\'<label class="opt"><input type="checkbox" name="q\'+idx+\'" value="\'+o+\'" onchange="updateAnswer(\'+idx+\')"><span class="opt-lbl">\'+o+\'.</span><span>\'+escapeHtml(q.options[o])+\'</span></label>\'});d.innerHTML=\'<div class="q-hdr">📝 Soal \'+(idx+1)+\' dari \'+qs.length+\'</div><div class="q-txt">\'+escapeHtml(q.text)+\'</div>\'+(q.image?\'<img src="\'+q.image+\'" class="q-img">\':\'\')+(\'<div class="opts">\'+opts+\'</div>\');cont.appendChild(d);var b=document.createElement("button");b.className="nav-btn"+(idx===0?" active":"");b.textContent=idx+1;b.onclick=function(){goToQuestion(idx)};b.id="nb"+idx;nav.appendChild(b)})(i)}updateStatusStats()}';
+            html += 'function initializeExam(){var cont=document.getElementById("qCont");var nav=document.getElementById("nav");for(var i=0;i<qs.length;i++){(function(idx){var q=qs[idx];var d=document.createElement("div");d.className="question"+(idx===0?" active":"");d.id="q"+idx;var audioHtml="";if(q.audio){audioHtml=\'<div class="q-audio"><div class="q-audio-label"><span style="font-size:1.3em">🎵</span><span>Audio untuk soal ini:</span></div><audio controls controlsList="nodownload"><source src="\'+q.audio+\'"></audio></div>\'}var opts="";["A","B","C","D","E"].forEach(function(o){opts+=\'<label class="opt"><input type="checkbox" name="q\'+idx+\'" value="\'+o+\'" onchange="updateAnswer(\'+idx+\')"><span class="opt-lbl">\'+o+\'.</span><span>\'+escapeHtml(q.options[o])+\'</span></label>\'});d.innerHTML=\'<div class="q-hdr">📝 Soal \'+(idx+1)+\' dari \'+qs.length+\'</div>\'+audioHtml+\'<div class="q-txt">\'+escapeHtml(q.text)+\'</div>\'+(q.image?\'<img src="\'+q.image+\'" class="q-img">\':\'\')+(\'<div class="opts">\'+opts+\'</div>\');cont.appendChild(d);var b=document.createElement("button");b.className="nav-btn"+(idx===0?" active":"");b.textContent=idx+1;b.onclick=function(){goToQuestion(idx)};b.id="nb"+idx;nav.appendChild(b)})(i)}updateStatusStats()}';
             html += 'function escapeHtml(t){var m={"&":"&amp;","<":"&lt;",">":"&gt;","\\"":"&quot;","\'":"&#039;"};return String(t).replace(/[&<>"\']/g,function(c){return m[c]})}';
             html += 'function updateAnswer(i){var cbs=document.querySelectorAll(\'input[name="q\'+i+\'"]:checked\');var sel=[];for(var j=0;j<cbs.length;j++){sel.push(cbs[j].value)}if(sel.length>0){ans[i]=sel;if(!doubt[i]){document.getElementById("nb"+i).classList.add("answered");document.getElementById("nb"+i).classList.remove("doubt")}}else{delete ans[i];if(!doubt[i]){document.getElementById("nb"+i).classList.remove("answered")}}updateStatusStats()}';
             html += 'function goToQuestion(i){var qsDivs=document.querySelectorAll(".question");for(var j=0;j<qsDivs.length;j++){qsDivs[j].classList.remove("active")}var bs=document.querySelectorAll(".nav-btn");for(var j=0;j<bs.length;j++){bs[j].classList.remove("active")}document.getElementById("q"+i).classList.add("active");document.getElementById("nb"+i).classList.add("active");cur=i;var doubtBtn=document.getElementById("doubtBtn");if(doubt[i]){doubtBtn.classList.add("confirmed");doubtBtn.innerHTML="✅ Yakin";doubtBtn.style.background="#28a745";doubtBtn.style.color="#fff"}else{doubtBtn.classList.remove("confirmed");doubtBtn.innerHTML="❓ Ragu-ragu";doubtBtn.style.background="#ffc107";doubtBtn.style.color="#000"}window.scrollTo({top:0,behavior:"smooth"})}';
@@ -892,7 +1017,4 @@
         }
     </script>
 </body>
-
 </html>
-
-
