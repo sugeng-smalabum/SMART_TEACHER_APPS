@@ -1,0 +1,2275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Lengkap - Sistem Aplikasi Pendidikan Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #28a745;
+            --info: #17a2b8;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--gradient-1);
+            opacity: 0.05;
+            transform: rotate(45deg);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .creators-box {
+            background: var(--gradient-1);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px auto;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .creators-box h3 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+        }
+
+        .creators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .creator-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .creator-item strong {
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .institution-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .institution-box h4 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        /* Navigation */
+        .nav-apps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient-1);
+        }
+
+        .app-card.app-2::before {
+            background: var(--gradient-3);
+        }
+
+        .app-card.app-3::before {
+            background: var(--gradient-4);
+        }
+
+        .app-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .app-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .app-card h3 {
+            font-size: 1.8em;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .app-card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: var(--gradient-1);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Tutorial Content */
+        .tutorial-section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .tutorial-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tutorial-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .tutorial-header h2 {
+            font-size: 2.5em;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .tutorial-header .version {
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+        }
+
+        .step {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--gradient-1);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .step h3 {
+            color: var(--primary);
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            padding-top: 20px;
+        }
+
+        .step-content {
+            margin-left: 20px;
+        }
+
+        .step-content p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .step-content ul, .step-content ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        .step-content li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #2196f3;
+            margin: 20px 0;
+        }
+
+        .info-box h4 {
+            color: #0d47a1;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #ff9800;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: #e65100;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #4caf50;
+            margin: 20px 0;
+        }
+
+        .success-box h4 {
+            color: #1b5e20;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-box {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #9c27b0;
+            margin: 20px 0;
+        }
+
+        .tip-box h4 {
+            color: #4a148c;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Screenshot Placeholder */
+        .screenshot {
+            background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+            border: 3px dashed #999;
+            border-radius: 12px;
+            padding: 60px 20px;
+            text-align: center;
+            margin: 25px 0;
+            color: #666;
+            font-style: italic;
+        }
+
+        .screenshot::before {
+            content: '📸';
+            display: block;
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-top: 3px solid var(--primary);
+        }
+
+        .feature-card h5 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Back Button */
+        .back-btn {
+            background: #6c757d;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        table thead {
+            background: var(--gradient-1);
+            color: white;
+        }
+
+        table th, table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1em;
+            }
+
+            .creators-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-apps {
+                grid-template-columns: 1fr;
+            }
+
+            .tutorial-header h2 {
+                font-size: 1.8em;
+            }
+
+            .step {
+                padding: 20px;
+            }
+
+            .step h3 {
+                font-size: 1.4em;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .nav-apps, .back-btn {
+                display: none;
+            }
+
+            .tutorial-section {
+                display: block !important;
+                page-break-after: always;
+            }
+        }
+
+        /* Animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .step {
+            animation: slideIn 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <h1>📚 Tutorial Lengkap</h1>
+                <p class="hero-subtitle">Sistem Aplikasi Pendidikan Digital Terintegrasi</p>
+                
+                <div class="creators-box">
+                    <h3>👥 Tim Pengembang</h3>
+                    <div class="creators-grid">
+                        <div class="creator-item">
+                            <strong>Sugeng Mardiyanto</strong>
+                            <small>Lead Developer</small>
+                        </div>
+                        <div class="creator-item">
+                            <strong>Rosdiana Amini</strong>
+                            <small>Co-Developer</small>
+                        </div>
+                        <div class="creator-item">
+                            <strong>Wahyudi Utomo</strong>
+                            <small>Co-Developer</small>
+                        </div>
+                    </div>
+                    
+                    <div class="institution-box">
+                        <h4>🏫 Institusi</h4>
+                        <p>SMA Laboratorium Universitas Negeri Malang</p>
+                        <p>SMAN 1 Widodaren Ngawi</p>
+                    </div>
+                </div>
+
+                <p style="margin-top: 20px; color: #666;">
+                    <strong>Tahun Pengembangan:</strong> 2024 - 2025
+                </p>
+            </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <div class="nav-apps" id="navMenu">
+            <div class="app-card app-1" onclick="showTutorial('exam')">
+                <div class="app-icon">📝</div>
+                <h3>Smart Exam Manager</h3>
+                <p>Tutorial pembuatan dan pengelolaan soal ujian digital dengan fitur lengkap</p>
+                <button class="btn">Lihat Tutorial →</button>
+            </div>
+
+            <div class="app-card app-2" onclick="showTutorial('scanner')">
+                <div class="app-icon">📱</div>
+                <h3>QR Scanner Dashboard</h3>
+                <p>Panduan scanning dan pengolahan hasil ujian siswa melalui QR Code</p>
+                <button class="btn">Lihat Tutorial →</button>
+            </div>
+
+            <div class="app-card app-3" onclick="showTutorial('journal')">
+                <div class="app-icon">📖</div>
+                <h3>Teacher's Journal</h3>
+                <p>Cara mendokumentasikan kegiatan pembelajaran harian secara digital</p>
+                <button class="btn">Lihat Tutorial →</button>
+            </div>
+        </div>
+
+        <!-- Tutorial 1: Smart Exam Manager -->
+        <div class="tutorial-section" id="examTutorial">
+            <button class="btn back-btn" onclick="showMenu()">← Kembali ke Menu</button>
+            
+            <div class="tutorial-header">
+                <h2>📝 Smart Exam Manager</h2>
+                <span class="version">v5.1 FIXED</span>
+                <p style="margin-top: 15px; color: #666;">Sistem Manajemen Ujian Digital yang Komprehensif</p>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Persiapan Awal</h3>
+                <div class="step-content">
+                    <p>Sebelum memulai, pastikan Anda sudah memiliki file <strong>teacherresolved.html</strong> yang merupakan aplikasi Smart Exam Manager.</p>
+                    
+                    <div class="info-box">
+                        <h4>ℹ️ Yang Anda Butuhkan:</h4>
+                        <ul>
+                            <li><strong>Browser modern</strong> (Chrome, Firefox, Edge, atau Safari)</li>
+                            <li><strong>File HTML</strong> aplikasi Smart Exam Manager</li>
+                            <li><strong>Soal ujian</strong> yang sudah disiapkan (bisa dalam bentuk teks atau CSV)</li>
+                            <li><strong>Gambar soal</strong> (opsional, jika soal memerlukan ilustrasi)</li>
+                        </ul>
+                    </div>
+
+                    <div class="screenshot">
+                        Tampilan awal Smart Exam Manager dengan header berwarna ungu gradasi
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Membuka Aplikasi</h3>
+                <div class="step-content">
+                    <ol>
+                        <li>Klik kanan pada file <code>teacherresolved.html</code></li>
+                        <li>Pilih <strong>"Open with"</strong> → Pilih browser favorit Anda</li>
+                        <li>Aplikasi akan terbuka di browser</li>
+                        <li>Anda akan melihat halaman utama dengan menu navigasi di bagian atas</li>
+                    </ol>
+
+                    <div class="success-box">
+                        <h4>✅ Tanda Aplikasi Berhasil Dibuka:</h4>
+                        <p>Anda akan melihat:</p>
+                        <ul>
+                            <li>Header dengan judul "Smart Exam Manager"</li>
+                            <li>Navigasi dengan tombol Home, Teacher, dan Dashboard</li>
+                            <li>Area "Save & Load Your Work" berwarna hijau</li>
+                            <li>Section "Exam Settings" dan "Add Questions"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Mengisi Informasi Ujian</h3>
+                <div class="step-content">
+                    <p>Sebelum menambahkan soal, lengkapi informasi dasar ujian:</p>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h5>📄 Exam Title</h5>
+                            <p>Masukkan judul ujian, contoh: "Ujian Tengah Semester Matematika"</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>⏱️ Duration</h5>
+                            <p>Tentukan durasi ujian dalam menit, contoh: 90 menit</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>🎓 Class/Grade</h5>
+                            <p>Isi kelas yang akan ujian, contoh: "XI IPA 1"</p>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <h4>💡 Tips:</h4>
+                        <p>Isikan informasi dengan jelas dan detail. Informasi ini akan muncul di file ujian siswa dan hasil QR Code.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Metode Menambahkan Soal</h3>
+                <div class="step-content">
+                    <p>Smart Exam Manager menyediakan 2 metode input soal:</p>
+
+                    <h4 style="margin-top: 20px; color: var(--primary);">A. Bulk Upload (CSV) - Untuk Banyak Soal</h4>
+                    <p>Metode ini cocok jika Anda sudah memiliki banyak soal dalam format spreadsheet.</p>
+
+                    <ol style="margin-top: 15px;">
+                        <li><strong>Download Template CSV:</strong>
+                            <ul>
+                                <li>Klik tab "Bulk Upload (CSV)"</li>
+                                <li>Klik tombol "📥 Download CSV Template"</li>
+                                <li>File template akan terdownload</li>
+                            </ul>
+                        </li>
+                        <li><strong>Isi Template:</strong>
+                            <ul>
+                                <li>Buka file CSV dengan Excel atau Google Sheets</li>
+                                <li>Isi kolom sesuai format yang ada</li>
+                                <li>Simpan file setelah selesai</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kolom</th>
+                                <th>Keterangan</th>
+                                <th>Contoh</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Question</strong></td>
+                                <td>Teks soal</td>
+                                <td>Berapa hasil dari 5 + 3?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Option_A</strong></td>
+                                <td>Pilihan jawaban A</td>
+                                <td>6</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Option_B</strong></td>
+                                <td>Pilihan jawaban B</td>
+                                <td>7</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Option_C</strong></td>
+                                <td>Pilihan jawaban C</td>
+                                <td>8</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Option_D</strong></td>
+                                <td>Pilihan jawaban D</td>
+                                <td>9</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Option_E</strong></td>
+                                <td>Pilihan jawaban E</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Correct_Answers</strong></td>
+                                <td>Jawaban benar (bisa lebih dari 1, pisahkan dengan koma)</td>
+                                <td>C atau A,C (untuk multiple correct)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Image_Filename</strong></td>
+                                <td>Nama file gambar (opsional)</td>
+                                <td>soal1.jpg atau kosongkan</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin-top: 30px; color: var(--primary);">B. Manual Entry - Untuk Sedikit Soal</h4>
+                    <p>Metode ini cocok untuk menambahkan soal satu per satu dengan interface yang mudah.</p>
+
+                    <ol style="margin-top: 15px;">
+                        <li>Klik tab "✏️ Manual Entry"</li>
+                        <li>Ketik teks soal di area "Question Text"</li>
+                        <li>Upload gambar jika diperlukan (opsional)</li>
+                        <li>Isi 5 opsi jawaban (A, B, C, D, E)</li>
+                        <li>Centang checkbox di depan jawaban yang benar</li>
+                        <li>Klik "➕ Add Question"</li>
+                    </ol>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Perhatian:</h4>
+                        <p>Anda bisa mencentang <strong>lebih dari 1 checkbox</strong> untuk soal dengan multiple correct answers (jawaban benar lebih dari satu).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step">
+                <div class="step-number">5</div>
+                <h3>Upload Gambar untuk Soal (Opsional)</h3>
+                <div class="step-content">
+                    <p>Jika soal Anda memerlukan gambar (diagram, grafik, ilustrasi):</p>
+
+                    <h4 style="color: var(--primary);">Untuk Bulk Upload:</h4>
+                    <ol>
+                        <li>Di section "📸 Upload Question Images", klik "Choose Files"</li>
+                        <li>Pilih semua gambar yang akan digunakan (bisa multiple selection)</li>
+                        <li>Klik "📤 Upload Images"</li>
+                        <li>Tunggu hingga muncul konfirmasi "✅ Successfully uploaded X image(s)"</li>
+                        <li>Di file CSV, tulis nama file gambar di kolom Image_Filename</li>
+                    </ol>
+
+                    <h4 style="color: var(--primary); margin-top: 20px;">Untuk Manual Entry:</h4>
+                    <ol>
+                        <li>Di form manual entry, ada field "Question Image (Optional)"</li>
+                        <li>Klik "Choose File" dan pilih gambar</li>
+                        <li>Preview gambar akan muncul</li>
+                        <li>Lanjutkan mengisi soal seperti biasa</li>
+                    </ol>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Format Gambar yang Didukung:</h4>
+                        <ul>
+                            <li>JPG / JPEG</li>
+                            <li>PNG</li>
+                            <li>GIF</li>
+                            <li>Ukuran maksimal: 5MB per gambar</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="step">
+                <div class="step-number">6</div>
+                <h3>Upload dan Preview CSV</h3>
+                <div class="step-content">
+                    <p>Setelah template CSV diisi:</p>
+
+                    <ol>
+                        <li><strong>Upload CSV File:</strong>
+                            <ul>
+                                <li>Scroll ke section "Upload CSV File"</li>
+                                <li>Klik tombol "📁 Choose CSV File"</li>
+                                <li>Pilih file CSV yang sudah Anda isi</li>
+                            </ul>
+                        </li>
+                        <li><strong>Preview Otomatis:</strong>
+                            <ul>
+                                <li>Sistem akan otomatis memproses file</li>
+                                <li>Muncul preview semua soal yang akan diimport</li>
+                                <li>Periksa setiap soal dengan teliti</li>
+                            </ul>
+                        </li>
+                        <li><strong>Konfirmasi Import:</strong>
+                            <ul>
+                                <li>Jika semua benar, klik "✅ Import All Questions"</li>
+                                <li>Jika ada kesalahan, klik "❌ Cancel" dan perbaiki file CSV</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="success-box">
+                        <h4>✅ Validasi Otomatis:</h4>
+                        <p>Sistem akan otomatis mengecek:</p>
+                        <ul>
+                            <li>Apakah semua kolom wajib terisi</li>
+                            <li>Apakah format jawaban benar valid (A, B, C, D, atau E)</li>
+                            <li>Apakah gambar yang direferensikan sudah diupload</li>
+                            <li>Jika ada error, akan muncul pesan detail di baris mana kesalahannya</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7 -->
+            <div class="step">
+                <div class="step-number">7</div>
+                <h3>Mengelola Daftar Soal</h3>
+                <div class="step-content">
+                    <p>Setelah soal ditambahkan (manual atau CSV), semua soal akan muncul di section "📋 Questions List".</p>
+
+                    <h4 style="color: var(--primary);">Fitur yang Tersedia:</h4>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h5>✏️ Edit Soal</h5>
+                            <p>Klik tombol "Edit" untuk mengubah soal. Data akan terisi otomatis di form, edit, lalu klik "Update".</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>🗑️ Delete Soal</h5>
+                            <p>Klik tombol "Delete" untuk menghapus soal. Akan ada konfirmasi sebelum dihapus.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>👀 Preview</h5>
+                            <p>Setiap soal ditampilkan lengkap dengan jawaban yang benar ditandai dengan ✓ hijau.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>📊 Counter</h5>
+                            <p>Di header section ada counter "Questions List (X)" yang menunjukkan jumlah total soal.</p>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <h4>💡 Tips Manajemen Soal:</h4>
+                        <ul>
+                            <li>Periksa urutan soal - soal akan muncul di ujian sesuai urutan yang Anda tambahkan</li>
+                            <li>Gunakan fitur Edit untuk memperbaiki typo tanpa perlu hapus dan input ulang</li>
+                            <li>Minimal harus ada 1 soal sebelum bisa download ujian</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 8 -->
+            <div class="step">
+                <div class="step-number">8</div>
+                <h3>Save & Load Soal</h3>
+                <div class="step-content">
+                    <p>Fitur penting untuk menyimpan pekerjaan Anda dan menggunakannya lagi di kemudian hari.</p>
+
+                    <h4 style="color: var(--success);">💾 Save Questions to File</h4>
+                    <ol>
+                        <li>Klik tombol "💾 Save Questions to File" di bagian atas</li>
+                        <li>File JSON akan terdownload otomatis</li>
+                        <li>Nama file: <code>[Judul_Ujian]_Questions.json</code></li>
+                        <li>File ini berisi semua soal + setting ujian</li>
+                    </ol>
+
+                    <h4 style="color: var(--info); margin-top: 20px;">📂 Load Questions from File</h4>
+                    <ol>
+                        <li>Klik tombol "📂 Load Questions from File"</li>
+                        <li>Pilih file JSON yang pernah Anda save sebelumnya</li>
+                        <li>Jika sudah ada soal, akan ada konfirmasi apakah mau replace atau tidak</li>
+                        <li>Semua soal dan setting akan otomatis terisi</li>
+                    </ol>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Kegunaan Fitur Ini:</h4>
+                        <ul>
+                            <li><strong>Backup:</strong> Simpan soal ujian sebagai arsip</li>
+                            <li><strong>Reusable:</strong> Gunakan soal yang sama untuk kelas lain atau tahun depan</li>
+                            <li><strong>Sharing:</strong> Berbagi soal dengan guru lain</li>
+                            <li><strong>Version Control:</strong> Buat beberapa versi soal ujian</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 9 -->
+            <div class="step">
+                <div class="step-number">9</div>
+                <h3>Download File Ujian untuk Siswa</h3>
+                <div class="step-content">
+                    <p>Setelah semua soal siap, langkah terakhir adalah membuat file ujian untuk siswa:</p>
+
+                    <ol>
+                        <li><strong>Pastikan semua terisi:</strong>
+                            <ul>
+                                <li>Exam Title ✓</li>
+                                <li>Duration ✓</li>
+                                <li>Class/Grade ✓</li>
+                                <li>Minimal 1 soal ✓</li>
+                            </ul>
+                        </li>
+                        <li><strong>Scroll ke bawah</strong> ke section "⬇️ Download Exam"</li>
+                        <li><strong>Klik tombol hijau</strong> "💾 Download Exam File"</li>
+                        <li><strong>File HTML akan terdownload</strong> dengan nama: <code>[Judul_Ujian]_Exam.html</code></li>
+                    </ol>
+
+                    <div class="success-box">
+                        <h4>✅ File Ujian Siswa Berisi:</h4>
+                        <ul>
+                            <li>Semua soal yang Anda buat</li>
+                            <li>Timer countdown otomatis</li>
+                            <li>System fullscreen enforcement</li>
+                            <li>Anti-cheating mechanism (deteksi tab switching)</li>
+                            <li>QR Code generator untuk hasil ujian</li>
+                            <li>Form input nama, NIS, dan kelas siswa</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Catatan Penting:</h4>
+                        <ul>
+                            <li>File ujian adalah <strong>file HTML tunggal</strong> - sangat mudah didistribusikan</li>
+                            <li>Bisa dikirim via <strong>WhatsApp, Email, Google Classroom, atau USB</strong></li>
+                            <li>Siswa <strong>tidak perlu internet</strong> untuk mengerjakan (offline-capable)</li>
+                            <li>File ini sudah include <strong>sistem keamanan</strong> untuk mencegah kecurangan</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 10 -->
+            <div class="step">
+                <div class="step-number">10</div>
+                <h3>Distribusi ke Siswa</h3>
+                <div class="step-content">
+                    <h4 style="color: var(--primary);">Cara Mendistribusikan File Ujian:</h4>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h5>📱 WhatsApp</h5>
+                            <p>Kirim file HTML via WhatsApp Group kelas. Siswa download dan buka di browser HP.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>📧 Email</h5>
+                            <p>Kirim sebagai attachment email ke siswa atau orang tua.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>🌐 Google Classroom</h5>
+                            <p>Upload sebagai material di Google Classroom assignment.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>💾 USB / Cloud</h5>
+                            <p>Copy ke USB atau upload ke Google Drive / Dropbox untuk sharing.</p>
+                        </div>
+                    </div>
+
+                    <h4 style="color: var(--primary); margin-top: 30px;">Instruksi untuk Siswa:</h4>
+                    <div class="info-box">
+                        <h4>📋 Langkah-langkah Siswa Mengerjakan:</h4>
+                        <ol>
+                            <li>Download file ujian dari sumber yang diberikan guru</li>
+                            <li>Buka file dengan browser (klik 2x atau klik kanan > Open with > Chrome)</li>
+                            <li>Isi Nama Lengkap, NIS, dan Kelas</li>
+                            <li>Klik "🚀 Mulai Ujian"</li>
+                            <li>Layar akan fullscreen otomatis</li>
+                            <li>Kerjakan semua soal dengan teliti</li>
+                            <li>Gunakan tombol navigasi untuk berpindah soal</li>
+                            <li>Tandai "❓ Ragu-ragu" untuk soal yang masih diragukan</li>
+                            <li>Setelah selesai, klik "✅ Submit Ujian"</li>
+                            <li>Screenshot QR Code hasil ujian dan kirim ke guru</li>
+                        </ol>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Peringatan untuk Siswa:</h4>
+                        <ul>
+                            <li><strong>Jangan keluar dari fullscreen</strong> - akan tercatat sebagai pelanggaran</li>
+                            <li><strong>Jangan switch tab/aplikasi</strong> - akan tercatat sebagai pelanggaran</li>
+                            <li><strong>Jangan refresh halaman</strong> - progress akan hilang</li>
+                            <li><strong>Pastikan baterai cukup</strong> sebelum memulai ujian</li>
+                            <li><strong>Screenshot QR Code</strong> segera setelah submit</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 11 -->
+            <div class="step">
+                <div class="step-number">11</div>
+                <h3>Tips & Best Practices</h3>
+                <div class="step-content">
+                    <div class="tip-box">
+                        <h4>💡 Tips Pembuatan Soal:</h4>
+                        <ul>
+                            <li><strong>Gunakan bulk upload</strong> untuk soal > 10 agar lebih efisien</li>
+                            <li><strong>Beri nama file CSV</strong> dengan jelas, misal: "Matematika_UTS_KLS11.csv"</li>
+                            <li><strong>Compress gambar</strong> jika ukuran file ujian terlalu besar</li>
+                            <li><strong>Test file ujian</strong> sendiri dulu sebelum dibagikan ke siswa</li>
+                            <li><strong>Simpan file JSON</strong> sebagai backup permanent</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>✅ Best Practices:</h4>
+                        <ul>
+                            <li><strong>Konsisten dalam penomoran:</strong> Gunakan format yang sama untuk semua soal</li>
+                            <li><strong>Double check jawaban:</strong> Pastikan jawaban benar sudah tercentang dengan tepat</li>
+                            <li><strong>Test berbagai device:</strong> Coba buka di HP dan laptop untuk memastikan tampilan OK</li>
+                            <li><strong>Buat instruksi jelas:</strong> Berikan panduan tertulis ke siswa sebelum ujian</li>
+                            <li><strong>Backup rutin:</strong> Save file JSON setiap kali selesai mengedit soal</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Hal yang Harus Dihindari:</h4>
+                        <ul>
+                            <li>❌ Jangan edit file HTML ujian secara manual - bisa merusak sistem</li>
+                            <li>❌ Jangan upload gambar terlalu besar (>5MB) - akan membuat file ujian lambat</li>
+                            <li>❌ Jangan lupa save sebelum close browser - progress bisa hilang</li>
+                            <li>❌ Jangan distribusi file terlalu dekat dengan waktu ujian - beri waktu siswa untuk download</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Tutorial 2: QR Scanner Dashboard -->
+        <div class="tutorial-section" id="scannerTutorial">
+            <button class="btn back-btn" onclick="showMenu()">← Kembali ke Menu</button>
+            
+            <div class="tutorial-header">
+                <h2>📱 QR Scanner Dashboard</h2>
+                <span class="version">v5.1 FIXED</span>
+                <p style="margin-top: 15px; color: #666;">Dashboard Scanning dan Pengolahan Hasil Ujian</p>
+            </div>
+
+            <!-- Step 1 Scanner -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Pengenalan QR Scanner Dashboard</h3>
+                <div class="step-content">
+                    <p>QR Scanner Dashboard adalah aplikasi pasangan Smart Exam Manager yang digunakan untuk mengumpulkan dan mengolah hasil ujian siswa melalui pemindaian QR Code.</p>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Apa itu QR Code Hasil Ujian?</h4>
+                        <p>Setelah siswa selesai mengerjakan ujian, sistem akan generate QR Code yang berisi:</p>
+                        <ul>
+                            <li>Nama siswa</li>
+                            <li>NIS (Nomor Induk Siswa)</li>
+                            <li>Kelas</li>
+                            <li>Nilai ujian (dalam persen)</li>
+                            <li>Jumlah jawaban benar/total soal</li>
+                            <li>Jumlah pelanggaran</li>
+                            <li>Timestamp (waktu selesai ujian)</li>
+                        </ul>
+                    </div>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h5>📸 Camera Scan</h5>
+                            <p>Scan QR Code langsung dari layar smartphone siswa menggunakan camera laptop/HP</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>📤 Upload Image</h5>
+                            <p>Upload screenshot QR Code yang dikirim siswa via WhatsApp/Email</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>📊 Auto Statistics</h5>
+                            <p>Statistik kelas otomatis: rata-rata, tertinggi, terendah</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>📥 Export Excel</h5>
+                            <p>Export semua hasil ke format CSV/Excel untuk pengolahan lebih lanjut</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 Scanner -->
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Membuka QR Scanner Dashboard</h3>
+                <div class="step-content">
+                    <ol>
+                        <li>Buka file <code>qr_scanner_fixed.html</code> dengan browser</li>
+                        <li>Anda akan melihat halaman dengan header "📱 QR Code Scanner Dashboard"</li>
+                        <li>Di bagian atas ada notifikasi hijau "✅ UPDATED: Now supports new QR code format"</li>
+                    </ol>
+
+                    <div class="success-box">
+                        <h4>✅ Tampilan Dashboard:</h4>
+                        <p>Dashboard terdiri dari beberapa section:</p>
+                        <ul>
+                            <li><strong>Scan QR Code:</strong> Area untuk scanning/upload QR</li>
+                            <li><strong>Statistics Overview:</strong> 4 kartu statistik (Total, Average, Highest, Lowest)</li>
+                            <li><strong>Student Results:</strong> Tabel hasil semua siswa</li>
+                        </ul>
+                    </div>
+
+                    <div class="screenshot">
+                        Tampilan QR Scanner Dashboard dengan gradient biru-ungu dan kartu statistik
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 Scanner -->
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Metode Scanning QR Code</h3>
+                <div class="step-content">
+                    <h4 style="color: var(--primary);">Metode 1: Camera Scanner (Scanning Langsung)</h4>
+                    
+                    <ol>
+                        <li><strong>Klik tombol "📷 Start Camera Scanner"</strong>
+                            <ul>
+                                <li>Browser akan meminta izin akses camera</li>
+                                <li>Klik "Allow" untuk memberikan izin</li>
+                            </ul>
+                        </li>
+                        <li><strong>Arahkan camera ke QR Code</strong>
+                            <ul>
+                                <li>Bisa dari layar HP siswa langsung</li>
+                                <li>Atau dari print-out QR Code</li>
+                                <li>Pastikan QR Code terlihat jelas di camera</li>
+                            </ul>
+                        </li>
+                        <li><strong>Scanning Otomatis</strong>
+                            <ul>
+                                <li>Sistem akan otomatis detect dan scan QR Code</li>
+                                <li>Setelah berhasil, camera akan berhenti</li>
+                                <li>Data akan langsung masuk ke tabel hasil</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="tip-box">
+                        <h4>💡 Tips Camera Scanning:</h4>
+                        <ul>
+                            <li><strong>Pencahayaan cukup:</strong> Pastikan ruangan cukup terang</li>
+                            <li><strong>Steady camera:</strong> Tahan camera dengan stabil</li>
+                            <li><strong>Jarak ideal:</strong> 15-30 cm dari layar</li>
+                            <li><strong>Fokus QR Code:</strong> Pastikan QR Code memenuhi frame camera</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="color: var(--primary); margin-top: 30px;">Metode 2: Upload QR Code Image</h4>
+                    
+                    <p>Metode ini cocok jika siswa mengirim screenshot QR Code via WhatsApp/Email.</p>
+
+                    <ol>
+                        <li><strong>Scroll ke "📤 Or Upload QR Code Image"</strong></li>
+                        <li><strong>Klik "Choose Files"</strong> dan pilih gambar QR Code</li>
+                        <li><strong>Klik tombol hijau "✅ Process QR Code"</strong></li>
+                        <li><strong>Tunggu proses</strong> - sistem akan otomatis decode QR</li>
+                        <li><strong>Data akan masuk</strong> ke tabel hasil jika berhasil</li>
+                    </ol>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Format Gambar yang Didukung:</h4>
+                        <ul>
+                            <li>JPG / JPEG</li>
+                            <li>PNG</li>
+                            <li>BMP</li>
+                            <li>Screenshot dari HP siswa</li>
+                            <li>Foto QR Code dari camera HP</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Troubleshooting QR Tidak Terbaca:</h4>
+                        <ul>
+                            <li>❌ Gambar terlalu blur → Minta siswa kirim ulang dengan fokus lebih baik</li>
+                            <li>❌ QR Code terpotong → Pastikan seluruh QR Code ada di gambar</li>
+                            <li>❌ Resolusi terlalu rendah → Minta siswa screenshot dengan kualitas tinggi</li>
+                            <li>❌ File corrupt → Coba convert gambar ke format PNG dulu</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 Scanner -->
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Memahami Data Hasil Scan</h3>
+                <div class="step-content">
+                    <p>Setelah QR Code berhasil di-scan, data akan muncul di tabel "📊 Student Results":</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kolom</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Name</strong></td>
+                                <td>Nama lengkap siswa</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NIS</strong></td>
+                                <td>Nomor Induk Siswa</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Class</strong></td>
+                                <td>Kelas siswa</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Exam</strong></td>
+                                <td>Judul ujian yang dikerjakan</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Score</strong></td>
+                                <td>Nilai dalam persen (dengan color coding)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Correct</strong></td>
+                                <td>Jumlah jawaban benar</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td>Total jumlah soal</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Violations</strong></td>
+                                <td>Jumlah pelanggaran (tab switching, dll)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Date</strong></td>
+                                <td>Tanggal dan jam selesai ujian</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="info-box">
+                        <h4>🎨 Color Coding Nilai:</h4>
+                        <ul>
+                            <li><strong style="color: #28a745;">Hijau (85-100):</strong> Excellent</li>
+                            <li><strong style="color: #17a2b8;">Biru (70-84):</strong> Good</li>
+                            <li><strong style="color: #ffc107;">Kuning (60-69):</strong> Average</li>
+                            <li><strong style="color: #dc3545;">Merah (<60):</strong> Poor</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>✅ Duplicate Detection:</h4>
+                        <p>Sistem otomatis mendeteksi jika siswa yang sama sudah pernah di-scan:</p>
+                        <ul>
+                            <li>Akan muncul konfirmasi "Result already exists"</li>
+                            <li>Anda bisa pilih: Replace (timpa data lama) atau Cancel (batal)</li>
+                            <li>Ini mencegah data ganda untuk siswa yang sama</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 Scanner -->
+            <div class="step">
+                <div class="step-number">5</div>
+                <h3>Statistik Otomatis</h3>
+                <div class="step-content">
+                    <p>Dashboard menampilkan 4 kartu statistik yang update otomatis setiap kali ada data baru:</p>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h5>👥 Total Students</h5>
+                            <p>Jumlah total siswa yang sudah di-scan hasilnya</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>📊 Average Score</h5>
+                            <p>Rata-rata nilai kelas (pembulatan ke integer)</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>🏆 Highest Score</h5>
+                            <p>Nilai tertinggi di kelas</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>📉 Lowest Score</h5>
+                            <p>Nilai terendah di kelas</p>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <h4>💡 Menggunakan Statistik:</h4>
+                        <ul>
+                            <li><strong>Monitor real-time:</strong> Lihat statistik update saat scanning siswa</li>
+                            <li><strong>Evaluasi kesulitan:</strong> Jika rata-rata rendah, mungkin soal terlalu sulit</li>
+                            <li><strong>Identifikasi outliers:</strong> Cek gap antara highest dan lowest</li>
+                            <li><strong>Decision making:</strong> Gunakan data untuk remidi atau pengayaan</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6 Scanner -->
+            <div class="step">
+                <div class="step-number">6</div>
+                <h3>Filter dan Search Data</h3>
+                <div class="step-content">
+                    <p>Dashboard dilengkapi filter untuk memudahkan mencari data tertentu:</p>
+
+                    <h4 style="color: var(--primary);">🔍 Search Box</h4>
+                    <ul>
+                        <li>Ketik nama atau NIS siswa di search box</li>
+                        <li>Hasil akan langsung terfilter secara real-time</li>
+                        <li>Search tidak case-sensitive</li>
+                    </ul>
+
+                    <h4 style="color: var(--primary); margin-top: 20px;">📚 Filter by Class</h4>
+                    <ul>
+                        <li>Dropdown akan otomatis terisi dengan list kelas yang ada</li>
+                        <li>Pilih kelas tertentu untuk melihat hasil kelas tersebut saja</li>
+                        <li>Pilih "All Classes" untuk melihat semua data</li>
+                    </ul>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Kombinasi Filter:</h4>
+                        <p>Anda bisa kombinasikan search dan class filter sekaligus. Contoh:</p>
+                        <ul>
+                            <li>Filter: Kelas "XI IPA 1" + Search: "Ahmad" = Menampilkan semua Ahmad di kelas XI IPA 1</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>✅ Tips Efisien:</h4>
+                        <ul>
+                            <li>Gunakan search untuk cek apakah siswa tertentu sudah di-scan</li>
+                            <li>Filter by class untuk fokus scan satu kelas dulu</li>
+                            <li>Clear filter sebelum export untuk dapat data lengkap</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7 Scanner -->
+            <div class="step">
+                <div class="step-number">7</div>
+                <h3>Export Data ke Excel/CSV</h3>
+                <div class="step-content">
+                    <p>Setelah semua data terkumpul, Anda bisa export ke format Excel untuk:</p>
+                    <ul>
+                        <li>Input ke sistem penilaian sekolah</li>
+                        <li>Analisis lebih lanjut dengan formula Excel</li>
+                        <li>Backup data permanent</li>
+                        <li>Sharing ke kepala sekolah / wali kelas</li>
+                    </ul>
+
+                    <h4 style="color: var(--primary); margin-top: 20px;">📥 Cara Export:</h4>
+                    <ol>
+                        <li><strong>Pastikan filter clear</strong> jika ingin export semua data</li>
+                        <li><strong>Klik tombol "📊 Export to Excel"</strong></li>
+                        <li><strong>File CSV akan terdownload</strong> dengan nama: <code>Exam_Results_[YYYY-MM-DD].csv</code></li>
+                        <li><strong>Buka dengan Excel/Google Sheets</strong> untuk melihat dan edit data</li>
+                    </ol>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Format File CSV:</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kolom</th>
+                                    <th>Isi Data</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>No</td><td>Nomor urut</td></tr>
+                                <tr><td>Name</td><td>Nama siswa</td></tr>
+                                <tr><td>NIS</td><td>Nomor Induk</td></tr>
+                                <tr><td>Class</td><td>Kelas</td></tr>
+                                <tr><td>Exam</td><td>Judul ujian</td></tr>
+                                <tr><td>Score</td><td>Nilai (angka)</td></tr>
+                                <tr><td>Correct</td><td>Jawaban benar</td></tr>
+                                <tr><td>Total</td><td>Total soal</td></tr>
+                                <tr><td>Violations</td><td>Pelanggaran</td></tr>
+                                <tr><td>Date</td><td>Tanggal & waktu</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>✅ Data Terurut Otomatis:</h4>
+                        <p>Data di export akan otomatis terurut berdasarkan nilai (dari tertinggi ke terendah), memudahkan identifikasi peringkat kelas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 8 Scanner -->
+            <div class="step">
+                <div class="step-number">8</div>
+                <h3>Mengelola Data Tersimpan</h3>
+                <div class="step-content">
+                    <p>Semua data hasil scan tersimpan otomatis di browser menggunakan LocalStorage.</p>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Persistent Storage:</h4>
+                        <ul>
+                            <li><strong>Auto-save:</strong> Setiap scan langsung tersimpan otomatis</li>
+                            <li><strong>Persistent:</strong> Data tetap ada meskipun browser ditutup</li>
+                            <li><strong>Per-browser:</strong> Data disimpan di browser yang digunakan</li>
+                            <li><strong>No-server:</strong> Tidak perlu internet, data di local komputer</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Backup Data Penting:</h4>
+                        <ul>
+                            <li>Lakukan <strong>export Excel secara berkala</strong> sebagai backup</li>
+                            <li>Data bisa hilang jika <strong>clear browser data/cache</strong></li>
+                            <li>Jika <strong>ganti komputer/browser</strong>, data tidak akan ikut</li>
+                            <li>Selalu <strong>export setelah selesai scanning</strong> semua siswa</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="color: var(--danger); margin-top: 20px;">🗑️ Clear All Data</h4>
+                    <p>Jika ingin menghapus semua data dan mulai dari awal:</p>
+                    <ol>
+                        <li>Klik tombol merah "🗑️ Clear All"</li>
+                        <li>Akan ada 2x konfirmasi untuk memastikan</li>
+                        <li>Semua data akan terhapus permanent</li>
+                        <li>Pastikan sudah export dulu sebelum clear!</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Step 9 Scanner -->
+            <div class="step">
+                <div class="step-number">9</div>
+                <h3>Workflow Pengumpulan Hasil Ujian</h3>
+                <div class="step-content">
+                    <h4 style="color: var(--primary);">Skenario 1: Scanning Langsung (Tatap Muka)</h4>
+                    <ol>
+                        <li>Siswa mengerjakan ujian di kelas (HP/laptop masing-masing)</li>
+                        <li>Setelah selesai, siswa menunjukkan layar hasil (QR Code) ke depan</li>
+                        <li>Guru scan satu per satu menggunakan camera laptop</li>
+                        <li>Proses cepat: ~5-10 detik per siswa</li>
+                        <li>Semua data langsung terekam real-time</li>
+                    </ol>
+
+                    <h4 style="color: var(--primary); margin-top: 20px;">Skenario 2: Screenshot via WhatsApp (Remote)</h4>
+                    <ol>
+                        <li>Siswa mengerjakan ujian di rumah</li>
+                        <li>Setelah selesai, siswa screenshot QR Code hasil</li>
+                        <li>Kirim screenshot ke WhatsApp Group kelas atau ke guru</li>
+                        <li>Guru save semua gambar ke folder</li>
+                        <li>Upload satu per satu ke QR Scanner Dashboard</li>
+                    </ol>
+
+                    <h4 style="color: var(--primary); margin-top: 20px;">Skenario 3: Hybrid (Kombinasi)</h4>
+                    <ol>
+                        <li>Siswa hadir → scan langsung dengan camera</li>
+                        <li>Siswa izin/sakit → kirim screenshot via WhatsApp</li>
+                        <li>Semua data terkumpul di satu dashboard yang sama</li>
+                    </ol>
+
+                    <div class="tip-box">
+                        <h4>💡 Tips Efisiensi:</h4>
+                        <ul>
+                            <li><strong>Buat folder khusus</strong> untuk save screenshot dari WhatsApp</li>
+                            <li><strong>Rename file</strong> dengan nama siswa untuk identifikasi mudah</li>
+                            <li><strong>Batch upload</strong> jika banyak screenshot sekaligus</li>
+                            <li><strong>Cek duplikasi</strong> dengan fitur search sebelum scan ulang</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 10 Scanner -->
+            <div class="step">
+                <div class="step-number">10</div>
+                <h3>Troubleshooting & FAQ</h3>
+                <div class="step-content">
+                    <div class="warning-box">
+                        <h4>❓ Masalah Umum dan Solusi:</h4>
+                        
+                        <p><strong>Q: Camera tidak muncul / Access denied</strong></p>
+                        <p>A: Pastikan browser memiliki izin akses camera. Cek Settings → Privacy → Camera → Allow untuk browser yang digunakan.</p>
+
+                        <p style="margin-top: 15px;"><strong>Q: QR Code tidak terbaca</strong></p>
+                        <p>A: Pastikan pencahayaan cukup, QR Code tidak blur, dan seluruh QR Code masuk dalam frame camera.</p>
+
+                        <p style="margin-top: 15px;"><strong>Q: Data hilang setelah close browser</strong></p>
+                        <p>A: Data seharusnya persistent. Jika hilang, kemungkinan ada setting browser yang auto-clear data. Selalu export backup.</p>
+
+                        <p style="margin-top: 15px;"><strong>Q: Siswa sudah scan tapi tidak muncul</strong></p>
+                        <p>A: Cek filter - mungkin ada filter class yang aktif. Klik "All Classes" untuk melihat semua data.</p>
+
+                        <p style="margin-top: 15px;"><strong>Q: Nilai siswa salah / data corrupt</strong></p>
+                        <p>A: QR Code mungkin rusak saat screenshot. Minta siswa kirim ulang screenshot yang lebih jelas.</p>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Format QR Compatibility:</h4>
+                        <p>Dashboard ini support 2 format QR Code:</p>
+                        <ul>
+                            <li><strong>Format Baru (v5.1):</strong> Pipe-delimited (lebih compact & reliable)</li>
+                            <li><strong>Format Lama:</strong> JSON format (untuk backward compatibility)</li>
+                        </ul>
+                        <p>Anda tidak perlu khawatir tentang perbedaan format - sistem otomatis detect dan decode keduanya!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Tutorial 3: Teacher's Journal -->
+        <div class="tutorial-section" id="journalTutorial">
+            <button class="btn back-btn" onclick="showMenu()">← Kembali ke Menu</button>
+            
+            <div class="tutorial-header">
+                <h2>📖 Teacher's Journal</h2>
+                <span class="version">v7.0 FINAL</span>
+                <p style="margin-top: 15px; color: #666;">Jurnal Pembelajaran Digital untuk Guru</p>
+            </div>
+
+            <!-- Step 1 Journal -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Pengenalan Teacher's Journal</h3>
+                <div class="step-content">
+                    <p>Teacher's Journal adalah aplikasi jurnal pembelajaran digital yang membantu guru mendokumentasikan kegiatan mengajar harian secara terstruktur, sistematis, dan mudah diakses.</p>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Mengapa Perlu Jurnal Digital?</h4>
+                        <ul>
+                            <li><strong>Akuntabilitas:</strong> Bukti dokumentasi kegiatan pembelajaran</li>
+                            <li><strong>Evaluasi:</strong> Bahan refleksi dan perbaikan metode mengajar</li>
+                            <li><strong>Administrasi:</strong> Memenuhi persyaratan administrasi sekolah</li>
+                            <li><strong>Efisiensi:</strong> Tidak perlu menulis manual, lebih cepat dan rapi</li>
+                            <li><strong>Analytics:</strong> Tracking produktivitas dan pola mengajar</li>
+                        </ul>
+                    </div>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h5>📊 Dashboard</h5>
+                            <p>Statistik real-time: total entries, week/month tracking, day streak</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>➕ Easy Input</h5>
+                            <p>Form input sederhana dengan auto-complete dan validasi</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>📅 Calendar View</h5>
+                            <p>Visualisasi jurnal dalam format kalender interaktif</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>📈 Reports</h5>
+                            <p>Export laporan ke CSV atau PDF untuk dokumentasi</p>
+                        </div>
+                    </div>
+
+                    <div class="screenshot">
+                        Tampilan hero Teacher's Journal dengan gradient ungu dan informasi creator
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2 Journal -->
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Membuka dan Navigasi Aplikasi</h3>
+                <div class="step-content">
+                    <ol>
+                        <li>Buka file <code>SUGENG JURNAL GURU 07 VERSION FINAL.html</code> dengan browser</li>
+                        <li>Halaman akan terbuka dengan header besar "📚 Teacher's Journal"</li>
+                        <li>Anda akan melihat informasi creator di box ungu</li>
+                        <li>Ada 5 tab navigasi di bawahnya</li>
+                    </ol>
+
+                    <div class="info-box">
+                        <h4>ℹ️ 5 Tab Utama:</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tab</th>
+                                    <th>Fungsi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>📊 Dashboard</strong></td>
+                                    <td>Overview statistik dan recent entries</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>➕ Add Entry</strong></td>
+                                    <td>Form untuk menambah jurnal baru</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>📋 Journal Records</strong></td>
+                                    <td>Lihat semua jurnal dalam table atau calendar</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>📈 Reports</strong></td>
+                                    <td>Export dan preview laporan</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>⚙️ Settings</strong></td>
+                                    <td>Theme, time period, class management</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>✅ First Time Setup:</h4>
+                        <p>Sebelum mulai menambah jurnal, lakukan setup awal:</p>
+                        <ol>
+                            <li>Pergi ke tab <strong>Settings (⚙️)</strong></li>
+                            <li>Pilih theme favorit (Light/Dark/Pastel)</li>
+                            <li>Set default time jika perlu</li>
+                            <li>Setup akan otomatis tersimpan</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3 Journal -->
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Setup Time Periods (Jam Pelajaran)</h3>
+                <div class="step-content">
+                    <p>Sebelum menambah jurnal, Anda perlu mendefinisikan periode waktu (jam pelajaran) yang digunakan di sekolah Anda.</p>
+
+                    <h4 style="color: var(--primary);">Cara Menambah Time Period:</h4>
+                    <ol>
+                        <li>Di tab <strong>Add Entry</strong>, cari field "Time Period"</li>
+                        <li>Klik tombol <strong>"⏰ Manage Periods"</strong></li>
+                        <li>Modal "Time Period Management" akan terbuka</li>
+                        <li>Di field "Add New Time Period", ketik nama periode, contoh:
+                            <ul>
+                                <li>"1-2" (untuk jam ke 1-2)</li>
+                                <li>"3rd Period" (untuk jam ke-3)</li>
+                                <li>"Morning Block" (untuk blok pagi)</li>
+                                <li>"7-9" (untuk jam 7-9)</li>
+                            </ul>
+                        </li>
+                        <li>Klik tombol <strong>"Add"</strong></li>
+                        <li>Period akan muncul di list</li>
+                        <li>Ulangi untuk semua periode yang Anda perlukan</li>
+                    </ol>
+
+                    <div class="tip-box">
+                        <h4>💡 Contoh Setup Time Periods:</h4>
+                        <p>Untuk jadwal SMA standar (8 jam pelajaran):</p>
+                        <ul>
+                            <li>1-2 (07:00 - 08:30)</li>
+                            <li>3-4 (08:30 - 10:00)</li>
+                            <li>Break (10:00 - 10:15)</li>
+                            <li>5-6 (10:15 - 11:45)</li>
+                            <li>7-8 (12:30 - 14:00)</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Manage Time Periods:</h4>
+                        <ul>
+                            <li><strong>Edit:</strong> Klik "✏️ Edit" untuk mengubah nama period</li>
+                            <li><strong>Delete:</strong> Klik "🗑️ Delete" untuk hapus (hati-hati jika sudah digunakan)</li>
+                            <li><strong>Usage Count:</strong> Melihat berapa kali period digunakan di jurnal</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 Journal -->
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Setup Kelas yang Diajar</h3>
+                <div class="step-content">
+                    <p>Selain time periods, Anda juga perlu menambahkan list kelas yang Anda ajar.</p>
+
+                    <h4 style="color: var(--primary);">Cara Menambah Kelas:</h4>
+                    <ol>
+                        <li>Di tab <strong>Add Entry</strong>, di field "Class"</li>
+                        <li>Klik tombol <strong>"🏫 Manage Classes"</strong></li>
+                        <li>Modal "Class Management" akan terbuka</li>
+                        <li>Di field "Add New Class", ketik nama kelas, contoh:
+                            <ul>
+                                <li>"X-1" atau "X IPA 1"</li>
+                                <li>"XI-IPA-2"</li>
+                                <li>"XII-IPS-1"</li>
+                            </ul>
+                        </li>
+                        <li>Klik tombol <strong>"Add"</strong></li>
+                        <li>Kelas akan muncul di list</li>
+                        <li>Tambahkan semua kelas yang Anda ajar</li>
+                    </ol>
+
+                    <div class="success-box">
+                        <h4>✅ Manfaat Setup Awal:</h4>
+                        <p>Dengan setup time periods dan classes di awal:</p>
+                        <ul>
+                            <li>Input jurnal jadi lebih cepat (tinggal pilih dropdown)</li>
+                            <li>Data lebih konsisten dan terstruktur</li>
+                            <li>Filter dan search lebih akurat</li>
+                            <li>Laporan lebih informatif</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Tips Penamaan:</h4>
+                        <ul>
+                            <li>Gunakan format yang konsisten untuk semua kelas</li>
+                            <li>Hindari typo - akan sulit difilter nanti</li>
+                            <li>Bisa edit/delete nanti jika ada perubahan</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 Journal -->
+            <div class="step">
+                <div class="step-number">5</div>
+                <h3>Menambah Entry Jurnal</h3>
+                <div class="step-content">
+                    <p>Setelah setup selesai, Anda siap menambahkan entry jurnal pertama!</p>
+
+                    <h4 style="color: var(--primary);">Langkah-langkah:</h4>
+                    <ol>
+                        <li><strong>Pergi ke tab "➕ Add Entry"</strong></li>
+                        <li><strong>Isi Form:</strong>
+                            <ul>
+                                <li><strong>Day:</strong> Otomatis terisi berdasarkan tanggal (read-only)</li>
+                                <li><strong>Date:</strong> Pilih tanggal (default: hari ini)</li>
+                                <li><strong>Time (AM/PM):</strong> Pilih waktu mulai mengajar</li>
+                                <li><strong>Time Period:</strong> Pilih dari dropdown (1-2, 3-4, dll)</li>
+                                <li><strong>Class:</strong> Pilih kelas dari dropdown</li>
+                                <li><strong>Classroom Activity:</strong> Tulis detail kegiatan pembelajaran (WAJIB)</li>
+                                <li><strong>Notes:</strong> Catatan tambahan (opsional)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Klik "💾 Save Entry"</strong></li>
+                        <li><strong>Konfirmasi akan muncul:</strong> "Entry added successfully!"</li>
+                    </ol>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Contoh Isi Jurnal:</h4>
+                        <p><strong>Classroom Activity:</strong></p>
+                        <p>"Menjelaskan materi Sistem Persamaan Linear Dua Variabel (SPLDV) menggunakan metode grafik. Siswa mengerjakan latihan soal di buku paket halaman 45-47. Diskusi kelompok untuk soal nomor 10."</p>
+                        
+                        <p style="margin-top: 15px;"><strong>Notes:</strong></p>
+                        <p>"Beberapa siswa masih kesulitan dengan konsep gradien. Perlu remedial untuk 5 siswa di jam kosong besok."</p>
+                    </div>
+
+                    <div class="tip-box">
+                        <h4>💡 Tips Menulis Jurnal yang Baik:</h4>
+                        <ul>
+                            <li><strong>Specific:</strong> Tulis detail kegiatan, bukan hanya "Mengajar materi"</li>
+                            <li><strong>Measurable:</strong> Sertakan progress: halaman buku, soal nomor berapa, dll</li>
+                            <li><strong>Actionable:</strong> Catat tindak lanjut yang perlu dilakukan</li>
+                            <li><strong>Reflective:</strong> Tulis observasi: siswa paham/tidak, kendala, dll</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>✅ Auto-save & Auto-fill:</h4>
+                        <ul>
+                            <li>Form otomatis auto-save setiap 30 detik</li>
+                            <li>Tanggal default ke hari ini</li>
+                            <li>Time default ke waktu sekarang</li>
+                            <li>Day otomatis update saat ganti tanggal</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6 Journal -->
+            <div class="step">
+                <div class="step-number">6</div>
+                <h3>Melihat Dashboard & Statistik</h3>
+                <div class="step-content">
+                    <p>Dashboard menampilkan overview kegiatan jurnal Anda dengan visual yang menarik.</p>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h5>📊 Total Entries</h5>
+                            <p>Total seluruh jurnal yang pernah dibuat</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>📅 This Week</h5>
+                            <p>Jumlah jurnal minggu ini (reset setiap Minggu)</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>📆 This Month</h5>
+                            <p>Jumlah jurnal bulan ini</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>🔥 Day Streak</h5>
+                            <p>Berapa hari berturut-turut Anda konsisten membuat jurnal</p>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Recent Entries Section:</h4>
+                        <p>Di bawah kartu statistik, ada section "📝 Recent Entries" yang menampilkan 5 jurnal terakhir dengan informasi:</p>
+                        <ul>
+                            <li>Tanggal, hari, waktu, periode, dan kelas</li>
+                            <li>Aktivitas pembelajaran</li>
+                            <li>Notes (jika ada)</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        <h4>💡 Gunakan Day Streak sebagai Motivasi:</h4>
+                        <p>Day Streak membantu Anda konsisten:</p>
+                        <ul>
+                            <li>Target: Minimal 1 jurnal per hari mengajar</li>
+                            <li>Challenge: Pertahankan streak selama 30 hari</li>
+                            <li>Reward: Dokumentasi lengkap sepanjang semester!</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7 Journal -->
+            <div class="step">
+                <div class="step-number">7</div>
+                <h3>Mengelola Records (Table & Calendar View)</h3>
+                <div class="step-content">
+                    <p>Tab "📋 Journal Records" menyediakan 2 cara melihat jurnal Anda:</p>
+
+                    <h4 style="color: var(--primary);">View 1: Table View (Default)</h4>
+                    <p>Menampilkan jurnal dalam bentuk tabel lengkap dengan semua kolom.</p>
+                    
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h5>🔍 Search</h5>
+                            <p>Cari jurnal berdasarkan keyword di aktivitas atau notes</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>🏫 Filter Class</h5>
+                            <p>Filter jurnal berdasarkan kelas tertentu</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>📅 Date Range</h5>
+                            <p>Filter berdasarkan range tanggal (Start - End)</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>🔄 Sort</h5>
+                            <p>Klik header kolom untuk sort (Date, Day, Time, dll)</p>
+                        </div>
+                    </div>
+
+                    <h4 style="color: var(--primary); margin-top: 30px;">View 2: Calendar View</h4>
+                    <p>Menampilkan jurnal dalam format kalender visual.</p>
+                    
+                    <ol>
+                        <li>Klik button "📅 Calendar View"</li>
+                        <li>Kalender bulan ini akan muncul</li>
+                        <li>Tanggal dengan jurnal akan <strong>berwarna hijau</strong></li>
+                        <li>Tanggal hari ini <strong>berwarna ungu</strong></li>
+                        <li>Klik tanggal untuk melihat detail jurnal hari itu</li>
+                        <li>Gunakan tombol "← Previous" dan "Next →" untuk navigasi bulan</li>
+                    </ol>
+
+                    <div class="success-box">
+                        <h4>✅ Actions di Table View:</h4>
+                        <p>Setiap baris jurnal ada 2 tombol action:</p>
+                        <ul>
+                            <li><strong>✏️ Edit:</strong> Buka modal edit untuk mengubah jurnal</li>
+                            <li><strong>🗑️ Delete:</strong> Hapus jurnal (ada konfirmasi)</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        <h4>💡 Tips Penggunaan:</h4>
+                        <ul>
+                            <li>Gunakan <strong>Table View</strong> untuk cari jurnal spesifik atau export</li>
+                            <li>Gunakan <strong>Calendar View</strong> untuk overview visual bulanan</li>
+                            <li>Kombinasikan filter untuk analisis detail per kelas/periode</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 8 Journal -->
+            <div class="step">
+                <div class="step-number">8</div>
+                <h3>Edit dan Delete Entry</h3>
+                <div class="step-content">
+                    <h4 style="color: var(--primary);">✏️ Edit Entry:</h4>
+                    <ol>
+                        <li>Di tab "Journal Records", klik tombol <strong>"✏️ Edit"</strong> pada jurnal yang ingin diubah</li>
+                        <li>Modal edit akan muncul dengan data terisi otomatis</li>
+                        <li><strong>Fitur Draggable:</strong> Anda bisa drag modal ke posisi manapun dengan klik-drag di header modal</li>
+                        <li>Edit field yang perlu diubah</li>
+                        <li>Klik tombol <strong>"💾 Update Entry"</strong></li>
+                        <li>Modal akan close dan tabel akan refresh otomatis</li>
+                    </ol>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Draggable Modal:</h4>
+                        <p>Modal edit bisa dipindah-pindah posisinya dengan cara:</p>
+                        <ul>
+                            <li>Klik dan tahan di area header modal (bagian atas)</li>
+                            <li>Drag ke posisi yang diinginkan</li>
+                            <li>Berguna jika modal menutupi data yang ingin dilihat</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="color: var(--danger); margin-top: 30px;">🗑️ Delete Entry:</h4>
+                    <ol>
+                        <li>Di tab "Journal Records", klik tombol <strong>"🗑️ Delete"</strong></li>
+                        <li>Akan muncul konfirmasi: "Are you sure?"</li>
+                        <li>Klik "OK" untuk confirm delete</li>
+                        <li>Jurnal akan terhapus permanent</li>
+                    </ol>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Delete Bersifat Permanent:</h4>
+                        <p>Sekali dihapus, jurnal tidak bisa dikembalikan. Pastikan:</p>
+                        <ul>
+                            <li>Sudah yakin ingin menghapus</li>
+                            <li>Sudah export backup jika perlu</li>
+                            <li>Tidak salah klik delete</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 9 Journal -->
+            <div class="step">
+                <div class="step-number">9</div>
+                <h3>Export Laporan (CSV & PDF)</h3>
+                <div class="step-content">
+                    <p>Tab "📈 Reports" memungkinkan Anda export jurnal untuk dokumentasi atau arsip.</p>
+
+                    <h4 style="color: var(--primary);">Langkah-langkah Export:</h4>
+                    <ol>
+                        <li><strong>Pilih Time Range:</strong>
+                            <ul>
+                                <li>Today - Jurnal hari ini saja</li>
+                                <li>This Week - Minggu ini</li>
+                                <li>This Month - Bulan ini</li>
+                                <li>Last 3 Months - 3 bulan terakhir</li>
+                                <li>Last 6 Months - 6 bulan terakhir</li>
+                                <li>Custom Range - Pilih tanggal start & end sendiri</li>
+                            </ul>
+                        </li>
+                        <li><strong>Preview:</strong> Data yang akan di-export muncul di preview section</li>
+                        <li><strong>Choose Format:</strong>
+                            <ul>
+                                <li><strong>"📊 Export CSV":</strong> Format Excel/spreadsheet</li>
+                                <li><strong>"📄 Export PDF":</strong> Format dokumen siap cetak</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Format CSV Export:</h4>
+                        <p>File CSV berisi kolom:</p>
+                        <ul>
+                            <li>Date, Day, Time, Period, Class, Activity, Notes</li>
+                            <li>Bisa dibuka dengan Excel atau Google Sheets</li>
+                            <li>Data terurut berdasarkan tanggal (terbaru ke terlama)</li>
+                            <li>Cocok untuk arsip digital atau input ke sistem lain</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>✅ Format PDF Export:</h4>
+                        <p>PDF berisi:</p>
+                        <ul>
+                            <li>Header: "Teacher's Journal Report"</li>
+                            <li>Info: Created by Sugeng Mardiyanto, Export Date, Total Entries</li>
+                            <li>Detail setiap jurnal dengan format rapi</li>
+                            <li>Summary: Total entries, date range, classes involved</li>
+                            <li>Siap untuk dicetak atau dikirim sebagai laporan</li>
+                        </ul>
+                    </div>
+
+                    <div class="tip-box">
+                        <h4>💡 Best Practices Export:</h4>
+                        <ul>
+                            <li><strong>Export rutin:</strong> Setiap akhir bulan untuk arsip bulanan</li>
+                            <li><strong>Backup:</strong> Simpan file CSV sebagai backup di cloud (Google Drive)</li>
+                            <li><strong>Laporan resmi:</strong> Gunakan PDF untuk submission ke kepala sekolah</li>
+                            <li><strong>Analisis:</strong> Gunakan CSV untuk analisis di Excel (pivot table, chart, dll)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 10 Journal -->
+            <div class="step">
+                <div class="step-number">10</div>
+                <h3>Settings & Customization</h3>
+                <div class="step-content">
+                    <h4 style="color: var(--primary);">⚙️ Tab Settings:</h4>
+                    
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h5>🎨 Theme</h5>
+                            <p>3 pilihan theme:</p>
+                            <ul style="font-size: 0.9em; margin-top: 8px;">
+                                <li>☀️ Light - Terang untuk siang hari</li>
+                                <li>🌙 Dark - Gelap untuk malam hari</li>
+                                <li>🎨 Pastel - Warna lembut dan nyaman</li>
+                            </ul>
+                        </div>
+                        <div class="feature-card">
+                            <h5>⏰ Default Time</h5>
+                            <p>Set waktu default untuk form (misal: jam masuk sekolah 07:00)</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>💾 Backup & Restore</h5>
+                            <p>Export semua data sebagai backup JSON atau import data dari backup</p>
+                        </div>
+                        <div class="feature-card">
+                            <h5>🗑️ Clear All Data</h5>
+                            <p>Reset semua data (ada konfirmasi 2x untuk keamanan)</p>
+                        </div>
+                    </div>
+
+                    <h4 style="color: var(--primary); margin-top: 30px;">💾 Backup & Restore Data:</h4>
+                    <p>Fitur penting untuk keamanan data Anda!</p>
+
+                    <div class="success-box">
+                        <h4>✅ Export Backup:</h4>
+                        <ol>
+                            <li>Di tab Settings, scroll ke "Backup & Restore"</li>
+                            <li>Klik <strong>"💾 Export Backup"</strong></li>
+                            <li>File JSON akan terdownload: <code>teacher-journal-backup-[YYYY-MM-DD].json</code></li>
+                            <li>File ini berisi SEMUA data: entries, classes, time periods, settings</li>
+                            <li>Simpan file ini sebagai backup permanent</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Import Backup:</h4>
+                        <ol>
+                            <li>Klik <strong>"📁 Import Backup"</strong></li>
+                            <li>Pilih file backup JSON yang pernah di-export</li>
+                            <li>Konfirmasi: "This will replace all current data"</li>
+                            <li>Semua data akan di-restore ke kondisi saat backup</li>
+                        </ol>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Kapan Perlu Backup?</h4>
+                        <ul>
+                            <li>Sebelum <strong>clear browser data/cache</strong></li>
+                            <li>Sebelum <strong>ganti komputer/browser</strong></li>
+                            <li>Setiap <strong>akhir semester</strong> sebagai arsip</li>
+                            <li><strong>Rutin setiap bulan</strong> untuk berjaga-jaga</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 11 Journal -->
+            <div class="step">
+                <div class="step-number">11</div>
+                <h3>Tips & Best Practices</h3>
+                <div class="step-content">
+                    <div class="tip-box">
+                        <h4>💡 Tips Efisiensi:</h4>
+                        <ul>
+                            <li><strong>Isi jurnal langsung setelah mengajar</strong> - ingatan masih fresh</li>
+                            <li><strong>Gunakan template activity</strong> - copy-paste untuk kegiatan yang mirip</li>
+                            <li><strong>Manfaatkan Notes</strong> - untuk hal penting yang perlu follow-up</li>
+                            <li><strong>Set reminder</strong> - alarm untuk isi jurnal sebelum pulang</li>
+                            <li><strong>Konsisten dengan format</strong> - memudahkan review nanti</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>✅ Workflow Harian yang Efektif:</h4>
+                        <ol>
+                            <li><strong>Pagi:</strong> Buka aplikasi, cek schedule hari ini</li>
+                            <li><strong>Setelah mengajar:</strong> Langsung isi jurnal (5 menit)</li>
+                            <li><strong>Istirahat:</strong> Review jurnal yang sudah dibuat</li>
+                            <li><strong>Sore:</strong> Lengkapi notes jika ada yang terlupa</li>
+                            <li><strong>Akhir pekan:</strong> Review semua jurnal minggu ini</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Keyboard Shortcuts:</h4>
+                        <ul>
+                            <li><strong>Ctrl/Cmd + S:</strong> Save data manual</li>
+                            <li><strong>Ctrl/Cmd + N:</strong> Go to Add Entry tab</li>
+                            <li><strong>Escape:</strong> Close modal yang terbuka</li>
+                        </ul>
+                    </div>
+
+                    <div class="warning-box">
+                        <h4>⚠️ Hal yang Harus Dihindari:</h4>
+                        <ul>
+                            <li>❌ Menunda isi jurnal sampai akhir minggu (bisa lupa detail)</li>
+                            <li>❌ Menulis terlalu singkat (kurang informatif untuk evaluasi)</li>
+                            <li>❌ Lupa backup rutin (risiko data hilang)</li>
+                            <li>❌ Clear browser data tanpa backup dulu</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 12 Journal -->
+            <div class="step">
+                <div class="step-number">12</div>
+                <h3>FAQ & Troubleshooting</h3>
+                <div class="step-content">
+                    <div class="warning-box">
+                        <h4>❓ Pertanyaan Umum:</h4>
+                        
+                        <p><strong>Q: Apakah data aman? Bisa hilang tidak?</strong></p>
+                        <p>A: Data tersimpan di LocalStorage browser. Aman selama tidak clear browser data. Untuk extra safety, lakukan export backup rutin.</p>
+
+                        <p style="margin-top: 15px;"><strong>Q: Bisa diakses dari HP tidak?</strong></p>
+                        <p>A: Bisa! Aplikasi responsive dan mobile-friendly. Bisa digunakan di smartphone, tablet, atau laptop.</p>
+
+                        <p style="margin-top: 15px;"><strong>Q: Bagaimana jika ganti komputer?</strong></p>
+                        <p>A: Export backup dari komputer lama, lalu import backup di komputer baru. Semua data akan pindah.</p>
+
+                        <p style="margin-top: 15px;"><strong>Q: Bisa digunakan offline tidak?</strong></p>
+                        <p>A: Ya! Setelah file dibuka pertama kali, aplikasi bisa digunakan tanpa internet. Data tersimpan local.</p>
+
+                        <p style="margin-top: 15px;"><strong>Q: Berapa lama data bisa tersimpan?</strong></p>
+                        <p>A: Permanent, selama LocalStorage tidak di-clear. Tidak ada batas waktu atau jumlah entries.</p>
+
+                        <p style="margin-top: 15px;"><strong>Q: Bisa share data dengan guru lain?</strong></p>
+                        <p>A: Ya, export backup JSON atau CSV, lalu share file tersebut. Guru lain bisa import di aplikasi mereka.</p>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>ℹ️ Performance Tips:</h4>
+                        <ul>
+                            <li>Aplikasi otomatis auto-save setiap 30 detik</li>
+                            <li>Ringan dan fast loading - optimized untuk performance</li>
+                            <li>Support 1000+ entries tanpa lag</li>
+                            <li>Calendar view efisien untuk navigasi bulan/tahun</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer Credit -->
+        <div style="background: white; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-top: 40px;">
+            <h3 style="color: var(--primary); margin-bottom: 15px;">📚 Tutorial Lengkap Sistem Aplikasi Pendidikan</h3>
+            <p style="color: #666; margin-bottom: 20px;">Dikembangkan oleh:</p>
+            <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 20px;">
+                <div>
+                    <strong style="font-size: 1.1em;">Sugeng Mardiyanto</strong>
+                    <p style="color: #888; font-size: 0.9em;">Lead Developer</p>
+                </div>
+                <div>
+                    <strong style="font-size: 1.1em;">Rosdiana Amini</strong>
+                    <p style="color: #888; font-size: 0.9em;">Co-Developer</p>
+                </div>
+                <div>
+                    <strong style="font-size: 1.1em;">Wahyudi Utomo</strong>
+                    <p style="color: #888; font-size: 0.9em;">Co-Developer</p>
+                </div>
+            </div>
+            <div style="background: var(--gradient-1); color: white; padding: 15px; border-radius: 10px; margin-top: 20px;">
+                <p><strong>🏫 SMA Laboratorium Universitas Negeri Malang</strong></p>
+                <p><strong>🏫 SMAN 1 Widodaren Ngawi</strong></p>
+            </div>
+            <p style="margin-top: 20px; color: #999; font-size: 0.9em;">© 2024-2025 | Sistem Aplikasi Pendidikan Digital</p>
+        </div>
+    </div>
+
+    <script>
+        function showMenu() {
+            document.getElementById('navMenu').style.display = 'grid';
+            document.querySelectorAll('.tutorial-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showTutorial(type) {
+            document.getElementById('navMenu').style.display = 'none';
+            
+            const tutorials = {
+                'exam': 'examTutorial',
+                'scanner': 'scannerTutorial',
+                'journal': 'journalTutorial'
+            };
+            
+            document.querySelectorAll('.tutorial-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            document.getElementById(tutorials[type]).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Print functionality
+        function printTutorial() {
+            window.print();
+        }
+
+        // Smooth scroll for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            // Escape key to go back to menu
+            if (e.key === 'Escape') {
+                const activeSection = document.querySelector('.tutorial-section.active');
+                if (activeSection) {
+                    showMenu();
+                }
+            }
+        });
+
+        // Initialize - show menu by default
+        window.addEventListener('load', function() {
+            showMenu();
+        });
+    </script>
+</body>
+</html>
