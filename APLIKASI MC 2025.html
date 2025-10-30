@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MC Script Grand Final PPK 2025 - SMA Lab UM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .progress-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .progress-box h3 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .segment-btn {
+            width: 100%;
+            text-align: left;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f5f5f5;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .segment-btn:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .segment-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .segment-icon {
+            font-size: 1.5em;
+            min-width: 30px;
+        }
+
+        .segment-info {
+            flex: 1;
+        }
+
+        .segment-number {
+            display: inline-block;
+            background: rgba(0,0,0,0.1);
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+        }
+
+        .segment-btn.active .segment-number {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .segment-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 0.95em;
+        }
+
+        .segment-time {
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .content-header {
+            padding: 30px;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .content-header h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .content-meta {
+            display: flex;
+            gap: 20px;
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .content-body {
+            padding: 40px;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .mc-dialog {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            background: #f8f9ff;
+            border-radius: 5px;
+        }
+
+        .mc-name {
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stage-direction {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+            border-radius: 5px;
+            color: #666;
+        }
+
+        .checklist {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: flex-start;
+        }
+
+        .checklist-icon {
+            color: #4caf50;
+            font-size: 1.2em;
+        }
+
+        .section-divider {
+            border: none;
+            border-top: 2px solid #e0e0e0;
+            margin: 30px 0;
+        }
+
+        .navigation-footer {
+            padding: 25px 40px;
+            background: #f8f9fa;
+            border-top: 2px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #cccccc;
+            pointer-events: none;
+        }
+
+        .home-btn {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 10px;
+            background: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2em;
+        }
+
+        .home-btn:hover {
+            background: #d0d0d0;
+            transform: scale(1.1);
+        }
+
+        .tips-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 2px solid #b3d4fc;
+        }
+
+        .tips-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .tips-box li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .tips-box li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: relative;
+                max-height: none;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content-header h2 {
+                font-size: 1.5em;
+            }
+        }
+
+        .highlight-star {
+            color: #ffc107;
+            font-size: 1.2em;
+            margin-left: 5px;
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .scroll-to-top:hover {
+            transform: scale(1.1);
+        }
+
+        .scroll-to-top.show {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎭 Grand Final PPK 2025</h1>
+            <p>Pemilihan Putra Putri Berkarakter • SMA Laboratorium UM</p>
+            <p style="margin-top: 10px; color: #667eea; font-weight: bold;">Jumat, 31 Oktober 2025 • Gedung Sasana Krida</p>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="progress-box">
+                    <h3>📍 Progress Acara</h3>
+                    <p><span id="currentNum">1</span> / <span id="totalNum">23</span> Segmen</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <div id="segmentButtons"></div>
+            </div>
+
+            <div>
+                <div class="content-area">
+                    <div class="content-header" id="contentHeader">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                            <div style="font-size: 2.5em;" id="headerIcon">🎤</div>
+                            <div>
+                                <div style="font-size: 0.9em; opacity: 0.9;">Segmen <span id="headerNum">1</span></div>
+                                <h2 id="headerTitle">Pembukaan</h2>
+                            </div>
+                        </div>
+                        <div class="content-meta">
+                            <div>⏰ <span id="headerTime">18.00 - 18.05</span></div>
+                            <div>⏱️ Durasi: <span id="headerDuration">5 menit</span></div>
+                        </div>
+                    </div>
+
+                    <div class="content-body" id="contentBody">
+                        <!-- Content will be dynamically loaded here -->
+                    </div>
+
+                    <div class="navigation-footer">
+                        <button class="nav-btn" id="prevBtn">
+                            ← Sebelumnya
+                        </button>
+                        <button class="home-btn" onclick="goToSegment(0)" title="Kembali ke Awal">
+                            🏠
+                        </button>
+                        <button class="nav-btn" id="nextBtn">
+                            Selanjutnya →
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tips-box">
+                    <h3>⭐ Tips Penggunaan</h3>
+                    <ul>
+                        <li>Klik tombol segmen di sidebar untuk jump langsung ke bagian tertentu</li>
+                        <li>Perhatikan waktu dan durasi setiap segmen agar acara tepat waktu</li>
+                        <li>Segmen dengan bintang ⭐ dan trofi 🏆 adalah momen penting acara</li>
+                        <li>Gunakan tombol navigasi atau keyboard (← →) untuk berpindah segmen</li>
+                        <li>Tekan tombol 🏠 untuk kembali ke segmen pembukaan</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="scroll-to-top" id="scrollTopBtn" onclick="scrollToTop()">
+        ↑
+    </button>
+
+    <script>
+        const segments = [
+            {
+                id: 0,
+                title: "Pembukaan",
+                time: "18.00 - 18.05",
+                duration: "5 menit",
+                icon: "🎤",
+                color: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Assalamu'alaikum warahmatullahi wabarakatuh.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Selamat malam dan salam sejahtera bagi kita semua.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Yang terhormat, Rektor Universitas Negeri Malang,
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Yang terhormat, Kepala UPT SMA Laboratorium UM,
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Yang kami hormati, Bapak/Ibu dewan juri,
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Serta seluruh undangan, guru, orang tua, dan siswa-siswi SMA Laboratorium UM yang kami banggakan.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Puji syukur kita panjatkan ke hadirat Tuhan Yang Maha Esa, karena atas rahmat dan karunia-Nya, pada malam yang penuh berkah ini kita dapat berkumpul bersama dalam keadaan sehat walafiat.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Malam ini adalah malam yang istimewa. Malam di mana kita akan menyaksikan puncak dari sebuah perjalanan panjang, dedikasi, dan perjuangan para finalis Pemilihan Putra Putri Berkarakter SMA Laboratorium UM tahun 2025.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Sebelum kita memulai rangkaian acara malam ini, perkenankan kami memperkenalkan diri. Saya _____ dan rekan saya _____ akan menemani Bapak/Ibu sekalian sebagai pemandu acara pada malam yang berkesan ini.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Baik, tanpa menunggu waktu lebih lama lagi, mari kita mulai acara Grand Final Pemilihan Putra Putri Berkarakter SMA Laboratorium UM Tahun 2025.
+                    </div>
+                `
+            },
+            {
+                id: 1,
+                title: "Lagu Indonesia Raya",
+                time: "18.05 - 18.10",
+                duration: "5 menit",
+                icon: "🇮🇩",
+                color: "linear-gradient(135deg, #ef4444 0%, #f97316 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Untuk mengawali acara malam ini, marilah kita bersama-sama menyanyikan lagu kebangsaan Indonesia Raya 1 stanza dengan penuh hikmat dan khidmat.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Kepada seluruh hadirin yang kami hormati, kami persilakan untuk berdiri.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Dirigen akan dipimpin oleh perwakilan dari Duta PPK 2024.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Bapak/Ibu, mari kita mulai.
+                    </div>
+                    <div class="stage-direction">
+                        Lagu Indonesia Raya dikumandangkan
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Terima kasih. Kepada seluruh hadirin, silakan duduk kembali.
+                    </div>
+                `
+            },
+            {
+                id: 2,
+                title: "Tari Pembuka",
+                time: "18.10 - 18.20",
+                duration: "10 menit",
+                icon: "💃",
+                color: "linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Hadirin yang berbahagia, untuk memeriahkan pembukaan acara malam ini, kami telah menyiapkan sebuah persembahan tari yang indah.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Tarian pembuka ini akan menggambarkan semangat, keanggunan, dan karakter yang menjadi nilai utama dalam ajang Pemilihan Putra Putri Berkarakter ini.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Mari kita sambut dengan tepuk tangan yang meriah, penampilan tari pembuka dari Tim Tari SMA Laboratorium UM!
+                    </div>
+                    <div class="stage-direction">
+                        Tari Pembuka
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Subhanallah, luar biasa! Mari kita berikan apresiasi sekali lagi untuk penampilan yang memukau dari Tim Tari kita.
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                title: "Sambutan Kepala Sekolah",
+                time: "18.20 - 18.25",
+                duration: "5 menit",
+                icon: "🎤",
+                color: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Hadirin yang kami muliakan, acara Pemilihan Putra Putri Berkarakter ini merupakan salah satu program unggulan SMA Laboratorium UM dalam membentuk karakter dan kepribadian siswa-siswi yang berintegritas.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Untuk memberikan sambutan sekaligus membuka secara resmi acara Grand Final malam ini, kami persilakan dengan hormat, Kepala UPT SMA Laboratorium Universitas Negeri Malang.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Bapak/Ibu hadirin, mari kita persilakan dengan tepuk tangan yang meriah.
+                    </div>
+                    <div class="stage-direction">
+                        Sambutan Kepala Sekolah
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Terima kasih atas sambutan dan arahan yang inspiratif dari Bapak Kepala Sekolah. Semoga semangat dan nilai-nilai yang disampaikan dapat menjadi motivasi bagi kita semua.
+                    </div>
+                `
+            },
+            {
+                id: 4,
+                title: "Pengenalan Dewan Juri",
+                time: "18.25 - 18.30",
+                duration: "5 menit",
+                icon: "👨‍⚖️",
+                color: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Hadirin yang berbahagia, dalam ajang bergengsi malam ini, tentunya kita memerlukan para juri yang kompeten dan berpengalaman untuk menilai para finalis kita.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Para dewan juri malam ini adalah sosok-sosok yang kredibel di bidangnya masing-masing. Mereka akan menilai setiap aspek dari penampilan, kepribadian, hingga kualitas jawaban para finalis.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Baik, ijinkan kami memperkenalkan dewan juri malam ini:
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        <em>[Sebutkan nama dan jabatan Juri 1]</em><br>
+                        Mari kita sambut dengan tepuk tangan!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        <em>[Sebutkan nama dan jabatan Juri 2]</em><br>
+                        Selamat malam dan terima kasih atas kehadirannya!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        <em>[Sebutkan nama dan jabatan Juri 3 dan seterusnya]</em>
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Kepada para dewan juri yang kami hormati, terima kasih telah bersedia meluangkan waktu untuk hadir dan menilai para finalis kami malam ini.
+                    </div>
+                `
+            },
+            {
+                id: 5,
+                title: "⭐ Runway Walk & Opening Number",
+                time: "18.30 - 19.00",
+                duration: "30 menit",
+                icon: "✨",
+                color: "linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Hadirin yang berbahagia, inilah saatnya yang paling kita nantikan!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Malam ini, 12 finalis terbaik telah terpilih untuk bertarung memperebutkan mahkota Putra Putri Berkarakter SMA Laboratorium UM 2025.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Mereka telah melewati berbagai tahapan seleksi yang ketat. Dari ratusan siswa, kini tersisa 12 finalis terbaik yang akan memukau kita malam ini.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Mari kita saksikan kepercayaan diri, karisma, dan pesona dari para finalis kita melalui Runway Walk dan Opening Number.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Setelah penampilannya, setiap finalis akan menyampaikan speech singkat yang menggambarkan visi dan misi mereka.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Hadirin yang terhormat, bersiaplah untuk terpukau! Mari kita sambut dengan gemuruh tepuk tangan, 12 finalis Pemilihan Putra Putri Berkarakter SMA Laboratorium UM 2025!
+                    </div>
+                    <div class="stage-direction">
+                        Runway Walk dan Speech Finalis
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Masya Allah! Luar biasa! Penampilan yang sangat memukau dari 12 finalis kita!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Kepercayaan diri, kecantikan, dan ketampanan yang terpancar jelas dari setiap finalis. Mari kita berikan apresiasi sekali lagi!
+                    </div>
+                `
+            },
+            {
+                id: 6,
+                title: "Sambutan Rektor UM",
+                time: "19.00 - 19.10",
+                duration: "10 menit",
+                icon: "🎤",
+                color: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Hadirin yang kami muliakan, acara Pemilihan Putra Putri Berkarakter ini tidak hanya sekadar ajang pencarian bakat, namun juga merupakan wadah pembentukan karakter generasi muda yang berintegritas.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Untuk memberikan sambutan dan motivasi kepada para finalis serta seluruh hadirin, kami dengan hormat mempersilakan Rektor Universitas Negeri Malang atau Kepala UPT untuk menyampaikan arahan.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Mari kita persilakan dengan tepuk tangan yang meriah.
+                    </div>
+                    <div class="stage-direction">
+                        Sambutan Rektor/Kepala UPT
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Terima kasih atas sambutan yang sangat inspiratif. Semoga nilai-nilai dan pesan yang disampaikan dapat tertanam dalam diri setiap finalis dan kita semua.
+                    </div>
+                `
+            },
+            {
+                id: 7,
+                title: "Video Flashback PPK 2025",
+                time: "19.10 - 19.15",
+                duration: "5 menit",
+                icon: "📹",
+                color: "linear-gradient(135deg, #14b8a6 0%, #10b981 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Hadirin yang berbahagia, perjalanan para finalis menuju panggung malam ini tentu tidaklah mudah.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Ada suka duka, tawa dan tangis, kelelahan dan kebahagiaan yang mereka lalui bersama selama persiapan hingga hari ini.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Mari kita saksikan bersama perjalanan mereka melalui video flashback Pemilihan Putra Putri Berkarakter 2025.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Silakan disaksikan.
+                    </div>
+                    <div class="stage-direction">
+                        Pemutaran Video
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Sungguh perjalanan yang menyentuh hati. Tepuk tangan untuk perjuangan dan dedikasi para finalis kita!
+                    </div>
+                `
+            },
+            {
+                id: 8,
+                title: "Q&A Top 12",
+                time: "19.15 - 19.42",
+                duration: "27 menit",
+                icon: "💬",
+                color: "linear-gradient(135deg, #f97316 0%, #ef4444 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Hadirin yang berbahagia, kita telah melihat pesona dan kepercayaan diri para finalis. Namun, karakter seseorang tidak hanya dinilai dari penampilan fisik semata.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Kecerdasan, cara berpikir, dan kemampuan berkomunikasi juga menjadi aspek penting yang akan dinilai malam ini.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Oleh karena itu, dalam segmen ini, para finalis akan menjawab pertanyaan yang diajukan oleh dewan juri.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Setiap finalis akan mendapatkan pertanyaan yang berbeda dan memiliki waktu untuk menyampaikan jawaban mereka.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Mari kita saksikan kecerdasan dan kemampuan berpikir kritis dari para finalis kita. Silakan, dewan juri.
+                    </div>
+                    <div class="stage-direction">
+                        Sesi Q&A berlangsung
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Luar biasa! Jawaban-jawaban yang cerdas dan penuh makna dari para finalis kita.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Mari kita berikan apresiasi untuk keberanian dan kecerdasan mereka!
+                    </div>
+                `
+            },
+            {
+                id: 9,
+                title: "Hiburan: Solo Falasifa",
+                time: "19.42 - 19.49",
+                duration: "7 menit",
+                icon: "🎵",
+                color: "linear-gradient(135deg, #a855f7 0%, #ec4899 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Hadirin yang berbahagia, untuk menghibur Bapak/Ibu sekalian, kami telah menyiapkan penampilan spesial.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Mari kita sambut dengan tepuk tangan yang meriah, penampilan solo dari Saudari Falasifa!
+                    </div>
+                    <div class="stage-direction">
+                        Penampilan Menyanyi
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Merdu sekali! Terima kasih untuk penampilan yang menyentuh hati dari Falasifa. Mari kita berikan tepuk tangan sekali lagi!
+                    </div>
+                `
+            },
+            {
+                id: 10,
+                title: "Penampilan Band",
+                time: "19.49 - 20.04",
+                duration: "15 menit",
+                icon: "🎸",
+                color: "linear-gradient(135deg, #3b82f6 0%, #6366f1 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Dan hiburan malam ini belum berakhir! Untuk semakin memeriahkan suasana, kita akan disuguhkan penampilan dari band kita.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Mereka akan membawakan 2 lagu yang pastinya akan membuat malam ini semakin berkesan.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Mari kita sambut dengan gegap gempita, penampilan band SMA Laboratorium UM!
+                    </div>
+                    <div class="stage-direction">
+                        Penampilan Band
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Wah, energi yang luar biasa! Terima kasih untuk penampilan yang memukau dari band kita!
+                    </div>
+                `
+            },
+            {
+                id: 11,
+                title: "Hiburan: Dance",
+                time: "20.04 - 20.11",
+                duration: "7 menit",
+                icon: "💃",
+                color: "linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Hadirin yang berbahagia, untuk semakin menghipnotis mata Anda, kami persembahkan sebuah performance dance yang dinamis!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Mari kita saksikan dan berikan dukungan dengan tepuk tangan yang meriah!
+                    </div>
+                    <div class="stage-direction">
+                        Penampilan Dance
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Fantastic! Penampilan yang sangat energik! Mari kita apresiasi sekali lagi!
+                    </div>
+                `
+            },
+            {
+                id: 12,
+                title: "⭐ Pengumuman Top 4",
+                time: "20.11 - 20.24",
+                duration: "13 menit",
+                icon: "🌟",
+                color: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Hadirin yang berbahagia, inilah momen yang paling menegangkan malam ini.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Dari 12 finalis yang telah menampilkan yang terbaik, hanya 4 orang yang akan melanjutkan ke babak final.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Keputusan ini tentunya sangat berat, mengingat semua finalis telah menunjukkan performa yang luar biasa.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Namun, berdasarkan penilaian dari dewan juri yang telah mempertimbangkan berbagai aspek, kini saatnya kami umumkan 4 besar finalis malam ini.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Para finalis, bersiaplah. Hadirin, mari kita berikan dukungan untuk mereka semua.
+                    </div>
+                    <div class="stage-direction">
+                        Proses pengumuman dengan drum roll dan suspense
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Finalis pertama yang masuk ke 4 besar adalah... <em>[Nama Finalis]</em>
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Finalis kedua yang masuk ke 4 besar adalah... <em>[Nama Finalis]</em>
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Finalis ketiga yang masuk ke 4 besar adalah... <em>[Nama Finalis]</em>
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Dan finalis terakhir yang melengkapi 4 besar malam ini adalah... <em>[Nama Finalis]</em>
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Selamat kepada 4 finalis yang telah lolos! Dan kepada finalis lainnya, kalian semua adalah pemenang. Terima kasih atas dedikasi dan perjuangan kalian!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Mari kita berikan tepuk tangan untuk semua finalis!
+                    </div>
+                `
+            },
+            {
+                id: 13,
+                title: "Video Profile PPK 2024",
+                time: "20.24 - 20.31",
+                duration: "7 menit",
+                icon: "📹",
+                color: "linear-gradient(135deg, #10b981 0%, #14b8a6 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Hadirin yang berbahagia, sebelum kita melanjutkan ke babak final, mari kita melihat kembali perjalanan Duta Putra Putri Berkarakter tahun 2024.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Mereka telah menjadi representasi terbaik dari SMA Laboratorium UM dan telah menjalankan tugas mereka dengan gemilang selama satu tahun terakhir.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Mari kita saksikan video profile dari Duta PPK 2024.
+                    </div>
+                    <div class="stage-direction">
+                        Pemutaran Video
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Terima kasih dan apresiasi setinggi-tingginya untuk dedikasi Duta PPK 2024!
+                    </div>
+                `
+            },
+            {
+                id: 14,
+                title: "⭐ Q&A Top 4 (FINAL)",
+                time: "20.31 - 20.51",
+                duration: "20 menit",
+                icon: "💬",
+                color: "linear-gradient(135deg, #ef4444 0%, #ec4899 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Hadirin yang terhormat, kini kita memasuki babak yang paling menentukan.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Empat finalis terbaik akan kembali diuji melalui sesi tanya jawab final yang lebih mendalam.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Pertanyaan yang diberikan akan menguji tidak hanya kecerdasan, tetapi juga kedewasaan berpikir, visi, dan komitmen mereka sebagai calon Duta Putra Putri Berkarakter.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Para finalis, ini adalah kesempatan terakhir Anda untuk membuktikan bahwa Anda layak menyandang mahkota ini.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Dewan juri, silakan.
+                    </div>
+                    <div class="stage-direction">
+                        Sesi Q&A Top 4
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Masya Allah! Jawaban-jawaban yang sangat berkualitas dan penuh makna!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Keputusan tentunya akan semakin sulit bagi dewan juri. Mari kita berikan apresiasi untuk ke-4 finalis kita!
+                    </div>
+                `
+            },
+            {
+                id: 15,
+                title: "Hiburan: Solo Keenar",
+                time: "20.51 - 20.56",
+                duration: "5 menit",
+                icon: "🎵",
+                color: "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Sementara dewan juri melakukan penilaian akhir, mari kita nikmati hiburan dari Saudara Keenar.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Mari kita sambut dengan tepuk tangan yang meriah!
+                    </div>
+                    <div class="stage-direction">
+                        Penampilan Menyanyi
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Terima kasih Keenar untuk penampilan yang indah!
+                    </div>
+                `
+            },
+            {
+                id: 16,
+                title: "Drama Musikal",
+                time: "20.56 - 21.01",
+                duration: "5 menit",
+                icon: "🎭",
+                color: "linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Dan sebagai penutup dari rangkaian hiburan malam ini, kami persembahkan sebuah koreografi drama musikal.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Silakan disaksikan dan dinikmati!
+                    </div>
+                    <div class="stage-direction">
+                        Penampilan Drama Musikal
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Bravo! Penampilan yang sangat artistik! Tepuk tangan untuk mereka!
+                    </div>
+                `
+            },
+            {
+                id: 17,
+                title: "Last Walk PPK 2024",
+                time: "21.01 - 21.06",
+                duration: "5 menit",
+                icon: "👑",
+                color: "linear-gradient(135deg, #f59e0b 0%, #f97316 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Hadirin yang berbahagia, sudah satu tahun Duta PPK 2024 mengemban amanah mereka.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Kini saatnya mereka melepaskan mahkota dan menyerahkannya kepada generasi penerus.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Sebagai bentuk penghormatan dan apresiasi, mari kita saksikan Last Walk dari Duta Putra Putri Berkarakter 2024.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Mari kita sambut dengan standing ovation!
+                    </div>
+                    <div class="stage-direction">
+                        Last Walk PPK 2024
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Terima kasih untuk segala dedikasi, kerja keras, dan pengabdian kalian. Kalian adalah inspirasi bagi kami semua!
+                    </div>
+                `
+            },
+            {
+                id: 18,
+                title: "Final Runway Walk",
+                time: "21.06 - 21.11",
+                duration: "5 menit",
+                icon: "✨",
+                color: "linear-gradient(135deg, #f43f5e 0%, #ef4444 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Hadirin yang berbahagia, inilah momen yang paling ditunggu!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Keempat finalis akan melakukan runway walk terakhir mereka sebelum pengumuman pemenang.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Ini adalah kesempatan terakhir mereka untuk menunjukkan pesona, kepercayaan diri, dan karakter mereka.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Mari kita sambut dengan tepuk tangan yang sangat meriah, Final Runway Walk dari 4 finalis PPK 2025!
+                    </div>
+                    <div class="stage-direction">
+                        Final Runway Walk
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Subhanallah! Mereka semua luar biasa! Hadirin, mari kita berikan standing ovation!
+                    </div>
+                `
+            },
+            {
+                id: 19,
+                title: "🏆 PENGUMUMAN JUARA & CROWNING",
+                time: "21.11 - 21.36",
+                duration: "25 menit",
+                icon: "🏆",
+                color: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Hadirin yang terhormat, tibalah kita pada puncak acara malam ini.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Dewan juri telah menyelesaikan penilaian mereka. Keputusan telah dibuat.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Malam ini, kita akan menyaksikan kelahiran Duta Putra dan Putri Berkarakter SMA Laboratorium UM yang baru.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Sebelum pengumuman pemenang utama, kami akan mengumumkan juara-juara kategori khusus.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        <em>[Umumkan kategori khusus seperti Favorit, Best Talent, dll]</em>
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Dan kini, saatnya pengumuman yang paling ditunggu-tunggu!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Untuk kategori Runner Up 2 PPK 2025...<br>
+                        <em>[Drum roll]</em><br>
+                        Adalah... <em>[Nama]</em><br>
+                        Selamat! Mari kita sambut untuk naik ke panggung!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Untuk kategori Runner Up 1 PPK 2025...<br>
+                        <em>[Drum roll]</em><br>
+                        Adalah... <em>[Nama]</em><br>
+                        Selamat! Silakan naik ke panggung!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Hadirin yang berbahagia, tinggal dua finalis tersisa. Siapakah yang akan menjadi Duta Putra dan Putri Berkarakter 2025?
+                    </div>
+                    <div class="stage-direction">
+                        Suasana tegang dengan musik latar
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Yang terhormat Bapak/Ibu sekalian, dengan bangga kami umumkan...
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1 & MC 2:</span>
+                        Juara 1 Putra Berkarakter SMA Laboratorium UM 2025 adalah... <em>[Nama Putra]</em><br>
+                        Dan Juara 1 Putri Berkarakter SMA Laboratorium UM 2025 adalah... <em>[Nama Putri]</em>
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Congratulations! Selamat kepada pemenang! Mari naik ke panggung!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Kini saatnya Crowning Moment yang sakral. Kami persilakan Duta PPK 2024 untuk menyematkan mahkota kepada penerus mereka.
+                    </div>
+                    <div class="stage-direction">
+                        Crowning Moment & Penyerahan Hadiah
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Mari kita berikan standing ovation untuk Duta Putra Putri Berkarakter SMA Laboratorium UM 2025!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Selamat kepada para pemenang! Dan kepada seluruh finalis, kalian semua adalah juara!
+                    </div>
+                `
+            },
+            {
+                id: 20,
+                title: "Doa Penutup",
+                time: "21.36 - 21.38",
+                duration: "2 menit",
+                icon: "🤲",
+                color: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Hadirin yang berbahagia, sebelum kita mengakhiri acara yang luar biasa ini, marilah kita panjatkan doa penutup.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Kami persilakan Ustadz Fahmi untuk memimpin doa. Hadirin, mari kita mengheningkan cipta.
+                    </div>
+                    <div class="stage-direction">
+                        Doa
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Aamiin. Terima kasih Ustadz Fahmi.
+                    </div>
+                `
+            },
+            {
+                id: 21,
+                title: "Penutup",
+                time: "21.38 - 21.41",
+                duration: "3 menit",
+                icon: "🎤",
+                color: "linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Hadirin yang kami muliakan, demikianlah acara Grand Final Pemilihan Putra Putri Berkarakter SMA Laboratorium UM 2025 telah kita lalui bersama.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Terima kasih kepada seluruh pihak yang telah mendukung acara ini: dewan juri, para guru, panitia, orang tua, dan tentunya seluruh finalis yang telah berjuang dengan luar biasa.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Semoga acara malam ini memberikan inspirasi dan motivasi bagi kita semua untuk terus mengembangkan karakter dan prestasi.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Kepada Duta PPK 2025 yang baru, semoga kalian dapat menjalankan amanah ini dengan penuh tanggung jawab dan menjadi teladan bagi seluruh siswa SMA Laboratorium UM.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Atas nama panitia, kami mohon maaf apabila ada kekurangan selama acara berlangsung.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Sampai jumpa di acara PPK tahun depan yang tentunya akan lebih spektakuler!
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Wassalamu'alaikum warahmatullahi wabarakatuh.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Selamat malam dan terima kasih!
+                    </div>
+                `
+            },
+            {
+                id: 22,
+                title: "Foto Bersama",
+                time: "21.41 - 22.00",
+                duration: "19 menit",
+                icon: "📸",
+                color: "linear-gradient(135deg, #ec4899 0%, #a855f7 100%)",
+                content: `
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 1:</span>
+                        Sebelum kita berpisah, kami mengundang seluruh finalis, panitia, dan dewan juri untuk berkumpul di panggung untuk sesi foto bersama.
+                    </div>
+                    <div class="mc-dialog">
+                        <span class="mc-name">MC 2:</span>
+                        Mari kita abadikan momen bersejarah ini bersama-sama!
+                    </div>
+                    <hr class="section-divider">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">📝 CATATAN PENTING UNTUK MC:</h3>
+                    <div class="checklist">
+                        <span class="checklist-icon">✅</span>
+                        <span>Selalu jaga energi dan antusiasme sepanjang acara</span>
+                    </div>
+                    <div class="checklist">
+                        <span class="checklist-icon">✅</span>
+                        <span>Berinteraksi dengan audience untuk menjaga engagement</span>
+                    </div>
+                    <div class="checklist">
+                        <span class="checklist-icon">✅</span>
+                        <span>Siapkan ice breaking atau kalimat transisi jika ada delay</span>
+                    </div>
+                    <div class="checklist">
+                        <span class="checklist-icon">✅</span>
+                        <span>Koordinasi dengan tim teknis untuk musik dan lighting</span>
+                    </div>
+                    <div class="checklist">
+                        <span class="checklist-icon">✅</span>
+                        <span>Pastikan pronounce nama-nama dengan benar</span>
+                    </div>
+                    <div class="checklist">
+                        <span class="checklist-icon">✅</span>
+                        <span>Jaga timing sesuai rundown</span>
+                    </div>
+                    <div class="checklist">
+                        <span class="checklist-icon">✅</span>
+                        <span>Selalu standby dengan improvisasi jika ada situasi tidak terduga</span>
+                    </div>
+                    <div class="checklist">
+                        <span class="checklist-icon">✅</span>
+                        <span>Tunjukkan empati dan apresiasi kepada semua finalis</span>
+                    </div>
+                    <div class="checklist">
+                        <span class="checklist-icon">✅</span>
+                        <span>Maintain profesionalisme namun tetap hangat dan ramah</span>
+                    </div>
+                    <div class="checklist">
+                        <span class="checklist-icon">✅</span>
+                        <span>Pastikan volume suara jelas dan intonasi bervariasi</span>
+                    </div>
+                    <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px; text-align: center; font-weight: bold; font-size: 1.2em;">
+                        🎉 Selamat Memandu Acara! Semoga Sukses! 🎉
+                    </div>
+                `
+            }
+        ];
+
+        let currentSegment = 0;
+
+        function renderSegmentButtons() {
+            const container = document.getElementById('segmentButtons');
+            container.innerHTML = '';
+            
+            segments.forEach((seg, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'segment-btn' + (idx === currentSegment ? ' active' : '');
+                btn.onclick = () => goToSegment(idx);
+                
+                btn.innerHTML = `
+                    <div class="segment-icon">${seg.icon}</div>
+                    <div class="segment-info">
+                        <div>
+                            <span class="segment-number">#${idx + 1}</span>
+                            ${seg.title.includes('⭐') || seg.title.includes('🏆') ? '<span class="highlight-star">★</span>' : ''}
+                        </div>
+                        <div class="segment-title">${seg.title}</div>
+                        <div class="segment-time">⏰ ${seg.time} • ${seg.duration}</div>
+                    </div>
+                `;
+                
+                container.appendChild(btn);
+            });
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            // Update Previous Button
+            if (currentSegment === 0) {
+                prevBtn.classList.add('disabled');
+            } else {
+                prevBtn.classList.remove('disabled');
+            }
+            
+            // Update Next Button
+            if (currentSegment === segments.length - 1) {
+                nextBtn.classList.add('disabled');
+            } else {
+                nextBtn.classList.remove('disabled');
+            }
+        }
+
+        function goToSegment(index) {
+            currentSegment = index;
+            const seg = segments[index];
+            
+            // Update header
+            document.getElementById('headerIcon').textContent = seg.icon;
+            document.getElementById('headerNum').textContent = index + 1;
+            document.getElementById('headerTitle').textContent = seg.title;
+            document.getElementById('headerTime').textContent = seg.time;
+            document.getElementById('headerDuration').textContent = seg.duration;
+            document.getElementById('contentHeader').style.background = seg.color;
+            
+            // Update content
+            document.getElementById('contentBody').innerHTML = seg.content;
+            
+            // Update progress
+            document.getElementById('currentNum').textContent = index + 1;
+            document.getElementById('totalNum').textContent = segments.length;
+            const progress = ((index + 1) / segments.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // Update buttons
+            renderSegmentButtons();
+            updateNavigationButtons();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function nextSegment() {
+            if (currentSegment < segments.length - 1) {
+                goToSegment(currentSegment + 1);
+            }
+        }
+
+        function previousSegment() {
+            if (currentSegment > 0) {
+                goToSegment(currentSegment - 1);
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Add event listeners to navigation buttons
+        document.getElementById('prevBtn').addEventListener('click', previousSegment);
+        document.getElementById('nextBtn').addEventListener('click', nextSegment);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') {
+                nextSegment();
+            } else if (e.key === 'ArrowLeft') {
+                previousSegment();
+            } else if (e.key === 'Home') {
+                goToSegment(0);
+            }
+        });
+
+        // Show scroll to top button
+        window.addEventListener('scroll', function() {
+            const btn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 300) {
+                btn.classList.add('show');
+            } else {
+                btn.classList.remove('show');
+            }
+        });
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', function() {
+            renderSegmentButtons();
+            goToSegment(0);
+        });
+    </script>
+</body>
+</html>
