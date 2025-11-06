@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Encyclopedia Builder - Report Text Exam</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.1em; opacity: 0.9; }
+        
+        .game-area {
+            padding: 30px;
+        }
+        
+        .login-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .login-screen h2 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .warning-box h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .warning-box ul {
+            margin-left: 20px;
+            color: #856404;
+        }
+        .warning-box li {
+            margin: 5px 0;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .score-panel {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .score-item {
+            text-align: center;
+            padding: 10px;
+        }
+        .score-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .score-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .timer-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .timer {
+            display: inline-block;
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            padding: 15px 30px;
+            background: white;
+            border-radius: 15px;
+            border: 3px solid #667eea;
+            min-width: 120px;
+        }
+        .timer.warning {
+            color: #ffc107;
+            border-color: #ffc107;
+            animation: pulse 1s infinite;
+        }
+        .timer.danger {
+            color: #dc3545;
+            border-color: #dc3545;
+            animation: pulse 0.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .violation-banner {
+            background: #dc3545;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .animal-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 3px solid #667eea;
+        }
+        .animal-image {
+            font-size: 5em;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .question-area {
+            margin-top: 20px;
+        }
+        .question {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+        .question h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .difficulty-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        .badge-easy {
+            background: #d4edda;
+            color: #155724;
+        }
+        .badge-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .badge-hard {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .drag-drop-area {
+            min-height: 100px;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+        }
+        .drag-item {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            cursor: move;
+            user-select: none;
+        }
+        .drag-item:hover {
+            background: #e7f0ff;
+        }
+        .drop-zone {
+            min-height: 60px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            background: white;
+        }
+        .drop-zone.drag-over {
+            background: #e7f0ff;
+            border-color: #667eea;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .result-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .trophy {
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .final-score {
+            font-size: 3em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        #qrcode {
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        
+        .sound-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5em;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        .sound-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            text-align: center;
+        }
+        .modal-content h2 {
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+        
+        .hidden { display: none; }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8em; }
+            .game-area { padding: 15px; }
+            .score-value { font-size: 1.5em; }
+            .btn { padding: 10px 20px; font-size: 1em; }
+            .timer { font-size: 2em; padding: 10px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sound-toggle" id="soundToggle">🔊</div>
+
+    <!-- Violation Modal -->
+    <div id="violationModal" class="modal">
+        <div class="modal-content">
+            <h2>⚠️ Security Violation Detected!</h2>
+            <p id="violationMessage"></p>
+            <p style="margin-top: 20px; color: #dc3545; font-weight: bold;">This violation has been recorded.</p>
+            <button class="btn btn-primary" id="closeViolationBtn">I Understand</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🦁 Animal Encyclopedia Builder</h1>
+            <p>Report Text Examination System</p>
+        </div>
+
+        <div class="game-area">
+            <!-- Login Screen -->
+            <div id="loginScreen" class="login-screen">
+                <h2>👋 Welcome, Student!</h2>
+                
+                <div class="warning-box">
+                    <h3>⚠️ Exam Security Rules:</h3>
+                    <ul>
+                        <li>You can only take this exam ONCE</li>
+                        <li>Do NOT switch tabs or minimize window</li>
+                        <li>Do NOT press ESC key</li>
+                        <li>Do NOT leave the exam page</li>
+                        <li>All violations will be recorded</li>
+                        <li>Complete all 30 questions (15 animals × 2 tasks)</li>
+                    </ul>
+                </div>
+
+                <div class="input-group">
+                    <label>Full Name:</label>
+                    <input type="text" id="studentName" placeholder="Enter your name">
+                </div>
+                <div class="input-group">
+                    <label>NIS (Student ID):</label>
+                    <input type="text" id="studentNIS" placeholder="Enter your NIS">
+                </div>
+                <div class="input-group">
+                    <label>Class:</label>
+                    <input type="text" id="studentClass" placeholder="e.g., 7A, 8B, 9C">
+                </div>
+
+                <button class="btn btn-primary" id="startExamBtn">📝 Start Exam</button>
+            </div>
+
+            <!-- Exam Screen -->
+            <div id="examScreen" class="hidden">
+                <div id="violationBanner" class="hidden violation-banner"></div>
+
+                <div class="score-panel">
+                    <div class="score-item">
+                        <div class="score-label">Question</div>
+                        <div class="score-value" id="currentQuestion">1/30</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Answered</div>
+                        <div class="score-value" id="answeredCount">0</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Violations</div>
+                        <div class="score-value" id="violationCount" style="color: #dc3545;">0</div>
+                    </div>
+                </div>
+
+                <div class="timer-container">
+                    <div class="timer" id="timer">45</div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar" style="width: 0%">0%</div>
+                </div>
+
+                <div id="questionContainer"></div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-success" id="submitBtn">➡️ Next Question</button>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="resultScreen" class="hidden result-screen">
+                <div class="trophy" id="trophyIcon">🏆</div>
+                <h2 id="resultTitle">Exam Completed!</h2>
+                <div class="final-score" id="finalScore">0</div>
+                <p id="resultMessage"></p>
+                <p style="margin-top: 15px; color: #666; font-size: 1.1em;">
+                    <strong>Total Questions:</strong> <span id="totalAnswered">0</span>/30<br>
+                    <strong>Violations:</strong> <span id="finalViolations" style="color: #dc3545;">0</span><br>
+                    <strong>Time Bonus:</strong> <span id="timeBonus">0</span> points
+                </p>
+                
+                <div id="qrcode"></div>
+                <p style="margin-top: 20px; color: #666;">
+                    📱 Show this QR code to your teacher to record your score
+                </p>
+                
+                <p style="margin-top: 30px; color: #999; font-size: 0.9em;">
+                    Note: You cannot retake this exam. Your attempt has been recorded.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <script>
+        const allAnimals = [
+            // EASY (5)
+            {
+                name: "Lion", image: "🦁", difficulty: "easy",
+                classification: "Lion is a large carnivorous mammal belonging to the family Felidae.",
+                habitat: "Lions live in grasslands and savannas of Africa.",
+                physical: "Lions have a muscular body, a large mane (males), and strong legs.",
+                diet: "Lions are carnivores and hunt large animals like zebras and antelopes.",
+                behavior: "Lions live in groups called prides and hunt cooperatively."
+            },
+            {
+                name: "Elephant", image: "🐘", difficulty: "easy",
+                classification: "Elephant is the largest land mammal in the world.",
+                habitat: "Elephants live in forests, grasslands, and savannas of Africa and Asia.",
+                physical: "Elephants have a long trunk, large ears, and thick gray skin.",
+                diet: "Elephants are herbivores and eat grass, leaves, and fruits.",
+                behavior: "Elephants are intelligent animals that live in family groups."
+            },
+            {
+                name: "Penguin", image: "🐧", difficulty: "easy",
+                classification: "Penguin is a flightless seabird found in the Southern Hemisphere.",
+                habitat: "Penguins live in cold regions, especially Antarctica.",
+                physical: "Penguins have black and white feathers, flippers, and waterproof coating.",
+                diet: "Penguins are carnivores and eat fish, krill, and squid.",
+                behavior: "Penguins are excellent swimmers and hunt in groups."
+            },
+            {
+                name: "Dolphin", image: "🐬", difficulty: "easy",
+                classification: "Dolphin is a highly intelligent marine mammal.",
+                habitat: "Dolphins live in oceans and some rivers around the world.",
+                physical: "Dolphins have a streamlined body, a dorsal fin, and a beak-like snout.",
+                diet: "Dolphins are carnivores and eat fish and squid.",
+                behavior: "Dolphins are social animals and communicate using clicks and whistles."
+            },
+            {
+                name: "Tiger", image: "🐯", difficulty: "easy",
+                classification: "Tiger is the largest wild cat species in the world.",
+                habitat: "Tigers live in forests and grasslands of Asia.",
+                physical: "Tigers have orange fur with black stripes and powerful muscles.",
+                diet: "Tigers are carnivores and hunt deer, wild pigs, and other large animals.",
+                behavior: "Tigers are solitary hunters and are excellent swimmers."
+            },
+            // MEDIUM (10 total)
+            {
+                name: "Giraffe", image: "🦒", difficulty: "medium",
+                classification: "Giraffe is the tallest land animal in the world.",
+                habitat: "Giraffes live in savannas and open woodlands of Africa.",
+                physical: "Giraffes have a very long neck, long legs, and spotted coat patterns.",
+                diet: "Giraffes are herbivores and feed on leaves from tall trees.",
+                behavior: "Giraffes are social animals and live in loose herds."
+            },
+            {
+                name: "Panda", image: "🐼", difficulty: "medium",
+                classification: "Panda is a bear species native to China.",
+                habitat: "Pandas live in bamboo forests in mountainous regions of China.",
+                physical: "Pandas have black and white fur and a round body shape.",
+                diet: "Pandas are herbivores and primarily eat bamboo.",
+                behavior: "Pandas are solitary animals and spend most of their time eating."
+            },
+            {
+                name: "Kangaroo", image: "🦘", difficulty: "medium",
+                classification: "Kangaroo is a large marsupial native to Australia.",
+                habitat: "Kangaroos live in grasslands and open forests of Australia.",
+                physical: "Kangaroos have powerful hind legs, a long tail, and a pouch.",
+                diet: "Kangaroos are herbivores and graze on grass and plants.",
+                behavior: "Kangaroos are social animals and live in groups called mobs."
+            },
+            {
+                name: "Koala", image: "🐨", difficulty: "medium",
+                classification: "Koala is a tree-dwelling marsupial native to Australia.",
+                habitat: "Koalas live in eucalyptus forests of eastern Australia.",
+                physical: "Koalas have gray fur, large ears, and strong limbs for climbing.",
+                diet: "Koalas are herbivores and eat eucalyptus leaves exclusively.",
+                behavior: "Koalas are solitary animals and sleep up to 20 hours a day."
+            },
+            {
+                name: "Polar Bear", image: "🐻‍❄️", difficulty: "medium",
+                classification: "Polar bear is the largest land carnivore in the world.",
+                habitat: "Polar bears live in the Arctic region on sea ice.",
+                physical: "Polar bears have thick white fur, large paws, and a layer of fat.",
+                diet: "Polar bears are carnivores and primarily hunt seals.",
+                behavior: "Polar bears are excellent swimmers and hunt on sea ice."
+            },
+            // HARD (15 total)
+            {
+                name: "Cheetah", image: "🐆", difficulty: "hard",
+                classification: "Cheetah is the fastest land animal in the world.",
+                habitat: "Cheetahs live in grasslands and savannas of Africa.",
+                physical: "Cheetahs have a slender body, long legs, and distinctive black tear marks.",
+                diet: "Cheetahs are carnivores and hunt small to medium-sized animals.",
+                behavior: "Cheetahs are solitary hunters and use speed to catch prey."
+            },
+            {
+                name: "Gorilla", image: "🦍", difficulty: "hard",
+                classification: "Gorilla is the largest living primate species.",
+                habitat: "Gorillas live in tropical forests of central Africa.",
+                physical: "Gorillas have a large body, powerful arms, and thick black fur.",
+                diet: "Gorillas are herbivores and eat leaves, shoots, and fruits.",
+                behavior: "Gorillas live in family groups led by a dominant male."
+            },
+            {
+                name: "Whale", image: "🐋", difficulty: "hard",
+                classification: "Whale is the largest mammal in the ocean.",
+                habitat: "Whales live in oceans around the world.",
+                physical: "Whales have a streamlined body, flippers, and a blowhole for breathing.",
+                diet: "Whales are carnivores and eat fish, krill, and plankton.",
+                behavior: "Whales are highly intelligent and communicate through songs."
+            },
+            {
+                name: "Owl", image: "🦉", difficulty: "hard",
+                classification: "Owl is a nocturnal bird of prey.",
+                habitat: "Owls live in forests, grasslands, and deserts worldwide.",
+                physical: "Owls have large eyes, sharp talons, and excellent hearing.",
+                diet: "Owls are carnivores and hunt small mammals, birds, and insects.",
+                behavior: "Owls are solitary hunters and are most active at night."
+            },
+            {
+                name: "Crocodile", image: "🐊", difficulty: "hard",
+                classification: "Crocodile is a large aquatic reptile.",
+                habitat: "Crocodiles live in rivers, lakes, and wetlands in tropical regions.",
+                physical: "Crocodiles have a long body, powerful jaws, and armored skin.",
+                diet: "Crocodiles are carnivores and hunt fish, birds, and mammals.",
+                behavior: "Crocodiles are ambush predators and can live for over 70 years."
+            }
+        ];
+
+        let studentData = {};
+        let currentAnimalIndex = 0;
+        let currentQuestionType = 1;
+        let answeredCount = 0;
+        let violations = 0;
+        let timeLeft = 45;
+        let timerInterval = null;
+        let soundEnabled = true;
+        let timeBonus = 0;
+        let answers = [];
+        let examStarted = false;
+        let examCompleted = false;
+
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Check if exam was already taken
+        window.addEventListener('load', function() {
+            const examTaken = localStorage.getItem('examTaken');
+            if (examTaken === 'true') {
+                document.getElementById('loginScreen').innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 5em;">🚫</div>
+                        <h2 style="color: #dc3545; margin: 20px 0;">Exam Already Completed</h2>
+                        <p style="color: #666; font-size: 1.1em;">
+                            You have already taken this exam.<br>
+                            Each student can only take the exam once.<br><br>
+                            Please contact your teacher if you need assistance.
+                        </p>
+                    </div>
+                `;
+            } else {
+                // Add event listeners
+                document.getElementById('startExamBtn').addEventListener('click', startExam);
+            }
+            
+            // Add event listeners for buttons
+            document.getElementById('soundToggle').addEventListener('click', toggleSound);
+            document.getElementById('closeViolationBtn').addEventListener('click', closeViolationModal);
+        });
+
+        // Security: Prevent ESC key
+        document.addEventListener('keydown', function(e) {
+            if (examStarted && !examCompleted && e.key === 'Escape') {
+                e.preventDefault();
+                recordViolation('Attempted to press ESC key');
+            }
+        });
+
+        // Security: Detect focus loss
+        window.addEventListener('blur', function() {
+            if (examStarted && !examCompleted) {
+                recordViolation('Left exam window (switched tabs or minimized)');
+            }
+        });
+
+        // Security: Prevent right-click
+        document.addEventListener('contextmenu', function(e) {
+            if (examStarted && !examCompleted) {
+                e.preventDefault();
+                recordViolation('Attempted to right-click');
+            }
+        });
+
+        // Security: Detect visibility change
+        document.addEventListener('visibilitychange', function() {
+            if (examStarted && !examCompleted && document.hidden) {
+                recordViolation('Tab became hidden');
+            }
+        });
+
+        function recordViolation(message) {
+            violations++;
+            document.getElementById('violationCount').textContent = violations;
+            
+            const banner = document.getElementById('violationBanner');
+            banner.textContent = `⚠️ Violation #${violations}: ${message}`;
+            banner.classList.remove('hidden');
+            
+            playSound('wrong');
+            showViolationModal(message);
+            
+            setTimeout(() => {
+                banner.classList.add('hidden');
+            }, 5000);
+        }
+
+        function showViolationModal(message) {
+            const modal = document.getElementById('violationModal');
+            document.getElementById('violationMessage').textContent = message;
+            modal.style.display = 'flex';
+        }
+
+        function closeViolationModal() {
+            document.getElementById('violationModal').style.display = 'none';
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            if (type === 'correct') {
+                oscillator.frequency.value = 800;
+                gainNode.gain.value = 0.3;
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.2);
+            } else if (type === 'wrong') {
+                oscillator.frequency.value = 200;
+                gainNode.gain.value = 0.3;
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.3);
+            } else if (type === 'tick') {
+                oscillator.frequency.value = 600;
+                gainNode.gain.value = 0.1;
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.05);
+            } else if (type === 'complete') {
+                oscillator.frequency.value = 1000;
+                gainNode.gain.value = 0.3;
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundToggle').textContent = soundEnabled ? '🔊' : '🔇';
+        }
+
+        function startExam() {
+            const name = document.getElementById('studentName').value.trim();
+            const nis = document.getElementById('studentNIS').value.trim();
+            const studentClass = document.getElementById('studentClass').value.trim();
+
+            if (!name || !nis || !studentClass) {
+                alert('⚠️ Please fill in all fields!');
+                return;
+            }
+
+            const examTaken = localStorage.getItem('examTaken');
+            if (examTaken === 'true') {
+                alert('⚠️ You have already taken this exam!');
+                return;
+            }
+
+            if (!confirm('Once you start, you CANNOT retake this exam. Are you ready to begin?')) {
+                return;
+            }
+
+            studentData = {
+                name: name,
+                nis: nis,
+                class: studentClass,
+                startTime: new Date().toISOString()
+            };
+
+            examStarted = true;
+            localStorage.setItem('examTaken', 'true');
+
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('examScreen').classList.remove('hidden');
+            
+            // Add event listener to submit button
+            document.getElementById('submitBtn').addEventListener('click', submitAnswer);
+            
+            loadQuestion();
+            startTimer();
+        }
+
+        function startTimer() {
+            const animal = allAnimals[currentAnimalIndex];
+            
+            if (animal.difficulty === 'easy') {
+                timeLeft = 60;
+            } else if (animal.difficulty === 'medium') {
+                timeLeft = 45;
+            } else {
+                timeLeft = 30;
+            }
+            
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = timeLeft;
+            timerElement.className = 'timer';
+            
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                
+                if (timeLeft <= 10 && timeLeft > 5) {
+                    timerElement.className = 'timer warning';
+                    playSound('tick');
+                } else if (timeLeft <= 5) {
+                    timerElement.className = 'timer danger';
+                    playSound('tick');
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    playSound('wrong');
+                    autoSubmitAnswer();
+                }
+            }, 1000);
+        }
+
+        function loadQuestion() {
+            const animal = allAnimals[currentAnimalIndex];
+            const container = document.getElementById('questionContainer');
+            const questionNumber = (currentAnimalIndex * 2) + currentQuestionType;
+            
+            document.getElementById('currentQuestion').textContent = questionNumber + '/30';
+            
+            let difficultyBadge = '';
+            if (animal.difficulty === 'easy') {
+                difficultyBadge = '<span class="difficulty-badge badge-easy">EASY</span>';
+            } else if (animal.difficulty === 'medium') {
+                difficultyBadge = '<span class="difficulty-badge badge-medium">MEDIUM</span>';
+            } else {
+                difficultyBadge = '<span class="difficulty-badge badge-hard">HARD</span>';
+            }
+            
+            if (currentQuestionType === 1) {
+                container.innerHTML = `
+                    <div class="animal-card">
+                        <div class="animal-image">${animal.image}</div>
+                        <h2 style="text-align: center; color: #667eea; margin: 15px 0;">
+                            ${animal.name} ${difficultyBadge}
+                        </h2>
+                        
+                        <div class="question">
+                            <h3>📋 Task 1: Arrange the Report Text Structure</h3>
+                            <p>Drag the sentences to the correct order to create a proper Report Text about ${animal.name}.</p>
+                            
+                            <div style="margin: 20px 0;">
+                                <strong>General Classification:</strong>
+                                <div class="drop-zone" id="zone1" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
+                            </div>
+                            
+                            <div style="margin: 20px 0;">
+                                <strong>Description (Habitat):</strong>
+                                <div class="drop-zone" id="zone2" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
+                            </div>
+                            
+                            <div style="margin: 20px 0;">
+                                <strong>Description (Physical Features):</strong>
+                                <div class="drop-zone" id="zone3" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
+                            </div>
+                            
+                            <div style="margin: 20px 0;">
+                                <strong>Description (Diet):</strong>
+                                <div class="drop-zone" id="zone4" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
+                            </div>
+                            
+                            <div style="margin: 20px 0;">
+                                <strong>Description (Behavior):</strong>
+                                <div class="drop-zone" id="zone5" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)"></div>
+                            </div>
+                            
+                            <div class="drag-drop-area">
+                                <strong>Drag from here:</strong><br>
+                                <div class="drag-item" draggable="true" ondragstart="drag(event)" id="classification" data-answer="zone1">${animal.classification}</div>
+                                <div class="drag-item" draggable="true" ondragstart="drag(event)" id="habitat" data-answer="zone2">${animal.habitat}</div>
+                                <div class="drag-item" draggable="true" ondragstart="drag(event)" id="physical" data-answer="zone3">${animal.physical}</div>
+                                <div class="drag-item" draggable="true" ondragstart="drag(event)" id="diet" data-answer="zone4">${animal.diet}</div>
+                                <div class="drag-item" draggable="true" ondragstart="drag(event)" id="behavior" data-answer="zone5">${animal.behavior}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                const questions = [
+                    {
+                        q: `What tense is used in Report Text?`,
+                        options: ['Present Tense', 'Past Tense', 'Future Tense', 'Present Continuous'],
+                        correct: 0
+                    },
+                    {
+                        q: `Which sentence is the General Classification of ${animal.name}?`,
+                        options: [animal.classification, animal.habitat, animal.diet, animal.behavior],
+                        correct: 0
+                    },
+                    {
+                        q: `What is the purpose of Report Text?`,
+                        options: [
+                            'To describe things as they are',
+                            'To tell a story',
+                            'To persuade readers',
+                            'To entertain'
+                        ],
+                        correct: 0
+                    },
+                    {
+                        q: `Report Text uses factual information about:`,
+                        options: [
+                            'General facts about a subject',
+                            'Personal experiences',
+                            'Fictional stories',
+                            'Future predictions'
+                        ],
+                        correct: 0
+                    },
+                    {
+                        q: `The structure of Report Text consists of:`,
+                        options: [
+                            'General Classification and Description',
+                            'Orientation, Complication, Resolution',
+                            'Thesis, Arguments, Reiteration',
+                            'Introduction, Body, Conclusion'
+                        ],
+                        correct: 0
+                    }
+                ];
+                
+                const randomQ = questions[Math.floor(Math.random() * questions.length)];
+                
+                container.innerHTML = `
+                    <div class="animal-card">
+                        <div class="animal-image">${animal.image}</div>
+                        <h2 style="text-align: center; color: #667eea; margin: 15px 0;">
+                            ${animal.name} ${difficultyBadge}
+                        </h2>
+                        
+                        <div class="question">
+                            <h3>❓ Task 2: Report Text Knowledge</h3>
+                            <p><strong>${randomQ.q}</strong></p>
+                            
+                            <div style="margin-top: 20px;">
+                                ${randomQ.options.map((opt, i) => `
+                                    <div style="margin: 10px 0;">
+                                        <label style="display: block; padding: 15px; background: white; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.3s;">
+                                            <input type="radio" name="answer" value="${i}" style="margin-right: 10px;">
+                                            ${opt}
+                                        </label>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                container.dataset.correctAnswer = randomQ.correct;
+                
+                document.querySelectorAll('label').forEach(label => {
+                    label.addEventListener('mouseenter', function() {
+                        this.style.borderColor = '#667eea';
+                        this.style.background = '#f8f9fa';
+                    });
+                    label.addEventListener('mouseleave', function() {
+                        if (!this.querySelector('input').checked) {
+                            this.style.borderColor = '#e0e0e0';
+                            this.style.background = 'white';
+                        }
+                    });
+                });
+            }
+
+            updateProgress();
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.target.classList.add('drag-over');
+        }
+
+        function dragLeave(ev) {
+            ev.target.classList.remove('drag-over');
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            ev.target.classList.remove('drag-over');
+            
+            const data = ev.dataTransfer.getData("text");
+            const draggedElement = document.getElementById(data);
+            
+            if (ev.target.classList.contains('drop-zone')) {
+                ev.target.innerHTML = '';
+                ev.target.appendChild(draggedElement);
+            }
+        }
+
+        function submitAnswer() {
+            let isCorrect = false;
+
+            if (currentQuestionType === 1) {
+                const zones = ['zone1', 'zone2', 'zone3', 'zone4', 'zone5'];
+                let allCorrect = true;
+                let allFilled = true;
+
+                zones.forEach(zone => {
+                    const dropZone = document.getElementById(zone);
+                    const item = dropZone.querySelector('.drag-item');
+                    
+                    if (!item) {
+                        allFilled = false;
+                    } else if (item.dataset.answer !== zone) {
+                        allCorrect = false;
+                    }
+                });
+
+                if (!allFilled) {
+                    alert('⚠️ Please fill in all the drop zones!');
+                    return;
+                }
+
+                isCorrect = allCorrect;
+            } else {
+                const selected = document.querySelector('input[name="answer"]:checked');
+                if (!selected) {
+                    alert('⚠️ Please select an answer!');
+                    return;
+                }
+                
+                const correctAnswer = document.getElementById('questionContainer').dataset.correctAnswer;
+                isCorrect = (selected.value === correctAnswer);
+            }
+
+            if (isCorrect) {
+                const baseScore = 20;
+                const timeBonusPoints = Math.floor(timeLeft / 2);
+                
+                answers.push({
+                    animal: allAnimals[currentAnimalIndex].name,
+                    question: currentQuestionType,
+                    correct: true,
+                    timeBonus: timeBonusPoints
+                });
+                
+                timeBonus += timeBonusPoints;
+                playSound('correct');
+            } else {
+                answers.push({
+                    animal: allAnimals[currentAnimalIndex].name,
+                    question: currentQuestionType,
+                    correct: false,
+                    timeBonus: 0
+                });
+                playSound('wrong');
+            }
+
+            answeredCount++;
+            document.getElementById('answeredCount').textContent = answeredCount;
+
+            clearInterval(timerInterval);
+            document.getElementById('submitBtn').disabled = true;
+
+            setTimeout(() => {
+                document.getElementById('submitBtn').disabled = false;
+                nextQuestion();
+            }, 800);
+        }
+
+        function autoSubmitAnswer() {
+            answers.push({
+                animal: allAnimals[currentAnimalIndex].name,
+                question: currentQuestionType,
+                correct: false,
+                timeBonus: 0
+            });
+
+            answeredCount++;
+            document.getElementById('answeredCount').textContent = answeredCount;
+            
+            const banner = document.getElementById('violationBanner');
+            banner.textContent = `⏰ Time's up! Moving to next question...`;
+            banner.classList.remove('hidden');
+            
+            setTimeout(() => {
+                banner.classList.add('hidden');
+                nextQuestion();
+            }, 2000);
+        }
+
+        function nextQuestion() {
+            if (currentQuestionType === 1) {
+                currentQuestionType = 2;
+                loadQuestion();
+                startTimer();
+            } else {
+                currentQuestionType = 1;
+                currentAnimalIndex++;
+                
+                if (currentAnimalIndex >= allAnimals.length) {
+                    showResults();
+                } else {
+                    loadQuestion();
+                    startTimer();
+                }
+            }
+        }
+
+        function updateProgress() {
+            const questionNumber = (currentAnimalIndex * 2) + currentQuestionType;
+            const progress = Math.round((questionNumber / 30) * 100);
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = progress + '%';
+        }
+
+        function showResults() {
+            clearInterval(timerInterval);
+            examCompleted = true;
+            playSound('complete');
+            
+            document.getElementById('examScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+
+            const correctCount = answers.filter(a => a.correct).length;
+            const finalScore = Math.round((correctCount / 30) * 100);
+            
+            document.getElementById('finalScore').textContent = finalScore + ' Points';
+            document.getElementById('totalAnswered').textContent = answeredCount;
+            document.getElementById('finalViolations').textContent = violations;
+            document.getElementById('timeBonus').textContent = timeBonus;
+
+            let trophy = '🏆';
+            let title = 'Exam Completed!';
+            let message = '';
+
+            if (violations >= 5) {
+                trophy = '⚠️';
+                title = 'Exam Completed with Violations';
+                message = 'Your exam has been flagged due to multiple security violations.';
+            } else if (finalScore >= 90) {
+                trophy = '🥇';
+                title = 'Outstanding Performance!';
+                message = 'You are a Report Text Expert!';
+            } else if (finalScore >= 80) {
+                trophy = '🥈';
+                title = 'Excellent Work!';
+                message = 'Great understanding of Report Text!';
+            } else if (finalScore >= 70) {
+                trophy = '🥉';
+                title = 'Good Job!';
+                message = 'You have a good grasp of Report Text!';
+            } else if (finalScore >= 60) {
+                trophy = '📚';
+                title = 'Passing Grade';
+                message = 'You passed the exam!';
+            } else {
+                trophy = '💪';
+                title = 'Needs Improvement';
+                message = 'Keep studying and try harder next time!';
+            }
+
+            document.getElementById('trophyIcon').textContent = trophy;
+            document.getElementById('resultTitle').textContent = title;
+            document.getElementById('resultMessage').textContent = message;
+
+            const timestamp = new Date().toISOString();
+            const qrData = `EXAM|${studentData.nis}|${studentData.name}|${studentData.class}|${finalScore}|${correctCount}|30|${violations}|${timestamp}|Animal Encyclopedia - Report Text Exam`;
+
+            generateQRCode(qrData);
+        }
+
+        function generateQRCode(data) {
+            const qr = qrcode(0, 'M');
+            qr.addData(data);
+            qr.make();
+            
+            document.getElementById('qrcode').innerHTML = qr.createImgTag(5);
+        }
+    </script>
+</body>
+</html>
