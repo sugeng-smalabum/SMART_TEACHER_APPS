@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam Results Dashboard - QR Scanner FIXED</title>
+    <title>Exam Results Dashboard - Universal Scanner</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 10px; }
@@ -45,11 +45,23 @@
         .footer { background: #2c3e50; color: white; text-align: center; padding: 20px; margin-top: 20px; }
         .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .search-box { flex: 1; min-width: 200px; }
-        #video { width: 100%; max-width: 500px; border: 3px solid #667eea; border-radius: 12px; margin: 15px auto; display: block; }
+        
+        /* Scanner Styles - IMPROVED */
+        #video { width: 100%; max-width: 500px; border: 3px solid #667eea; border-radius: 12px; margin: 15px auto; display: block; background: #000; }
         .scanner-container { text-align: center; padding: 15px; background: white; border-radius: 12px; margin: 15px 0; }
         .qr-upload { margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 2px dashed #667eea; }
+        .scanner-status { margin-top: 10px; padding: 10px; background: #e8f5e9; border-radius: 6px; color: #155724; font-weight: 600; display: none; }
+        .scanner-status.scanning { display: block; background: #fff3cd; color: #856404; }
+        .scanner-status.success { display: block; background: #d4edda; color: #155724; }
+        .scanner-status.error { display: block; background: #f8d7da; color: #721c24; }
+        .camera-switch { margin-top: 10px; }
+        
         .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #667eea; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Scan guide overlay */
+        .scan-guide { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 250px; height: 250px; border: 3px solid #28a745; border-radius: 12px; pointer-events: none; box-shadow: 0 0 0 9999px rgba(0,0,0,0.5); z-index: 10; }
+        .video-container { position: relative; display: inline-block; margin: 15px auto; }
         
         @media (max-width: 768px) {
             body { padding: 5px; }
@@ -70,6 +82,7 @@
             .alert-info, .alert-warning, .alert-success { font-size: 0.85em; padding: 12px; }
             .qr-upload { padding: 12px; }
             .qr-upload p { font-size: 0.9em; }
+            .scan-guide { width: 200px; height: 200px; }
         }
 
         @media (max-width: 480px) {
@@ -77,11 +90,6 @@
             .stat-value { font-size: 1.5em; }
             th, td { padding: 6px 4px; font-size: 0.75em; }
             table { min-width: 700px; }
-        }
-
-        @media (max-width: 768px) and (orientation: landscape) {
-            .stats-grid { grid-template-columns: repeat(4, 1fr); }
-            #video { max-width: 400px; }
         }
     </style>
 </head>
@@ -93,39 +101,48 @@
   <a href="dashboard.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Dashboard</a>
   <a href="journal.html" style="padding: 10px 20px; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; display: inline-block; font-size: 0.9em;">Journal</a>  
 </nav>    
-    <div class="container">
+    <div class="container" style="margin-top: 70px;">
         <div class="header">
             <h1>📱 QR Code Scanner Dashboard</h1>
-            <p>Scan Student QR Codes & Monitor Results - FIXED v5.1</p>
+            <p>Universal Scanner - Works on All Phones! 🎯</p>
         </div>
 
         <div class="main-content">
             <div class="alert alert-success">
-                <strong>✅ UPDATED:</strong> Now supports the new QR code format from Exam v5.1! Works with both old (JSON) and new (pipe-delimited) formats.
+                <strong>✅ IMPROVED:</strong> Scanner sekarang kompatibel dengan Samsung, Oppo, Vivo, dan semua jenis HP! 🚀
             </div>
 
             <div class="section">
                 <h2 class="section-title">📸 Scan QR Code</h2>
                 <div class="alert alert-info">
-                    <strong>How to use:</strong><br>
-                    1. Click "Start Camera" to scan QR codes from student screens<br>
-                    2. OR upload a QR code image/screenshot<br>
-                    3. Results will be automatically added to the table below
+                    <strong>Cara menggunakan:</strong><br>
+                    1️⃣ Klik "Start Camera Scanner" untuk scan QR code<br>
+                    2️⃣ Arahkan kamera ke QR code siswa (masukkan QR ke kotak hijau)<br>
+                    3️⃣ ATAU upload foto/screenshot QR code<br>
+                    4️⃣ Hasil otomatis masuk ke tabel di bawah
                 </div>
                 
                 <div class="scanner-container">
                     <button class="btn btn-primary" onclick="startScanner()" id="startBtn">📷 Start Camera Scanner</button>
                     <button class="btn btn-danger" onclick="stopScanner()" id="stopBtn" style="display:none;">⏹️ Stop Scanner</button>
                     
+                    <div id="scannerStatus" class="scanner-status"></div>
+                    
                     <div id="scannerArea" style="display:none; margin-top:15px;">
-                        <video id="video" playsinline></video>
-                        <p style="color:#666; margin-top:10px; font-size:0.9em;">Point camera at student's QR code</p>
+                        <div class="video-container">
+                            <video id="video" playsinline autoplay></video>
+                            <div class="scan-guide"></div>
+                        </div>
+                        <p style="color:#666; margin-top:10px; font-size:0.9em;">📍 Posisikan QR code di dalam kotak hijau</p>
+                        <div class="camera-switch">
+                            <button class="btn btn-info" onclick="switchCamera()" id="switchBtn">🔄 Switch Camera</button>
+                        </div>
                     </div>
 
                     <div class="qr-upload">
-                        <p style="margin-bottom:10px; font-weight:600; color:#667eea;">📤 Or Upload QR Code Image:</p>
-                        <input type="file" id="qrImageUpload" accept="image/*" style="padding:10px; margin-bottom:10px; width:100%; font-size:0.9em;">
-                        <button class="btn btn-success" onclick="processUploadedQR()" id="processBtn" style="display:none; width:100%; margin-top:10px;">✅ Process QR Code</button>
+                        <p style="margin-bottom:10px; font-weight:600; color:#667eea;">📤 Atau Upload Foto QR Code:</p>
+                        <input type="file" id="qrImageUpload" accept="image/*" capture="environment" style="padding:10px; margin-bottom:10px; width:100%; font-size:0.9em;">
+                        <button class="btn btn-success" onclick="processUploadedQR()" style="width:100%; margin-top:10px;">✅ Process QR Code</button>
                         <canvas id="canvas" style="display:none;"></canvas>
                     </div>
                 </div>
@@ -174,8 +191,8 @@
         </div>
 
         <div class="footer">
-            <p><strong>Created by Sugeng M|Rosdiana Amini|Wahyudi Utomo</strong></p>
-            <p style="margin-top: 10px; opacity: 0.8;">QR Scanner Dashboard v5.1 FIXED - Compatible with New Format</p>
+            <p><strong>Created by Sugeng M | Rosdiana Amini | Wahyudi Utomo</strong></p>
+            <p style="margin-top: 10px; opacity: 0.8;">QR Scanner Dashboard v6.0 - Universal Compatibility 🌍</p>
         </div>
     </div>
 
@@ -186,8 +203,21 @@
         var canvas = document.getElementById('canvas');
         var scanning = false;
         var stream = null;
-        var uploadedImageData = null;
         var jsQRLoaded = false;
+        var currentFacingMode = 'environment'; // 'user' or 'environment'
+        var scanInterval = null;
+        var lastScanTime = 0;
+
+        // Enhanced QR detection settings
+        var scanSettings = {
+            fps: 10, // Reduced from continuous for better compatibility
+            minScanInterval: 1000, // Minimum 1 second between scans
+            videoConstraints: {
+                width: { ideal: 1280, max: 1920 },
+                height: { ideal: 720, max: 1080 },
+                facingMode: 'environment'
+            }
+        };
 
         function checkJsQR() {
             if (typeof jsQR !== 'undefined') {
@@ -197,12 +227,13 @@
             return false;
         }
 
-        function waitForJsQR(callback, maxAttempts = 30) {
+        function waitForJsQR(callback, maxAttempts = 50) {
             var attempts = 0;
             var interval = setInterval(function() {
                 attempts++;
                 if (checkJsQR()) {
                     clearInterval(interval);
+                    updateScannerStatus('✅ Scanner ready!', 'success');
                     callback(true);
                 } else if (attempts >= maxAttempts) {
                     clearInterval(interval);
@@ -212,19 +243,35 @@
         }
 
         function loadJsQRFallback(callback) {
+            updateScannerStatus('Loading scanner library...', 'scanning');
             var script = document.createElement('script');
             script.src = 'https://unpkg.com/jsqr@1.4.0/dist/jsQR.js';
             script.onload = function() {
                 if (checkJsQR()) {
+                    updateScannerStatus('✅ Scanner ready!', 'success');
+                    setTimeout(() => hideScannerStatus(), 2000);
                     callback(true);
                 } else {
+                    updateScannerStatus('❌ Scanner failed to load', 'error');
                     callback(false);
                 }
             };
             script.onerror = function() {
+                updateScannerStatus('❌ Network error. Check connection.', 'error');
                 callback(false);
             };
             document.head.appendChild(script);
+        }
+
+        function updateScannerStatus(message, type) {
+            var status = document.getElementById('scannerStatus');
+            status.textContent = message;
+            status.className = 'scanner-status ' + type;
+        }
+
+        function hideScannerStatus() {
+            var status = document.getElementById('scannerStatus');
+            status.style.display = 'none';
         }
 
         window.addEventListener('DOMContentLoaded', function() {
@@ -238,7 +285,6 @@
                     console.log('✅ jsQR library loaded successfully');
                 } else {
                     console.error('❌ Failed to load jsQR library');
-                    alert('⚠️ QR Scanner library failed to load.\n\nPossible solutions:\n1. Check your internet connection\n2. Refresh the page\n3. Try a different browser\n\nYou can still view existing results, but scanning new QR codes will not work.');
                 }
             });
         });
@@ -246,17 +292,27 @@
         function loadResults() {
             var saved = localStorage.getItem('teacherResults');
             if (saved) {
-                allResults = JSON.parse(saved);
+                try {
+                    allResults = JSON.parse(saved);
+                } catch (e) {
+                    console.error('Error loading saved results:', e);
+                    allResults = [];
+                }
             }
         }
 
         function saveResults() {
-            localStorage.setItem('teacherResults', JSON.stringify(allResults));
+            try {
+                localStorage.setItem('teacherResults', JSON.stringify(allResults));
+            } catch (e) {
+                console.error('Error saving results:', e);
+                alert('⚠️ Error menyimpan data. Storage mungkin penuh.');
+            }
         }
 
-        function startScanner() {
+        async function startScanner() {
             if (!checkJsQR()) {
-                alert('⚠️ QR Scanner library is still loading. Please wait a moment and try again.');
+                alert('⚠️ Scanner library belum siap. Tunggu sebentar dan coba lagi.');
                 return;
             }
 
@@ -264,148 +320,202 @@
             document.getElementById('stopBtn').style.display = 'inline-flex';
             document.getElementById('scannerArea').style.display = 'block';
             
+            updateScannerStatus('🔄 Starting camera...', 'scanning');
             scanning = true;
             
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-                .then(function(s) {
-                    stream = s;
-                    video.srcObject = stream;
-                    video.setAttribute('playsinline', true);
-                    video.play();
-                    requestAnimationFrame(tick);
-                })
-                .catch(function(err) {
-                    alert('Error accessing camera: ' + err.message + '\n\nPlease allow camera permission or use image upload instead.');
-                    stopScanner();
+            try {
+                // Enhanced constraints for better compatibility
+                var constraints = {
+                    video: {
+                        facingMode: currentFacingMode,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                };
+
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = stream;
+                
+                // Wait for video to be ready
+                await new Promise((resolve) => {
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        resolve();
+                    };
                 });
+
+                updateScannerStatus('📷 Camera aktif. Arahkan ke QR code...', 'scanning');
+                
+                // Use interval instead of requestAnimationFrame for better compatibility
+                scanInterval = setInterval(tick, 1000 / scanSettings.fps);
+
+            } catch (err) {
+                console.error('Camera error:', err);
+                updateScannerStatus('❌ Error: ' + err.message, 'error');
+                alert('Error mengakses kamera: ' + err.message + '\n\nSolusi:\n1. Izinkan akses kamera\n2. Gunakan upload foto sebagai alternatif\n3. Coba browser lain (Chrome/Firefox)');
+                stopScanner();
+            }
         }
 
         function stopScanner() {
             scanning = false;
+            
+            if (scanInterval) {
+                clearInterval(scanInterval);
+                scanInterval = null;
+            }
+            
             if (stream) {
                 stream.getTracks().forEach(track => track.stop());
                 stream = null;
             }
+            
             video.srcObject = null;
             document.getElementById('startBtn').style.display = 'inline-flex';
             document.getElementById('stopBtn').style.display = 'none';
             document.getElementById('scannerArea').style.display = 'none';
+            hideScannerStatus();
+        }
+
+        async function switchCamera() {
+            currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+            
+            if (scanning) {
+                stopScanner();
+                await new Promise(resolve => setTimeout(resolve, 500));
+                startScanner();
+            }
         }
 
         function tick() {
-            if (!scanning) return;
-            
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                canvas.height = video.videoHeight;
+            if (!scanning || !video || video.readyState !== video.HAVE_ENOUGH_DATA) {
+                return;
+            }
+
+            // Throttle scans
+            var now = Date.now();
+            if (now - lastScanTime < scanSettings.minScanInterval) {
+                return;
+            }
+
+            try {
+                // Set canvas size to match video
                 canvas.width = video.videoWidth;
-                var ctx = canvas.getContext('2d');
+                canvas.height = video.videoHeight;
+                
+                if (canvas.width === 0 || canvas.height === 0) {
+                    return;
+                }
+
+                var ctx = canvas.getContext('2d', { willReadFrequently: true });
                 ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
                 var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                
+                // Enhanced jsQR options for better detection
                 var code = jsQR(imageData.data, imageData.width, imageData.height, {
-                    inversionAttempts: 'dontInvert',
+                    inversionAttempts: 'attemptBoth', // Try both normal and inverted
                 });
                 
-                if (code) {
+                if (code && code.data) {
+                    lastScanTime = now;
+                    updateScannerStatus('✅ QR Code terdeteksi!', 'success');
                     processQRData(code.data);
                     stopScanner();
                 }
+            } catch (err) {
+                console.error('Scan error:', err);
             }
-            
-            requestAnimationFrame(tick);
         }
 
         function handleQRImageSelect(e) {
             var file = e.target.files[0];
             if (!file) {
-                document.getElementById('processBtn').style.display = 'none';
-                uploadedImageData = null;
                 return;
             }
             
-            document.getElementById('processBtn').style.display = 'block';
-            document.getElementById('processBtn').innerHTML = '<span class="loading"></span> Processing...';
-            document.getElementById('processBtn').disabled = true;
-            
-            var reader = new FileReader();
-            reader.onload = function(event) {
-                uploadedImageData = event.target.result;
-                processUploadedQR();
-            };
-            reader.readAsDataURL(file);
+            if (!file.type.startsWith('image/')) {
+                alert('⚠️ Please select an image file!');
+                return;
+            }
         }
 
-        function processUploadedQR() {
-            if (!uploadedImageData) {
-                alert('❌ No image selected!');
-                document.getElementById('processBtn').style.display = 'none';
+        async function processUploadedQR() {
+            var fileInput = document.getElementById('qrImageUpload');
+            var file = fileInput.files[0];
+            
+            if (!file) {
+                alert('❌ Pilih foto QR code terlebih dahulu!');
                 return;
             }
 
             if (!checkJsQR()) {
-                alert('⚠️ QR Scanner library is still loading. Please wait a moment and try again.');
-                var btn = document.getElementById('processBtn');
-                btn.disabled = false;
-                btn.innerHTML = '✅ Process QR Code';
+                alert('⚠️ Scanner library belum siap. Tunggu sebentar dan coba lagi.');
                 return;
             }
 
-            var btn = document.getElementById('processBtn');
+            updateScannerStatus('🔄 Processing image...', 'scanning');
 
-            var img = new Image();
-            img.onload = function() {
-                try {
-                    var maxSize = 500;
-                    var width = img.width;
-                    var height = img.height;
+            try {
+                var img = await loadImage(file);
+                
+                // Multiple resolution attempts for better compatibility
+                var resolutions = [
+                    { width: img.width, height: img.height },
+                    { width: 800, height: 800 * (img.height / img.width) },
+                    { width: 1200, height: 1200 * (img.height / img.width) }
+                ];
+
+                for (var i = 0; i < resolutions.length; i++) {
+                    var res = resolutions[i];
+                    canvas.width = res.width;
+                    canvas.height = res.height;
                     
-                    if (width > maxSize || height > maxSize) {
-                        if (width > height) {
-                            height = Math.floor(height * (maxSize / width));
-                            width = maxSize;
-                        } else {
-                            width = Math.floor(width * (maxSize / height));
-                            height = maxSize;
-                        }
-                    }
-                    
-                    canvas.width = width;
-                    canvas.height = height;
                     var ctx = canvas.getContext('2d', { willReadFrequently: true });
-                    ctx.drawImage(img, 0, 0, width, height);
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     
-                    var imageData = ctx.getImageData(0, 0, width, height);
+                    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                     
-                    var code = jsQR(imageData.data, width, height, {
-                        inversionAttempts: 'dontInvert',
+                    var code = jsQR(imageData.data, canvas.width, canvas.height, {
+                        inversionAttempts: 'attemptBoth',
                     });
                     
-                    if (code) {
+                    if (code && code.data) {
+                        updateScannerStatus('✅ QR Code found!', 'success');
                         processQRData(code.data);
-                        document.getElementById('qrImageUpload').value = '';
-                        btn.style.display = 'none';
-                        uploadedImageData = null;
-                    } else {
-                        alert('❌ No QR code found. Please ensure:\n1. Image is clear\n2. QR code is visible\n3. Good lighting in photo');
-                        btn.disabled = false;
-                        btn.innerHTML = '✅ Process QR Code';
-                        btn.style.display = 'block';
+                        fileInput.value = '';
+                        setTimeout(() => hideScannerStatus(), 2000);
+                        return;
                     }
-                } catch (error) {
-                    alert('❌ Error processing image: ' + error.message);
-                    btn.disabled = false;
-                    btn.innerHTML = '✅ Process QR Code';
-                    btn.style.display = 'block';
                 }
-            };
-            
-            img.onerror = function() {
-                alert('❌ Failed to load image. Please try another file.');
-                btn.disabled = false;
-                btn.innerHTML = '✅ Process QR Code';
-                btn.style.display = 'block';
-            };
-            
-            img.src = uploadedImageData;
+                
+                updateScannerStatus('❌ No QR code found', 'error');
+                alert('❌ QR code tidak ditemukan!\n\nTips:\n1. Pastikan foto jelas\n2. QR code terlihat penuh\n3. Pencahayaan cukup\n4. Coba foto ulang lebih dekat');
+                
+            } catch (error) {
+                updateScannerStatus('❌ Error: ' + error.message, 'error');
+                alert('❌ Error memproses foto: ' + error.message);
+            }
+        }
+
+        function loadImage(file) {
+            return new Promise((resolve, reject) => {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = new Image();
+                    img.onload = function() {
+                        resolve(img);
+                    };
+                    img.onerror = function() {
+                        reject(new Error('Failed to load image'));
+                    };
+                    img.src = e.target.result;
+                };
+                reader.onerror = function() {
+                    reject(new Error('Failed to read file'));
+                };
+                reader.readAsDataURL(file);
+            });
         }
 
         function processQRData(data) {
@@ -417,8 +527,7 @@
                     var parts = data.split('|');
                     
                     if (parts.length < 10) {
-                        alert('❌ Invalid QR code format! Not enough data fields.');
-                        return;
+                        throw new Error('Format QR code tidak lengkap!');
                     }
                     
                     result = {
@@ -432,22 +541,18 @@
                         timestamp: parts[8].trim(),
                         examTitle: parts[9].trim()
                     };
-                    
-                    console.log('✅ Parsed NEW format QR code:', result);
                 }
                 // OLD FORMAT: JSON
                 else {
                     result = JSON.parse(data);
-                    console.log('✅ Parsed OLD format QR code (JSON):', result);
                 }
                 
-                // Validate required fields
+                // Validate
                 if (!result.name || !result.nis || result.score === undefined) {
-                    alert('❌ Invalid QR code: Missing required fields (name, NIS, or score)!');
-                    return;
+                    throw new Error('Data tidak lengkap (nama, NIS, atau nilai)');
                 }
 
-                // Set defaults for missing fields
+                // Set defaults
                 result.class = result.class || 'Unknown';
                 result.correct = result.correct || 0;
                 result.total = result.total || 0;
@@ -455,13 +560,13 @@
                 result.timestamp = result.timestamp || new Date().toISOString();
                 result.examTitle = result.examTitle || 'Unknown Exam';
 
-                // Check for duplicates
+                // Check duplicates
                 var existing = allResults.findIndex(function(r) { 
                     return r.nis === result.nis && r.examTitle === result.examTitle; 
                 });
                 
                 if (existing !== -1) {
-                    if (confirm('Result for ' + result.name + ' (NIS: ' + result.nis + ') already exists.\n\nReplace with new scan?')) {
+                    if (confirm('Hasil untuk ' + result.name + ' (NIS: ' + result.nis + ') sudah ada.\n\nGanti dengan scan baru?')) {
                         allResults[existing] = result;
                     } else {
                         return;
@@ -473,21 +578,23 @@
                 saveResults();
                 updateDisplay();
                 
-                alert('✅ QR Code Scanned Successfully!\n\n' +
-                      'Name: ' + result.name + '\n' +
+                alert('✅ QR Code Berhasil Di-Scan!\n\n' +
+                      'Nama: ' + result.name + '\n' +
                       'NIS: ' + result.nis + '\n' +
-                      'Class: ' + result.class + '\n' +
-                      'Score: ' + result.score + '\n' +
-                      'Exam: ' + result.examTitle);
+                      'Kelas: ' + result.class + '\n' +
+                      'Nilai: ' + result.score + '\n' +
+                      'Ujian: ' + result.examTitle);
+                      
             } catch (e) {
                 console.error('Error parsing QR code:', e);
-                alert('❌ Error reading QR code: ' + e.message + '\n\nThe QR code format may be invalid or corrupted.');
+                updateScannerStatus('❌ Error: ' + e.message, 'error');
+                alert('❌ Error membaca QR code: ' + e.message + '\n\nQR code mungkin rusak atau format tidak valid.');
             }
         }
 
         function updateDisplay() {
             if (allResults.length === 0) {
-                document.getElementById('resultsTableContainer').innerHTML = '<div class="alert alert-warning">No results yet. Scan QR codes to add results.</div>';
+                document.getElementById('resultsTableContainer').innerHTML = '<div class="alert alert-warning">Belum ada hasil. Scan QR code untuk menambah data.</div>';
                 document.getElementById('totalStudents').textContent = '0';
                 document.getElementById('averageScore').textContent = '0';
                 document.getElementById('highestScore').textContent = '0';
@@ -533,7 +640,7 @@
             });
 
             if (filtered.length === 0) {
-                document.getElementById('resultsTableContainer').innerHTML = '<div class="alert alert-warning">No results match your filter.</div>';
+                document.getElementById('resultsTableContainer').innerHTML = '<div class="alert alert-warning">Tidak ada hasil yang cocok dengan filter.</div>';
                 return;
             }
 
@@ -579,7 +686,7 @@
 
         function exportToCSV() {
             if (allResults.length === 0) {
-                alert('No results to export!');
+                alert('Tidak ada hasil untuk di-export!');
                 return;
             }
 
@@ -622,16 +729,21 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
 
-            alert('✅ Results exported to CSV/Excel!');
+            alert('✅ Hasil berhasil di-export ke CSV/Excel!');
         }
 
         function clearAllResults() {
-            if (confirm('Are you sure you want to delete ALL results? This cannot be undone!')) {
-                if (confirm('Really sure? All student data will be permanently deleted!')) {
+            if (allResults.length === 0) {
+                alert('Tidak ada data untuk dihapus!');
+                return;
+            }
+            
+            if (confirm('⚠️ Yakin ingin menghapus SEMUA hasil (' + allResults.length + ' data)?\n\nTindakan ini tidak bisa dibatalkan!')) {
+                if (confirm('Benar-benar yakin? Semua data siswa akan hilang permanen!')) {
                     allResults = [];
                     saveResults();
                     updateDisplay();
-                    alert('All results cleared.');
+                    alert('✅ Semua hasil telah dihapus.');
                 }
             }
         }
