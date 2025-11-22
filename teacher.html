@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Exam Manager – Teacher Suite v5.2 AUDIO</title>
+    <title>Smart Exam Manager – Teacher Suite v5.3 REVIEW</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; padding-top: 80px; }
@@ -16,7 +16,7 @@
         .section-title { font-size: 1.5em; color: #333; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; margin-bottom: 8px; color: #555; font-weight: 600; }
-        .input-group input[type="text"], .input-group input[type="number"], .input-group textarea { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em; transition: border-color 0.3s; }
+        .input-group input[type="text"], .input-group input[type="number"], .input-group input[type="password"], .input-group textarea { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1em; transition: border-color 0.3s; }
         .input-group input:focus, .input-group textarea:focus { outline: none; border-color: #667eea; }
         .input-group textarea { min-height: 100px; resize: vertical; }
         .options-container { display: grid; gap: 15px; }
@@ -74,6 +74,7 @@
         .save-load-section { background: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745; margin-bottom: 20px; }
         .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
         .audio-upload-section { background: white; padding: 20px; border-radius: 8px; border: 2px solid #667eea; margin-top: 20px; }
+        .password-section { background: #fff3cd; padding: 20px; border-radius: 8px; border-left: 4px solid #ffc107; margin-bottom: 20px; }
         @media (max-width: 768px) { 
             body { padding-top: 140px; }
             .header h1 { font-size: 1.8em; } 
@@ -97,12 +98,12 @@
     <div class="container">
         <div class="header">
             <h1>🎵 Smart Exam Manager</h1>
-            <p>Teacher Suite v5.2 AUDIO - Now with Audio Support!</p>
+            <p>Teacher Suite v5.3 REVIEW - With Password Protected Review!</p>
         </div>
 
         <div class="main-content">
             <div class="alert alert-success">
-                <strong>✨ NEW in v5.2:</strong> Upload audio files (MP3, WAV, OGG) untuk soal listening! Audio akan diputar otomatis di ujian siswa.
+                <strong>✨ NEW in v5.3:</strong> Siswa sekarang dapat melihat pembahasan jawaban setelah submit ujian dengan memasukkan password yang Anda tentukan!
             </div>
 
             <!-- Save/Load Section -->
@@ -132,6 +133,27 @@
                         <label for="examClass">🎓 Class/Grade</label>
                         <input type="text" id="examClass" placeholder="e.g., XI IPA 1">
                     </div>
+                </div>
+            </div>
+
+            <!-- Password Section -->
+            <div class="password-section">
+                <h3 style="color: #856404; margin-bottom: 15px;">🔐 Review Password Protection</h3>
+                <p style="margin-bottom: 15px; color: #666;">Set a password that students must enter to view the answer review/explanation after they finish the exam.</p>
+                <div class="input-group">
+                    <label for="reviewPassword">🔑 Review Password (required)</label>
+                    <div style="position: relative;">
+                        <input type="password" id="reviewPassword" placeholder="Enter password for review access" autocomplete="new-password" style="padding-right: 50px;">
+                        <button type="button" onclick="togglePasswordVisibility()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; font-size: 1.3em; padding: 5px 10px;" title="Show/Hide Password">
+                            <span id="passwordToggleIcon">👁️</span>
+                        </button>
+                    </div>
+                    <p style="margin-top: 8px; font-size: 0.9em; color: #28a745; display: none;" id="passwordDisplay">
+                        <strong>Your password:</strong> <span id="passwordText" style="font-family: monospace; background: #f0f0f0; padding: 4px 8px; border-radius: 4px;"></span>
+                    </p>
+                </div>
+                <div class="alert alert-warning" style="margin-top: 10px;">
+                    <strong>⚠️ Important:</strong> Remember this password! Students will need it to access the answer review after submitting their exam. Without this password, they cannot see the explanations.
                 </div>
             </div>
 
@@ -315,14 +337,14 @@
 
             <div class="section">
                 <h2 class="section-title">⬇️ Download Exam</h2>
-                <p style="margin-bottom: 20px; color: #666;">Generate a secure exam file with audio support. Students can listen to audio during the exam!</p>
+                <p style="margin-bottom: 20px; color: #666;">Generate a secure exam file with audio support and password-protected answer review!</p>
                 <button class="btn btn-success" id="downloadBtn" style="font-size: 1.1em;">💾 Download Exam File</button>
             </div>
         </div>
 
         <div class="footer">
             <p><strong>Created by Sugeng M|Rosdiana Amini|Wahyudi Utomo</strong></p>
-            <p style="margin-top: 10px; opacity: 0.8;">Smart Exam Manager v5.2 AUDIO - With Audio Support!</p>
+            <p style="margin-top: 10px; opacity: 0.8;">Smart Exam Manager v5.3 REVIEW - With Password Protected Review!</p>
         </div>
     </div>
 
@@ -424,7 +446,7 @@
                         
                         var audioDiv = document.createElement('div');
                         audioDiv.style.cssText = 'padding: 12px; background: #f8f9fa; border-radius: 6px; margin-bottom: 10px; border-left: 3px solid #667eea;';
-                        audioDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span style="font-size: 1.5em;">🎵</span><strong style="color: #667eea;">' + escapeHtml(file.name) + '</strong><span style="color: #28a745; margin-left: auto;">✓</span></div><audio controls style="width: 100%; height: 35px;"><source src="' + e.target.result + '" type="' + file.type + '"></audio>';
+                        audioDiv.innerHTML = '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><span style="font-size: 1.5em;">🎵</span><strong style="color: #667eea;">' + escapeHtml(file.name) + '</strong><span style="color: #28a745; margin-left: auto;">✔</span></div><audio controls style="width: 100%; height: 35px;"><source src="' + e.target.result + '" type="' + file.type + '"></audio>';
                         uploadedDiv.appendChild(audioDiv);
                         
                         processed++;
@@ -491,7 +513,7 @@
                         
                         var imgDiv = document.createElement('div');
                         imgDiv.style.cssText = 'display: flex; align-items: center; gap: 10px; padding: 8px; background: #f8f9fa; border-radius: 6px; margin-bottom: 8px;';
-                        imgDiv.innerHTML = '<img src="' + e.target.result + '" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;"><span style="font-weight: 600;">' + escapeHtml(file.name) + '</span><span style="color: #28a745; margin-left: auto;">✓</span>';
+                        imgDiv.innerHTML = '<img src="' + e.target.result + '" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;"><span style="font-weight: 600;">' + escapeHtml(file.name) + '</span><span style="color: #28a745; margin-left: auto;">✔</span>';
                         uploadedDiv.appendChild(imgDiv);
                         
                         processed++;
@@ -631,7 +653,7 @@
                 var optionsHtml = '';
                 ['A', 'B', 'C', 'D', 'E'].forEach(function(opt) {
                     var isCorrect = q.correctAnswers.indexOf(opt) !== -1;
-                    optionsHtml += '<div class="option-display ' + (isCorrect ? 'correct-answer' : '') + '"><strong>' + opt + '.</strong> ' + escapeHtml(q.options[opt]) + (isCorrect ? ' ✓' : '') + '</div>';
+                    optionsHtml += '<div class="option-display ' + (isCorrect ? 'correct-answer' : '') + '"><strong>' + opt + '.</strong> ' + escapeHtml(q.options[opt]) + (isCorrect ? ' ✔' : '') + '</div>';
                 });
 
                 var imgHtml = '';
@@ -778,7 +800,7 @@
                 for (var j = 0; j < opts.length; j++) {
                     var opt = opts[j];
                     var isCorrect = q.correctAnswers.indexOf(opt) !== -1;
-                    optionsHtml += '<div class="option-display ' + (isCorrect ? 'correct-answer' : '') + '"><strong>' + opt + '.</strong> ' + escapeHtml(q.options[opt]) + (isCorrect ? ' ✓' : '') + '</div>';
+                    optionsHtml += '<div class="option-display ' + (isCorrect ? 'correct-answer' : '') + '"><strong>' + opt + '.</strong> ' + escapeHtml(q.options[opt]) + (isCorrect ? ' ✔' : '') + '</div>';
                 }
 
                 var imgHtml = '';
@@ -851,14 +873,16 @@
             var title = document.getElementById('examTitle').value.trim() || 'Untitled_Exam';
             var duration = document.getElementById('examDuration').value;
             var examClass = document.getElementById('examClass').value.trim();
+            var reviewPassword = document.getElementById('reviewPassword').value;
 
             var saveData = {
-                version: '5.2',
+                version: '5.3',
                 timestamp: new Date().toISOString(),
                 examInfo: {
                     title: title,
                     duration: duration,
-                    class: examClass
+                    class: examClass,
+                    reviewPassword: reviewPassword
                 },
                 questions: questions
             };
@@ -903,6 +927,7 @@
                         if (data.examInfo.title) document.getElementById('examTitle').value = data.examInfo.title;
                         if (data.examInfo.duration) document.getElementById('examDuration').value = data.examInfo.duration;
                         if (data.examInfo.class) document.getElementById('examClass').value = data.examInfo.class;
+                        if (data.examInfo.reviewPassword) document.getElementById('reviewPassword').value = data.examInfo.reviewPassword;
                     }
 
                     updateQuestionsList();
@@ -933,6 +958,7 @@
             var title = document.getElementById('examTitle').value.trim();
             var duration = document.getElementById('examDuration').value;
             var examClass = document.getElementById('examClass').value.trim();
+            var reviewPassword = document.getElementById('reviewPassword').value.trim();
 
             if (!title) {
                 alert('⚠️ Please enter an exam title!');
@@ -944,7 +970,12 @@
                 return;
             }
 
-            var examHTML = generateStudentExam(title, duration, examClass, questions);
+            if (!reviewPassword) {
+                alert('⚠️ Please set a review password!\n\nThis password will be required for students to access the answer review after they submit their exam.');
+                return;
+            }
+
+            var examHTML = generateStudentExam(title, duration, examClass, questions, reviewPassword);
             
             var blob = new Blob([examHTML], { type: 'text/html; charset=utf-8' });
             var url = URL.createObjectURL(blob);
@@ -957,16 +988,17 @@
             URL.revokeObjectURL(url);
 
             var audioCount = questions.filter(q => q.audio).length;
-            alert('✅ Exam file downloaded successfully!\n\n📝 File: ' + a.download + '\n🎯 Questions: ' + questions.length + '\n🎵 Audio questions: ' + audioCount + '\n⏱️ Duration: ' + duration + ' minutes\n\n✨ Students can listen to audio during the exam!');
+            alert('✅ Exam file downloaded successfully!\n\n📁 File: ' + a.download + '\n🎯 Questions: ' + questions.length + '\n🎵 Audio questions: ' + audioCount + '\n⏱️ Duration: ' + duration + ' minutes\n🔐 Review Password: ' + reviewPassword + '\n\n✨ Students will need the password to view answer explanations!');
         }
 
-        function generateStudentExam(title, duration, examClass, questionsData) {
+        function generateStudentExam(title, duration, examClass, questionsData, reviewPassword) {
             var examKey = title.replace(/[^a-z0-9]/gi, '_');
             var qJson = JSON.stringify(questionsData);
+            var encodedPassword = btoa(reviewPassword);
             
             var html = '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + escapeHtml(title) + '</title>';
             
-            html += '<style>*{margin:0;padding:0;box-sizing:border-box;user-select:none}body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh}.container{max-width:1400px;margin:0 auto;display:flex;gap:20px;padding:20px}.sidebar{width:280px;background:#fff;border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.2);position:sticky;top:20px;height:fit-content;max-height:calc(100vh - 40px);overflow-y:auto}.main{flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,.2)}.hdr{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:25px;border-radius:12px 12px 0 0;margin:-30px -30px 30px}.timer{font-size:2em;font-weight:700;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px}.timer.safe{background:#d4edda;color:#155724}.timer.warning{background:#fff3cd;color:#856404}.timer.danger{background:#f8d7da;color:#721c24}.info{background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:15px;font-size:0.9em}.info div{margin-bottom:5px}.violation{background:#f8d7da;color:#721c24;padding:10px;border-radius:6px;text-align:center;margin-bottom:15px;font-weight:700;display:none;font-size:0.9em}.status-summary{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);padding:15px;border-radius:8px;margin-bottom:15px;border-left:4px solid #28a745}.status-title{font-weight:700;color:#1b5e20;margin-bottom:12px;font-size:1em;display:flex;align-items:center;gap:5px}.status-item{font-size:0.95em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}.status-label{display:flex;align-items:center;gap:8px;font-weight:600}.status-indicator{width:14px;height:14px;border-radius:3px;display:inline-block}.status-answered{background:#28a745}.status-doubt{background:#ffc107}.status-unanswered{background:#9e9e9e}.status-count{font-weight:700;font-size:1.1em;color:#667eea;background:#f0f0f0;padding:2px 10px;border-radius:12px}.nav-title{font-size:1em;font-weight:700;color:#667eea;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e0e0e0}.nav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}.nav-btn{padding:12px 8px;border:none;border-radius:6px;font-weight:700;cursor:pointer;background:#e0e0e0;color:#333;transition:all 0.3s;font-size:0.95em;-webkit-tap-highlight-color:transparent;touch-action:manipulation}.nav-btn:hover{transform:scale(1.05)}.nav-btn.answered{background:#28a745;color:#fff}.nav-btn.doubt{background:#ffc107;color:#000;font-weight:800}.nav-btn.active{background:#667eea;color:#fff;border:3px solid #4a5cd1;transform:scale(1.1)}.question{display:none}.question.active{display:block}.q-hdr{font-size:1.3em;color:#667eea;margin-bottom:15px;font-weight:700}.q-txt{font-size:1.1em;line-height:1.6;margin-bottom:20px;color:#333}.q-audio{margin:15px 0;padding:15px;background:#f0f8ff;border-radius:8px;border-left:4px solid #667eea}.q-audio-label{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-weight:600;color:#667eea;font-size:1.05em}.q-audio audio{width:100%;margin-top:5px}.q-img{max-width:100%;border-radius:8px;margin:20px 0;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.1)}.opts{display:grid;gap:12px}.opt{display:flex;align-items:center;padding:15px;border:2px solid #e0e0e0;border-radius:8px;cursor:pointer;transition:all 0.3s;background:#fff}.opt:hover{border-color:#667eea;background:#f8f9ff;transform:translateX(5px)}.opt input{width:20px;height:20px;margin-right:15px;cursor:pointer;accent-color:#667eea}.opt-lbl{font-weight:700;color:#667eea;margin-right:10px;font-size:1.1em}.nav-btns{display:flex;justify-content:space-between;gap:10px;margin-top:30px;padding-top:20px;border-top:2px solid #e0e0e0;flex-wrap:wrap}.btn{padding:14px 28px;border:none;border-radius:8px;font-size:1em;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;transition:all 0.3s;box-shadow:0 4px 8px rgba(0,0,0,0.2);-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}.btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3)}.btn:active{transform:translateY(0);background:linear-gradient(135deg,#5568d3,#6a3f8f)}.btn-success{background:#28a745}.btn-success:hover{background:#218838}.btn-success:active{background:#1e7e34}.btn-doubt{background:#ffc107;color:#000;font-weight:700}.btn-doubt:hover{background:#e0a800}.btn-doubt:active{background:#d39e00}.btn-doubt.confirmed{background:#28a745;color:#fff}.btn-doubt.confirmed:hover{background:#1e7e34}.btn-doubt.confirmed:active{background:#1c7430}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:#fff;padding:40px;border-radius:16px;max-width:600px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);max-height:90vh;overflow-y:auto}.modal-content h2{color:#667eea;margin-bottom:20px;font-size:2em}.modal-content input{width:100%;padding:14px;margin:10px 0;border:2px solid #e0e0e0;border-radius:8px;font-size:1em}.start{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.warn{background:#fff3cd;border:2px solid #ffc107;color:#856404;padding:15px;border-radius:8px;margin-bottom:20px;text-align:center;font-weight:700}#qrcode{margin:20px auto;padding:20px;background:white;border-radius:12px;display:inline-block}@media(max-width:1024px){.container{flex-direction:column}.sidebar{width:100%;position:relative;top:0;max-height:none}.nav-btns{justify-content:center}.nav-grid{grid-template-columns:repeat(5,1fr)}}</style>';
+            html += '<style>*{margin:0;padding:0;box-sizing:border-box;user-select:none}body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh}.container{max-width:1400px;margin:0 auto;display:flex;gap:20px;padding:20px}.sidebar{width:280px;background:#fff;border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.2);position:sticky;top:20px;height:fit-content;max-height:calc(100vh - 40px);overflow-y:auto}.main{flex:1;background:#fff;border-radius:12px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,.2)}.hdr{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:25px;border-radius:12px 12px 0 0;margin:-30px -30px 30px}.timer{font-size:2em;font-weight:700;text-align:center;padding:15px;border-radius:8px;margin-bottom:20px}.timer.safe{background:#d4edda;color:#155724}.timer.warning{background:#fff3cd;color:#856404}.timer.danger{background:#f8d7da;color:#721c24}.info{background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:15px;font-size:0.9em}.info div{margin-bottom:5px}.violation{background:#f8d7da;color:#721c24;padding:10px;border-radius:6px;text-align:center;margin-bottom:15px;font-weight:700;display:none;font-size:0.9em}.status-summary{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);padding:15px;border-radius:8px;margin-bottom:15px;border-left:4px solid #28a745}.status-title{font-weight:700;color:#1b5e20;margin-bottom:12px;font-size:1em;display:flex;align-items:center;gap:5px}.status-item{font-size:0.95em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,0.1)}.status-label{display:flex;align-items:center;gap:8px;font-weight:600}.status-indicator{width:14px;height:14px;border-radius:3px;display:inline-block}.status-answered{background:#28a745}.status-doubt{background:#ffc107}.status-unanswered{background:#9e9e9e}.status-count{font-weight:700;font-size:1.1em;color:#667eea;background:#f0f0f0;padding:2px 10px;border-radius:12px}.nav-title{font-size:1em;font-weight:700;color:#667eea;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #e0e0e0}.nav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}.nav-btn{padding:12px 8px;border:none;border-radius:6px;font-weight:700;cursor:pointer;background:#e0e0e0;color:#333;transition:all 0.3s;font-size:0.95em;-webkit-tap-highlight-color:transparent;touch-action:manipulation}.nav-btn:hover{transform:scale(1.05)}.nav-btn.answered{background:#28a745;color:#fff}.nav-btn.doubt{background:#ffc107;color:#000;font-weight:800}.nav-btn.active{background:#667eea;color:#fff;border:3px solid #4a5cd1;transform:scale(1.1)}.question{display:none}.question.active{display:block}.q-hdr{font-size:1.3em;color:#667eea;margin-bottom:15px;font-weight:700}.q-txt{font-size:1.1em;line-height:1.6;margin-bottom:20px;color:#333}.q-audio{margin:15px 0;padding:15px;background:#f0f8ff;border-radius:8px;border-left:4px solid #667eea}.q-audio-label{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-weight:600;color:#667eea;font-size:1.05em}.q-audio audio{width:100%;margin-top:5px}.q-img{max-width:100%;border-radius:8px;margin:20px 0;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.1)}.opts{display:grid;gap:12px}.opt{display:flex;align-items:center;padding:15px;border:2px solid #e0e0e0;border-radius:8px;cursor:pointer;transition:all 0.3s;background:#fff}.opt:hover{border-color:#667eea;background:#f8f9ff;transform:translateX(5px)}.opt input{width:20px;height:20px;margin-right:15px;cursor:pointer;accent-color:#667eea}.opt-lbl{font-weight:700;color:#667eea;margin-right:10px;font-size:1.1em}.nav-btns{display:flex;justify-content:space-between;gap:10px;margin-top:30px;padding-top:20px;border-top:2px solid #e0e0e0;flex-wrap:wrap}.btn{padding:14px 28px;border:none;border-radius:8px;font-size:1em;font-weight:600;cursor:pointer;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;transition:all 0.3s;box-shadow:0 4px 8px rgba(0,0,0,0.2);-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}.btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.3)}.btn:active{transform:translateY(0);background:linear-gradient(135deg,#5568d3,#6a3f8f)}.btn-success{background:#28a745}.btn-success:hover{background:#218838}.btn-success:active{background:#1e7e34}.btn-doubt{background:#ffc107;color:#000;font-weight:700}.btn-doubt:hover{background:#e0a800}.btn-doubt:active{background:#d39e00}.btn-doubt.confirmed{background:#28a745;color:#fff}.btn-doubt.confirmed:hover{background:#1e7e34}.btn-doubt.confirmed:active{background:#1c7430}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:#fff;padding:40px;border-radius:16px;max-width:600px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);max-height:90vh;overflow-y:auto}.modal-content h2{color:#667eea;margin-bottom:20px;font-size:2em}.modal-content input{width:100%;padding:14px;margin:10px 0;border:2px solid #e0e0e0;border-radius:8px;font-size:1em}.start{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}.warn{background:#fff3cd;border:2px solid #ffc107;color:#856404;padding:15px;border-radius:8px;margin-bottom:20px;text-align:center;font-weight:700}#qrcode{margin:20px auto;padding:20px;background:white;border-radius:12px;display:inline-block}.review-container{max-width:900px;margin:0 auto;padding:20px;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.2)}.review-header{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:25px;border-radius:12px;margin-bottom:25px;text-align:center}.review-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:25px}.summary-card{background:linear-gradient(135deg,#f8f9fa,#e9ecef);padding:20px;border-radius:12px;text-align:center;border-left:4px solid #667eea}.summary-card.correct{border-left-color:#28a745;background:linear-gradient(135deg,#d4edda,#c3e6cb)}.summary-card.wrong{border-left-color:#dc3545;background:linear-gradient(135deg,#f8d7da,#f5c6cb)}.summary-number{font-size:2.5em;font-weight:700;color:#667eea;margin-bottom:5px}.summary-card.correct .summary-number{color:#28a745}.summary-card.wrong .summary-number{color:#dc3545}.summary-label{font-size:0.9em;color:#666;font-weight:600}.review-question{background:#fff;border:2px solid #e0e0e0;border-radius:12px;padding:25px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}.review-question.correct{border-left:6px solid #28a745;background:#f8fff9}.review-question.wrong{border-left:6px solid #dc3545;background:#fff8f8}.review-q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding-bottom:10px;border-bottom:2px solid #e0e0e0}.review-q-number{font-size:1.3em;font-weight:700;color:#667eea}.review-badge{padding:8px 16px;border-radius:20px;font-weight:700;font-size:0.9em}.review-badge.correct{background:#28a745;color:#fff}.review-badge.wrong{background:#dc3545;color:#fff}.review-q-text{font-size:1.1em;line-height:1.6;margin-bottom:15px;color:#333}.review-q-audio{margin:15px 0;padding:15px;background:#f0f8ff;border-radius:8px;border-left:4px solid #667eea}.review-q-audio-label{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-weight:600;color:#667eea;font-size:1.05em}.review-q-audio audio{width:100%;margin-top:5px}.review-q-img{max-width:100%;border-radius:8px;margin:15px 0;box-shadow:0 4px 12px rgba(0,0,0,0.1)}.review-options{display:grid;gap:10px;margin-top:15px}.review-option{padding:15px;border-radius:8px;border:2px solid #e0e0e0;background:#f8f9fa;display:flex;align-items:center;gap:12px}.review-option.student-answer{border-color:#667eea;background:#e8eaff;font-weight:600}.review-option.correct-answer{border-color:#28a745;background:#d4edda;font-weight:600}.review-option.wrong-answer{border-color:#dc3545;background:#f8d7da;font-weight:600}.review-opt-label{font-weight:700;color:#667eea;font-size:1.1em;min-width:30px}.review-indicator{margin-left:auto;font-size:1.2em}.answer-explanation{margin-top:15px;padding:15px;background:#fff3cd;border-left:4px solid #ffc107;border-radius:8px}.answer-explanation-title{font-weight:700;color:#856404;margin-bottom:8px;display:flex;align-items:center;gap:8px}.answer-explanation-text{color:#856404;line-height:1.5}.password-prompt{background:#fff;padding:30px;border-radius:12px;max-width:400px;width:90%;text-align:center}.password-prompt h3{color:#667eea;margin-bottom:15px;font-size:1.5em}.password-prompt p{color:#666;margin-bottom:20px;line-height:1.5}.password-prompt input{width:100%;padding:14px;margin:15px 0;border:2px solid #e0e0e0;border-radius:8px;font-size:1em;text-align:center}.password-error{background:#f8d7da;color:#721c24;padding:12px;border-radius:6px;margin-top:10px;display:none}@media(max-width:1024px){.container{flex-direction:column}.sidebar{width:100%;position:relative;top:0;max-height:none}.nav-btns{justify-content:center}.nav-grid{grid-template-columns:repeat(5,1fr)}.review-summary{grid-template-columns:1fr}}</style>';
             
             html += '<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>';
             
@@ -974,11 +1006,16 @@
             
             html += '<div id="exam" style="display:none"><div class="container"><div class="sidebar"><div class="timer safe" id="timer">90:00</div><div class="info"><div style="margin-bottom:8px"><strong>📝 Nama:</strong> <span id="dName"></span></div><div style="margin-bottom:8px"><strong>🆔 NIS:</strong> <span id="dNis"></span></div><div><strong>🎓 Kelas:</strong> <span id="dClass"></span></div></div><div class="violation" id="viol">⚠️ Pelanggaran: <span id="vCount">0</span></div><div class="status-summary"><div class="status-title">📊 Status Pengerjaan</div><div class="status-item"><div class="status-label"><span class="status-indicator status-answered"></span>Sudah Terjawab</div><span class="status-count" id="statAnswered">0</span></div><div class="status-item"><div class="status-label"><span class="status-indicator status-doubt"></span>Ragu-ragu</div><span class="status-count" id="statDoubt">0</span></div><div class="status-item"><div class="status-label"><span class="status-indicator status-unanswered"></span>Belum Terjawab</div><span class="status-count" id="statUnanswered">' + questionsData.length + '</span></div></div><div class="nav-title">🧭 Navigasi Soal</div><div class="nav-grid" id="nav"></div><button class="btn btn-success" onclick="submitExam()" style="width:100%;margin-top:20px;font-size:1em">✅ Submit Ujian</button></div><div class="main"><div class="hdr"><h1>📝 ' + escapeHtml(title) + '</h1><p style="font-size:1.1em;margin-top:10px">🎓 Kelas: ' + escapeHtml(examClass) + ' | 📋 Total: ' + questionsData.length + ' soal</p></div><div id="qCont"></div><div class="nav-btns"><button class="btn" onclick="prevQuestion()" style="flex:1">⬅️ Sebelumnya</button><button class="btn btn-doubt" onclick="toggleDoubtStatus()" id="doubtBtn" style="flex:1.2">❓ Ragu-ragu</button><button class="btn" onclick="nextQuestion()" style="flex:1">Selanjutnya ➡️</button></div></div></div></div>';
             
-            html += '<div id="result" class="modal"><div class="modal-content"><h2>🎉 Ujian Selesai!</h2><p style="font-size:1.2em;margin:20px 0"><strong>Nama:</strong> <span id="rName"></span><br><strong>NIS:</strong> <span id="rNis"></span><br><strong>Nilai:</strong> <span id="rScore" style="font-size:2em;color:#667eea;font-weight:bold"></span></p><div style="margin-top:30px;padding:20px;background:#f8f9fa;border-radius:8px;border:2px solid #667eea"><p style="margin-bottom:15px;font-weight:bold;color:#667eea;font-size:1.2em">📱 Scan QR Code ini untuk mengirim hasil ke guru:</p><div id="qrcode"></div><p style="margin-top:15px;font-size:0.9em;color:#666">Format: NIS | Nama | Kelas | Nilai | Waktu</p><p style="margin-top:10px;font-size:0.85em;color:#dc3545;font-weight:600">🔒 QR Code ini tidak bisa diedit atau diubah</p><div style="margin-top:15px;padding:10px;background:#fff;border-radius:6px;border:1px solid #ddd"><p style="font-size:0.85em;color:#666;margin-bottom:5px"><strong>Data Manual (jika QR gagal):</strong></p><p style="font-size:0.8em;font-family:monospace;word-break:break-all" id="manualData"></p></div></div></div></div>';
+            html += '<div id="result" class="modal"><div class="modal-content"><h2>🎉 Ujian Selesai!</h2><p style="font-size:1.2em;margin:20px 0"><strong>Nama:</strong> <span id="rName"></span><br><strong>NIS:</strong> <span id="rNis"></span><br><strong>Nilai:</strong> <span id="rScore" style="font-size:2em;color:#667eea;font-weight:bold"></span></p><div style="margin-top:20px"><button class="btn btn-primary" onclick="promptReviewPassword()" style="width:100%;margin-bottom:15px;font-size:1.1em">📖 Lihat Pembahasan Jawaban</button></div><div style="margin-top:30px;padding:20px;background:#f8f9fa;border-radius:8px;border:2px solid #667eea"><p style="margin-bottom:15px;font-weight:bold;color:#667eea;font-size:1.2em">📱 Scan QR Code ini untuk mengirim hasil ke guru:</p><div id="qrcode"></div><p style="margin-top:15px;font-size:0.9em;color:#666">Format: NIS | Nama | Kelas | Nilai | Waktu</p><p style="margin-top:10px;font-size:0.85em;color:#dc3545;font-weight:600">🔒 QR Code ini tidak bisa diedit atau diubah</p><div style="margin-top:15px;padding:10px;background:#fff;border-radius:6px;border:1px solid #ddd"><p style="font-size:0.85em;color:#666;margin-bottom:5px"><strong>Data Manual (jika QR gagal):</strong></p><p style="font-size:0.8em;font-family:monospace;word-break:break-all" id="manualData"></p></div></div></div></div>';
+            
+            html += '<div id="passwordPrompt" class="modal"><div class="password-prompt"><h3>🔐 Password Diperlukan</h3><p>Masukkan password dari guru untuk melihat pembahasan jawaban:</p><input type="password" id="reviewPasswordInput" placeholder="Masukkan password" autocomplete="off"><div class="password-error" id="passwordError">❌ Password salah! Silakan coba lagi.</div><div style="margin-top:20px;display:flex;gap:10px;justify-content:center"><button class="btn btn-primary" onclick="verifyPassword()">🔓 Buka Review</button><button class="btn btn-secondary" onclick="closePasswordPrompt()">❌ Batal</button></div></div></div>';
+            
+            html += '<div id="review" style="display:none"><div class="review-container"><div class="review-header"><h1>📖 Pembahasan Jawaban</h1><p style="font-size:1.1em;margin-top:10px;opacity:0.9">Review jawaban Anda dan pelajari yang benar</p></div><div class="review-summary"><div class="summary-card correct"><div class="summary-number" id="reviewCorrect">0</div><div class="summary-label">✅ Benar</div></div><div class="summary-card wrong"><div class="summary-number" id="reviewWrong">0</div><div class="summary-label">❌ Salah</div></div><div class="summary-card"><div class="summary-number" id="reviewScore">0</div><div class="summary-label">📊 Nilai</div></div></div><div id="reviewContent"></div><div style="text-align:center;margin-top:30px"><button class="btn btn-primary" onclick="backToResult()" style="font-size:1.1em">⬅️ Kembali ke Hasil</button></div></div></div>';
             
             html += '<script>';
             html += 'var qs=' + qJson + ';';
-            html += 'var dur=' + duration + ';var cur=0;var ans={};var doubt={};var time=dur*60;var timer=null;var viols=0;var std={};var started=false;var submitInProgress=false;';
+            html += 'var reviewPass="' + encodedPassword + '";';
+            html += 'var dur=' + duration + ';var cur=0;var ans={};var doubt={};var time=dur*60;var timer=null;var viols=0;var std={};var started=false;var submitInProgress=false;var examResults={};';
             html += 'document.addEventListener("contextmenu",function(e){e.preventDefault()});';
             html += 'document.addEventListener("selectstart",function(e){e.preventDefault()});';
             html += 'document.addEventListener("copy",function(e){e.preventDefault()});';
@@ -999,7 +1036,13 @@
             html += 'function startTimer(){updateTimerDisplay();timer=setInterval(function(){time--;updateTimerDisplay();if(time<=0){clearInterval(timer);autoSubmitExam()}},1000)}';
             html += 'function updateTimerDisplay(){var m=Math.floor(time/60);var s=time%60;var d=m+":"+(s<10?"0":"")+s;var t=document.getElementById("timer");t.textContent=d;var tot=dur*60;if(time>tot/2){t.className="timer safe"}else if(time>tot*0.25){t.className="timer warning"}else{t.className="timer danger"}}';
             html += 'function autoSubmitExam(){alert("⏰ Waktu Habis!\\n\\nUjian akan otomatis di-submit sekarang.");submitExam(true)}';
-            html += 'function submitExam(auto){if(submitInProgress){return}submitInProgress=true;try{if(!auto){var unanswered=0;var doubtCount=0;for(var i=0;i<qs.length;i++){if(doubt[i]){doubtCount++}else if(!ans[i]||ans[i].length===0){unanswered++}}var msg="";if(unanswered>0){msg+="⚠️ Ada "+unanswered+" soal yang belum dijawab\\n"}if(doubtCount>0){msg+="❓ Ada "+doubtCount+" soal yang masih ragu-ragu\\n"}if(msg&&!confirm(msg+"\\nYakin ingin submit ujian?")){submitInProgress=false;return}}if(timer){clearInterval(timer);timer=null}var cor=0;for(var i=0;i<qs.length;i++){var q=qs[i];var sa=ans[i]||[];var ca=q.correctAnswers.slice();sa.sort();ca.sort();if(JSON.stringify(sa)===JSON.stringify(ca)){cor++}}var sc=Math.round(cor/qs.length*100);var k="exam_' + examKey + '_"+std.nis;var dt=new Date();var ts=dt.getFullYear()+"-"+pad(dt.getMonth()+1)+"-"+pad(dt.getDate())+" "+pad(dt.getHours())+":"+pad(dt.getMinutes());var r={name:std.name,nis:std.nis,class:std.class,score:sc,correct:cor,total:qs.length,violations:viols,timestamp:ts,examTitle:"' + escapeHtml(title) + '"};try{localStorage.setItem(k,JSON.stringify(r))}catch(e){console.error("Storage error:",e)}document.getElementById("rName").textContent=std.name;document.getElementById("rNis").textContent=std.nis;document.getElementById("rScore").textContent=sc;var qrText="EXAM|"+std.nis+"|"+std.name+"|"+std.class+"|"+sc+"|"+cor+"|"+qs.length+"|"+viols+"|"+ts+"|' + escapeHtml(title) + '";document.getElementById("manualData").textContent=qrText;try{document.getElementById("qrcode").innerHTML="";new QRCode(document.getElementById("qrcode"),{text:qrText,width:280,height:280,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M})}catch(qrErr){console.error("QR Error:",qrErr);document.getElementById("qrcode").innerHTML="<p style=\\"color:red;padding:20px\\">⚠️ QR Code gagal dibuat.<br>Gunakan data manual di bawah.</p>"}document.getElementById("exam").style.display="none";document.getElementById("result").classList.add("active");if(document.fullscreenElement){try{document.exitFullscreen()}catch(e){}}submitInProgress=false}catch(err){alert("⚠️ Error saat submit: "+err.message+"\\n\\nSilakan screenshot hasil Anda dan hubungi guru.");console.error(err);submitInProgress=false}};function pad(n){return n<10?"0"+n:n};';
+            html += 'function submitExam(auto){if(submitInProgress){return}submitInProgress=true;try{if(!auto){var unanswered=0;var doubtCount=0;for(var i=0;i<qs.length;i++){if(doubt[i]){doubtCount++}else if(!ans[i]||ans[i].length===0){unanswered++}}var msg="";if(unanswered>0){msg+="⚠️ Ada "+unanswered+" soal yang belum dijawab\\n"}if(doubtCount>0){msg+="❓ Ada "+doubtCount+" soal yang masih ragu-ragu\\n"}if(msg&&!confirm(msg+"\\nYakin ingin submit ujian?")){submitInProgress=false;return}}if(timer){clearInterval(timer);timer=null}var cor=0;var results=[];for(var i=0;i<qs.length;i++){var q=qs[i];var sa=ans[i]||[];var ca=q.correctAnswers.slice();sa.sort();ca.sort();var isCorrect=JSON.stringify(sa)===JSON.stringify(ca);if(isCorrect){cor++}results.push({questionIndex:i,studentAnswer:sa,correctAnswer:ca,isCorrect:isCorrect})}examResults={studentAnswers:ans,results:results,correct:cor,total:qs.length};var sc=Math.round(cor/qs.length*100);var k="exam_' + examKey + '_"+std.nis;var dt=new Date();var ts=dt.getFullYear()+"-"+pad(dt.getMonth()+1)+"-"+pad(dt.getDate())+" "+pad(dt.getHours())+":"+pad(dt.getMinutes());var r={name:std.name,nis:std.nis,class:std.class,score:sc,correct:cor,total:qs.length,violations:viols,timestamp:ts,examTitle:"' + escapeHtml(title) + '"};try{localStorage.setItem(k,JSON.stringify(r))}catch(e){console.error("Storage error:",e)}document.getElementById("rName").textContent=std.name;document.getElementById("rNis").textContent=std.nis;document.getElementById("rScore").textContent=sc;var qrText="EXAM|"+std.nis+"|"+std.name+"|"+std.class+"|"+sc+"|"+cor+"|"+qs.length+"|"+viols+"|"+ts+"|' + escapeHtml(title) + '";document.getElementById("manualData").textContent=qrText;try{document.getElementById("qrcode").innerHTML="";new QRCode(document.getElementById("qrcode"),{text:qrText,width:280,height:280,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M})}catch(qrErr){console.error("QR Error:",qrErr);document.getElementById("qrcode").innerHTML="<p style=\\"color:red;padding:20px\\">⚠️ QR Code gagal dibuat.<br>Gunakan data manual di bawah.</p>"}document.getElementById("exam").style.display="none";document.getElementById("result").classList.add("active");if(document.fullscreenElement){try{document.exitFullscreen()}catch(e){}}submitInProgress=false}catch(err){alert("⚠️ Error saat submit: "+err.message+"\\n\\nSilakan screenshot hasil Anda dan hubungi guru.");console.error(err);submitInProgress=false}};function pad(n){return n<10?"0"+n:n};';
+            html += 'function promptReviewPassword(){document.getElementById("result").classList.remove("active");document.getElementById("passwordPrompt").classList.add("active");document.getElementById("reviewPasswordInput").value="";document.getElementById("passwordError").style.display="none";document.getElementById("reviewPasswordInput").focus()}';
+            html += 'function closePasswordPrompt(){document.getElementById("passwordPrompt").classList.remove("active");document.getElementById("result").classList.add("active")}';
+            html += 'function verifyPassword(){var input=document.getElementById("reviewPasswordInput").value.trim();if(!input){document.getElementById("passwordError").textContent="❌ Password tidak boleh kosong!";document.getElementById("passwordError").style.display="block";return}var encodedInput=btoa(input);if(encodedInput===reviewPass){document.getElementById("passwordPrompt").classList.remove("active");document.getElementById("review").style.display="block";generateReview();window.scrollTo({top:0,behavior:"smooth"})}else{document.getElementById("passwordError").textContent="❌ Password salah! Silakan coba lagi.";document.getElementById("passwordError").style.display="block";document.getElementById("reviewPasswordInput").value="";document.getElementById("reviewPasswordInput").focus()}}';
+            html += 'document.getElementById("reviewPasswordInput").addEventListener("keypress",function(e){if(e.key==="Enter"){verifyPassword()}});';
+            html += 'function backToResult(){document.getElementById("review").style.display="none";document.getElementById("result").classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}';
+            html += 'function generateReview(){var correct=examResults.correct;var wrong=examResults.total-correct;var score=Math.round(correct/examResults.total*100);document.getElementById("reviewCorrect").textContent=correct;document.getElementById("reviewWrong").textContent=wrong;document.getElementById("reviewScore").textContent=score;var cont=document.getElementById("reviewContent");cont.innerHTML="";for(var i=0;i<qs.length;i++){var q=qs[i];var result=examResults.results[i];var studentAns=result.studentAnswer;var correctAns=result.correctAnswer;var isCorrect=result.isCorrect;var div=document.createElement("div");div.className="review-question "+(isCorrect?"correct":"wrong");var audioHtml="";if(q.audio){audioHtml=\'<div class="review-q-audio"><div class="review-q-audio-label"><span style="font-size:1.3em">🎵</span><span>Audio soal:</span></div><audio controls controlsList="nodownload"><source src="\'+q.audio+\'"></audio></div>\'}var imgHtml="";if(q.image){imgHtml=\'<img src="\'+q.image+\'" class="review-q-img">\'}var optionsHtml="";["A","B","C","D","E"].forEach(function(opt){var isStudentAns=studentAns.indexOf(opt)!==-1;var isCorrectAns=correctAns.indexOf(opt)!==-1;var optClass="review-option";var indicator="";if(isCorrectAns){optClass+=" correct-answer";indicator=\'<span class="review-indicator">✅</span>\'}if(isStudentAns&&!isCorrectAns){optClass+=" wrong-answer";indicator=\'<span class="review-indicator">❌</span>\'}if(isStudentAns&&!isCorrectAns){optionsHtml+=\'<div class="\'+optClass+\'"><span class="review-opt-label">\'+opt+\'.</span><span>\'+escapeHtml(q.options[opt])+\'</span>\'+indicator+\'<span style="margin-left:10px;font-size:0.9em;color:#28a745">(Jawaban Benar)</span></div>\'}else if(isStudentAns){optionsHtml+=\'<div class="\'+optClass+\'"><span class="review-opt-label">\'+opt+\'.</span><span>\'+escapeHtml(q.options[opt])+\'</span></div>\'}else{optionsHtml+=\'<div class="\'+optClass+\'"><span class="review-opt-label">\'+opt+\'.</span><span>\'+escapeHtml(q.options[opt])+\'</span></div>\'}});var explanationHtml="";if(!isCorrect){var correctOptTexts=correctAns.map(function(opt){return opt+". "+q.options[opt]}).join(", ");explanationHtml=\'<div class="answer-explanation"><div class="answer-explanation-title"><span style="font-size:1.2em">💡</span><span>Penjelasan:</span></div><div class="answer-explanation-text">Jawaban yang benar adalah: <strong>\'+correctOptTexts+\'</strong></div></div>\'}div.innerHTML=\'<div class="review-q-header"><span class="review-q-number">Soal \'+(i+1)+\'</span><span class="review-badge \'+(isCorrect?"correct":"wrong")+\'">\'+( isCorrect?"✅ Benar":"❌ Salah")+\'</span></div>\'+audioHtml+\'<div class="review-q-text">\'+escapeHtml(q.text)+\'</div>\'+imgHtml+\'<div class="review-options">\'+optionsHtml+\'</div>\'+explanationHtml;cont.appendChild(div)}}';
             html += '<\/script></body></html>';
             
             return html;
@@ -1015,6 +1058,39 @@
             };
             return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
         }
+
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById('reviewPassword');
+            var toggleIcon = document.getElementById('passwordToggleIcon');
+            var passwordDisplay = document.getElementById('passwordDisplay');
+            var passwordText = document.getElementById('passwordText');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.textContent = '🙈';
+                if (passwordInput.value.trim()) {
+                    passwordText.textContent = passwordInput.value;
+                    passwordDisplay.style.display = 'block';
+                }
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.textContent = '👁️';
+                passwordDisplay.style.display = 'none';
+            }
+        }
+
+        document.getElementById('reviewPassword').addEventListener('input', function() {
+            var passwordDisplay = document.getElementById('passwordDisplay');
+            var passwordText = document.getElementById('passwordText');
+            var passwordInput = document.getElementById('reviewPassword');
+            
+            if (passwordInput.type === 'text' && passwordInput.value.trim()) {
+                passwordText.textContent = passwordInput.value;
+                passwordDisplay.style.display = 'block';
+            } else if (passwordInput.type === 'text') {
+                passwordDisplay.style.display = 'none';
+            }
+        });
     </script>
 </body>
-</html>
+</html></span>\'+indicator+\'<span style="margin-left:10px;font-size:0.9em;color:#dc3545">(Jawaban Anda)</span></div>\'}else if(isCorrectAns){optionsHtml+=\'<div class="\'+optClass+\'"><span class="review-opt-label">\'+opt+\'.</span><span>\'+escapeHtml(q.options[opt])+\'
