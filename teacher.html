@@ -996,7 +996,6 @@
 
         function generateStudentExam(title, duration, examClass, questionsData, reviewPassword) {
             var examKey = title.replace(/[^a-z0-9]/gi, '_');
-            html += 'window.SPREADSHEET_URL="' + (SPREADSHEET_URL || '') + '";';
             var qJson = JSON.stringify(questionsData);
             var encodedPassword = btoa(reviewPassword);
             
@@ -1018,6 +1017,7 @@
             
             html += '<script>';
             html += 'var qs=' + qJson + ';';
+            html += 'window.SPREADSHEET_URL="' + SPREADSHEET_URL + '";';
             html += 'var reviewPass="' + encodedPassword + '";';
             html += 'var dur=' + duration + ';var cur=0;var ans={};var doubt={};var time=dur*60;var timer=null;var viols=0;var std={};var started=false;var submitInProgress=false;var examResults={};';
             html += 'document.addEventListener("contextmenu",function(e){e.preventDefault()});';
