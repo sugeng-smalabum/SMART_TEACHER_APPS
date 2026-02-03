@@ -157,6 +157,39 @@
                 </div>
             </div>
 
+            <!-- Google Sheets Integration Section -->
+            <div class="section" style="background: #e3f2fd; border-left-color: #2196F3;">
+                <h2 class="section-title" style="color: #1976D2;">
+                    <span>📊</span>
+                    <span>Google Sheets Integration</span>
+                </h2>
+                <p style="margin-bottom: 15px; color: #555;">Connect to Google Sheets to automatically save student exam results.</p>
+                
+                <div class="input-group">
+                    <label for="webAppUrl">🔗 Web App URL from Google Apps Script</label>
+                    <input type="text" id="webAppUrl" placeholder="https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec">
+                    <p style="margin-top: 8px; font-size: 0.9em; color: #666;">
+                        <strong>Format:</strong> https://script.google.com/macros/s/[DEPLOYMENT_ID]/exec
+                    </p>
+                    <div id="urlStatus" style="margin-top: 10px;"></div>
+                </div>
+                
+                <button class="btn btn-info" onclick="testConnection()" style="margin-top: 10px;">
+                    <span>🔍</span>
+                    <span>Test Connection</span>
+                </button>
+                
+                <div class="alert alert-info" style="margin-top: 15px;">
+                    <strong>📝 Setup Instructions:</strong><br>
+                    1. Create a Google Sheet<br>
+                    2. Extensions → Apps Script<br>
+                    3. Paste the doPost function<br>
+                    4. Deploy → New Deployment → Web App<br>
+                    5. Execute as: Me, Access: Anyone<br>
+                    6. Copy the Web App URL and paste above
+                </div>
+            </div>
+
             <div class="section">
                 <h2 class="section-title">📤 Add Questions</h2>
                 
@@ -352,6 +385,45 @@
     <script>
         // URL Google Apps Script (ganti setelah deploy)
        const SPREADSHEET_URL = 'https://script.google.com/macros/s/AKfycbwc1wTsKH2MVQLf2CFAOfhCuMSiCRJPbiGg9VGOMXFBKtMvltsSwHq1WThsNOLPE8FgDg/exec';
+
+
+        // Test Connection to Google Sheets
+        function testConnection() {
+            var url = document.getElementById('webAppUrl').value.trim();
+            var statusDiv = document.getElementById('urlStatus');
+            
+            if (!url) {
+                statusDiv.innerHTML = '<div class="alert alert-warning">❌ URL tidak boleh kosong!</div>';
+                return;
+            }
+
+            if (!url.includes('script.google.com')) {
+                statusDiv.innerHTML = '<div class="alert alert-warning">⚠️ Format URL tidak sesuai. Harus dari script.google.com</div>';
+                return;
+            }
+
+            statusDiv.innerHTML = '<div class="alert alert-info">⏳ Mengecek koneksi ke Google Sheets...</div>';
+
+            fetch(url, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    test: true,
+                    timestamp: new Date().toISOString()
+                })
+            })
+            .then(() => {
+                statusDiv.innerHTML = '<div class="alert alert-success">✅ Koneksi berhasil! URL valid dan siap digunakan</div>';
+            })
+            .catch(error => {
+                statusDiv.innerHTML = '<div class="alert alert-warning">❌ Koneksi gagal. Pastikan Web App sudah di-deploy dengan benar</div>';
+                console.error('Connection test error:', error);
+            });
+        }
+
         var questions = [];
         var editingIndex = -1;
         var currentImageData = null;
@@ -961,6 +1033,7 @@
             var duration = document.getElementById('examDuration').value;
             var examClass = document.getElementById('examClass').value.trim();
             var reviewPassword = document.getElementById('reviewPassword').value.trim();
+            var webAppUrl = document.getElementById('webAppUrl').value.trim();
 
             if (!title) {
                 alert('⚠️ Please enter an exam title!');
@@ -977,7 +1050,16 @@
                 return;
             }
 
-            var examHTML = generateStudentExam(title, duration, examClass, questions, reviewPassword);
+            if (!webAppUrl) {
+                if (!confirm('⚠️ Web App URL belum diisi!\n\nHasil ujian tidak akan otomatis tersimpan ke Google Sheets.\n\nLanjutkan tanpa Google Sheets integration?')) {
+                    return;
+                }
+            } else if (!webAppUrl.includes('script.google.com')) {
+                alert('⚠️ Format Web App URL tidak valid!\n\nHarus dari: https://script.google.com/macros/s/...');
+                return;
+            }
+
+            var examHTML = generateStudentExam(title, duration, examClass, questions, reviewPassword, webAppUrl);
             
             var blob = new Blob([examHTML], { type: 'text/html; charset=utf-8' });
             var url = URL.createObjectURL(blob);
@@ -990,10 +1072,11 @@
             URL.revokeObjectURL(url);
 
             var audioCount = questions.filter(q => q.audio).length;
-            alert('✅ Exam file downloaded successfully!\n\n📁 File: ' + a.download + '\n🎯 Questions: ' + questions.length + '\n🎵 Audio questions: ' + audioCount + '\n⏱️ Duration: ' + duration + ' minutes\n🔐 Review Password: ' + reviewPassword + '\n\n✨ Students will need the password to view answer explanations!');
+            var sheetsStatus = webAppUrl ? '✅ Connected to Google Sheets' : '⚠️ Not connected to Sheets';
+            alert('✅ Exam file downloaded successfully!\n\n📁 File: ' + a.download + '\n🎯 Questions: ' + questions.length + '\n🎵 Audio questions: ' + audioCount + '\n⏱️ Duration: ' + duration + ' minutes\n🔐 Review Password: ' + reviewPassword + '\n📊 ' + sheetsStatus + '\n\n✨ Students will need the password to view answer explanations!');
         }
 
-        function generateStudentExam(title, duration, examClass, questionsData, reviewPassword) {
+        function generateStudentExam(title, duration, examClass, questionsData, reviewPassword, webAppUrl) {
             var examKey = title.replace(/[^a-z0-9]/gi, '_');
             var qJson = JSON.stringify(questionsData);
             var encodedPassword = btoa(reviewPassword);
@@ -1015,6 +1098,7 @@
             html += '<div id="review" style="display:none"><div class="review-container"><div class="review-header"><h1>📖 Pembahasan Jawaban</h1><p style="font-size:1.1em;margin-top:10px;opacity:0.9">Review jawaban Anda dan pelajari yang benar</p></div><div class="review-summary"><div class="summary-card correct"><div class="summary-number" id="reviewCorrect">0</div><div class="summary-label">✅ Benar</div></div><div class="summary-card wrong"><div class="summary-number" id="reviewWrong">0</div><div class="summary-label">❌ Salah</div></div><div class="summary-card"><div class="summary-number" id="reviewScore">0</div><div class="summary-label">📊 Nilai</div></div></div><div id="reviewContent"></div><div style="text-align:center;margin-top:30px"><button class="btn btn-primary" onclick="backToResult()" style="font-size:1.1em">⬅️ Kembali ke Hasil</button></div></div></div>';
             
             html += '<script>';
+            html += 'var WEB_APP_URL="' + (webAppUrl || '') + '";';
             html += 'var qs=' + qJson + ';';
             html += 'window.SPREADSHEET_URL="' + SPREADSHEET_URL + '";';
             html += 'var reviewPass="' + encodedPassword + '";';
@@ -1039,7 +1123,19 @@
             html += 'function startTimer(){updateTimerDisplay();timer=setInterval(function(){time--;updateTimerDisplay();if(time<=0){clearInterval(timer);autoSubmitExam()}},1000)}';
             html += 'function updateTimerDisplay(){var m=Math.floor(time/60);var s=time%60;var d=m+":"+(s<10?"0":"")+s;var t=document.getElementById("timer");t.textContent=d;var tot=dur*60;if(time>tot/2){t.className="timer safe"}else if(time>tot*0.25){t.className="timer warning"}else{t.className="timer danger"}}';
             html += 'function autoSubmitExam(){alert("⏰ Waktu Habis!\\n\\nUjian akan otomatis di-submit sekarang.");submitExam(true)}';
-            html += 'function sendToSpreadsheet(data){if(!window.SPREADSHEET_URL||window.SPREADSHEET_URL==="MASUKKAN_URL_WEB_APP_ANDA_DISINI"){console.warn("⚠️ Spreadsheet URL belum diset");return Promise.resolve()}console.log("📤 Mengirim data ke spreadsheet...");var params="?name="+encodeURIComponent(data.name)+"&nis="+encodeURIComponent(data.nis)+"&class="+encodeURIComponent(data.class)+"&score="+data.score+"&correct="+data.correct+"&total="+data.total+"&violations="+data.violations+"&timestamp="+encodeURIComponent(data.timestamp)+"&examTitle="+encodeURIComponent(data.examTitle);var url=window.SPREADSHEET_URL+params;return fetch(url,{method:"GET",mode:"no-cors"}).then(function(){console.log("✅ Data berhasil dikirim ke Google Spreadsheet!");return true}).catch(function(err){console.error("❌ Error:",err);console.log("💾 Data tetap tersimpan lokal");return false})};';
+            html += 'function sendToSpreadsheet(data){';
+            html += 'if(!WEB_APP_URL){console.warn("No Web App URL configured");return}';
+            html += 'console.log("📤 Sending to Google Sheets...",data);';
+            html += 'fetch(WEB_APP_URL,{';
+            html += 'method:"POST",';
+            html += 'mode:"no-cors",';
+            html += 'headers:{"Content-Type":"application/json"},';
+            html += 'body:JSON.stringify(data)';
+            html += '}).then(function(){';
+            html += 'console.log("✅ Data sent to Google Sheets");';
+            html += '}).catch(function(err){';
+            html += 'console.error("❌ Error sending to Sheets:",err);';
+            html += '});};';
             html += 'function submitExam(auto){if(submitInProgress){return}submitInProgress=true;try{if(!auto){var unanswered=0;var doubtCount=0;for(var i=0;i<qs.length;i++){if(doubt[i]){doubtCount++}else if(!ans[i]||ans[i].length===0){unanswered++}}var msg="";if(unanswered>0){msg+="⚠️ Ada "+unanswered+" soal yang belum dijawab\\n"}if(doubtCount>0){msg+="❓ Ada "+doubtCount+" soal yang masih ragu-ragu\\n"}if(msg&&!confirm(msg+"\\nYakin ingin submit ujian?")){submitInProgress=false;return}}if(timer){clearInterval(timer);timer=null}var cor=0;var results=[];for(var i=0;i<qs.length;i++){var q=qs[i];var sa=ans[i]||[];var ca=q.correctAnswers.slice();sa.sort();ca.sort();var isCorrect=JSON.stringify(sa)===JSON.stringify(ca);if(isCorrect){cor++}results.push({questionIndex:i,studentAnswer:sa,correctAnswer:ca,isCorrect:isCorrect})}examResults={studentAnswers:ans,results:results,correct:cor,total:qs.length};var sc=Math.round(cor/qs.length*100);var k="exam_' + examKey + '_"+std.nis;var dt=new Date();var ts=dt.getFullYear()+"-"+pad(dt.getMonth()+1)+"-"+pad(dt.getDate())+" "+pad(dt.getHours())+":"+pad(dt.getMinutes());var r={name:std.name,nis:std.nis,class:std.class,score:sc,correct:cor,total:qs.length,violations:viols,timestamp:ts,examTitle:"' + escapeHtml(title) + '"};try{localStorage.setItem(k,JSON.stringify(r))}catch(e){console.error("Storage error:",e)}sendToSpreadsheet(r);document.getElementById("rName").textContent=std.name;document.getElementById("rNis").textContent=std.nis;document.getElementById("rScore").textContent=sc;var qrText="EXAM|"+std.nis+"|"+std.name+"|"+std.class+"|"+sc+"|"+cor+"|"+qs.length+"|"+viols+"|"+ts+"|' + escapeHtml(title) + '";document.getElementById("manualData").textContent=qrText;try{document.getElementById("qrcode").innerHTML="";new QRCode(document.getElementById("qrcode"),{text:qrText,width:280,height:280,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M})}catch(qrErr){console.error("QR Error:",qrErr);document.getElementById("qrcode").innerHTML="<p style=\\"color:red;padding:20px\\">⚠️ QR Code gagal dibuat.<br>Gunakan data manual di bawah.</p>"}document.getElementById("exam").style.display="none";document.getElementById("result").classList.add("active");if(document.fullscreenElement){try{document.exitFullscreen()}catch(e){}}submitInProgress=false}catch(err){alert("⚠️ Error saat submit: "+err.message+"\\n\\nSilakan screenshot hasil Anda dan hubungi guru.");console.error(err);submitInProgress=false}};function pad(n){return n<10?"0"+n:n};';
             html += 'function promptReviewPassword(){document.getElementById("result").classList.remove("active");document.getElementById("passwordPrompt").classList.add("active");document.getElementById("reviewPasswordInput").value="";document.getElementById("passwordError").style.display="none";document.getElementById("reviewPasswordInput").focus()}';
             html += 'function closePasswordPrompt(){document.getElementById("passwordPrompt").classList.remove("active");document.getElementById("result").classList.add("active")}';
