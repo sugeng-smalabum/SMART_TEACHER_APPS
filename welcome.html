@@ -52,6 +52,144 @@
             line-height: 1.6;
         }
 
+        /* ===== HAK CIPTA SECTION ===== */
+        .hak-cipta-section {
+            margin: 30px auto 10px auto;
+            max-width: 860px;
+            background: linear-gradient(135deg, #fff8e1 0%, #fff3e0 100%);
+            border: 2px solid #e65100;
+            border-radius: 12px;
+            padding: 30px 35px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(230, 81, 0, 0.10);
+        }
+
+        .hak-cipta-section .hc-dasar {
+            font-size: 0.85em;
+            color: #555;
+            margin-bottom: 18px;
+            line-height: 1.8;
+        }
+
+        .hak-cipta-section .hc-dasar span {
+            display: inline-block;
+            margin: 2px 0;
+        }
+
+        .hak-cipta-section .hc-title {
+            font-size: 1.25em;
+            font-weight: 800;
+            color: #b71c1c;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .hak-cipta-section .hc-badge {
+            display: inline-block;
+            background: #b71c1c;
+            color: white;
+            font-size: 0.78em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            border-radius: 20px;
+            padding: 4px 18px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .hak-cipta-section .hc-app-name {
+            font-size: 1.5em;
+            font-weight: 900;
+            color: #e65100;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+        }
+
+        .hak-cipta-section .hc-desc {
+            font-size: 0.92em;
+            color: #444;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .hak-cipta-section .hc-divider {
+            border: none;
+            border-top: 2px dashed #e65100;
+            margin: 18px 0;
+            opacity: 0.4;
+        }
+
+        .hak-cipta-section .hc-larangan-title {
+            font-size: 1em;
+            font-weight: 700;
+            color: #b71c1c;
+            margin-bottom: 12px;
+        }
+
+        .hak-cipta-section .hc-larangan-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 18px 0;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .hak-cipta-section .hc-larangan-list li {
+            font-size: 0.90em;
+            color: #333;
+            padding: 5px 0 5px 28px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .hak-cipta-section .hc-larangan-list li::before {
+            content: "🚫";
+            position: absolute;
+            left: 0;
+            top: 5px;
+            font-size: 0.9em;
+        }
+
+        .hak-cipta-section .hc-footer {
+            font-size: 0.85em;
+            color: #555;
+            line-height: 1.7;
+            font-style: italic;
+            border-top: 1px solid #e65100;
+            padding-top: 14px;
+            margin-top: 6px;
+            opacity: 0.85;
+        }
+
+        /* SERTIFIKAT HAKI placeholder */
+        .haki-sertifikat-box {
+            margin: 20px auto 0 auto;
+            max-width: 860px;
+            background: #f9f9f9;
+            border: 2px dashed #bbb;
+            border-radius: 10px;
+            padding: 22px;
+            text-align: center;
+        }
+
+        .haki-sertifikat-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+            display: block;
+            margin: 0 auto;
+        }
+
+        .haki-sertifikat-box .haki-label {
+            font-size: 0.80em;
+            color: #999;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -60,6 +198,14 @@
 
             .content {
                 padding: 20px;
+            }
+
+            .hak-cipta-section {
+                padding: 20px 15px;
+            }
+
+            .hak-cipta-section .hc-app-name {
+                font-size: 1.15em;
             }
         }
     </style>
@@ -74,13 +220,59 @@
     </nav>
 
     <div class="container">
-        <!-- Replace 'banner.jpg' with the actual filename of your uploaded image -->
+        <!-- Banner utama -->
         <img src="banner.png" alt="Selamat Datang - Sugeng Mardiyanto" class="banner-image">
         
         <div class="content">
             <h2>Selamat Datang di Aplikasi Pembelajaran</h2>
             <p>Untuk informasi lebih lanjut, silakan hubungi:<br>
             Call: 0822-3209-7111 | WA: 082142781714</p>
+
+            <!-- ===== KETENTUAN HAK ATAS CIPTAAN ===== -->
+            <div class="hak-cipta-section">
+
+                <div class="hc-dasar">
+                    <strong>Berdasarkan:</strong><br>
+                    <span>1️⃣ Undang-Undang Nomor 28 Tahun 2014 tentang Hak Cipta</span><br>
+                    <span>2️⃣ Undang-Undang Nomor 11 Tahun 2008 tentang Informasi dan Transaksi Elektronik (ITE)</span>
+                </div>
+
+                <div class="hc-title">⚖️ PERINGATAN HAK CIPTA</div>
+                <div class="hc-badge">Dilindungi Undang-Undang</div>
+
+                <div class="hc-app-name">Aplikasi Komputer: SMART TEACHER APPS</div>
+
+                <div class="hc-desc">
+                    Seluruh konten, sistem, desain, fitur, kode program, tampilan antarmuka, database,
+                    materi pembelajaran, serta seluruh komponen dalam aplikasi <strong>SMART TEACHER APPS</strong>
+                    merupakan karya asli dan dilindungi oleh hukum Hak Cipta yang berlaku di
+                    <strong>Republik Indonesia</strong>.
+                </div>
+
+                <hr class="hc-divider">
+
+                <div class="hc-larangan-title">📌 Dilarang keras untuk:</div>
+                <ul class="hc-larangan-list">
+                    <li>Menyalin <em>(copying)</em> sebagian atau seluruh isi aplikasi</li>
+                    <li>Menggandakan <em>(reproducing)</em> dalam bentuk apa pun</li>
+                    <li>Menggunakan tanpa izin resmi</li>
+                    <li>Memodifikasi, mengadaptasi, menerjemahkan, atau mengembangkan ulang</li>
+                    <li>Mendistribusikan, menjual, menyewakan, atau mengalihkan hak penggunaan</li>
+                    <li>Mengklaim sebagai karya milik pihak lain</li>
+                </ul>
+
+                <div class="hc-footer">
+                    Tanpa izin tertulis resmi dari <strong>Pemilik Hak Cipta</strong> dan
+                    <strong>Pembuat Aplikasi SMART TEACHER APPS</strong>.
+                </div>
+            </div>
+
+            <!-- ===== SERTIFIKAT HAKI - Ganti "sertifikat_haki.png" dengan nama file Sertifikat HAKI Anda ===== -->
+            <div class="haki-sertifikat-box">
+                <div class="haki-label">📜 Sertifikat Hak Kekayaan Intelektual (HAKI)</div>
+                <img src="Sertfikat_HAKI.jpg" alt="Sertifikat HAKI - SMART TEACHER APPS">
+            </div>
+
         </div>
     </div>
 </body>
