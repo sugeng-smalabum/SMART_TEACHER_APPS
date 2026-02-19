@@ -120,6 +120,13 @@
             opacity: 0.4;
         }
 
+        .hak-cipta-section .hc-divider-solid {
+            border: none;
+            border-top: 2px solid #b71c1c;
+            margin: 22px 0;
+            opacity: 0.5;
+        }
+
         .hak-cipta-section .hc-larangan-title {
             font-size: 1em;
             font-weight: 700;
@@ -149,6 +156,76 @@
             left: 0;
             top: 5px;
             font-size: 0.9em;
+        }
+
+        /* ===== KONSEKUENSI SECTION ===== */
+        .hc-konsekuensi-box {
+            background: linear-gradient(135deg, #fce4ec 0%, #ffebee 100%);
+            border: 1.5px solid #c62828;
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 4px 0 10px 0;
+            text-align: center;
+        }
+
+        .hc-konsekuensi-box .hck-title {
+            font-size: 1.05em;
+            font-weight: 800;
+            color: #b71c1c;
+            margin-bottom: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .hc-konsekuensi-box .hck-uu {
+            font-size: 0.78em;
+            color: #888;
+            font-style: italic;
+            margin-bottom: 14px;
+        }
+
+        .hc-konsekuensi-box .hck-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .hc-konsekuensi-box .hck-list li {
+            font-size: 0.90em;
+            color: #333;
+            padding: 6px 0 6px 30px;
+            position: relative;
+            line-height: 1.5;
+            border-bottom: 1px dashed #f48fb1;
+        }
+
+        .hc-konsekuensi-box .hck-list li:last-child {
+            border-bottom: none;
+        }
+
+        .hc-konsekuensi-box .hck-list li::before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+            top: 6px;
+            font-size: 0.9em;
+        }
+
+        .hc-konsekuensi-box .hck-list li strong {
+            color: #b71c1c;
+        }
+
+        .hc-konsekuensi-box .hck-list li.hck-berat {
+            background: rgba(183, 28, 28, 0.06);
+            border-radius: 6px;
+            padding-left: 30px;
+            border-bottom: none;
+            margin-top: 4px;
+        }
+
+        .hc-konsekuensi-box .hck-list li.hck-berat::before {
+            content: "⚠️";
         }
 
         .hak-cipta-section .hc-footer {
@@ -206,6 +283,10 @@
 
             .hak-cipta-section .hc-app-name {
                 font-size: 1.15em;
+            }
+
+            .hc-konsekuensi-box {
+                padding: 15px 12px;
             }
         }
     </style>
@@ -283,14 +364,14 @@
                 </div>
 
                 <hr class="hc-divider-solid">
-                
+
                 <div class="hc-footer">
                     Tanpa izin tertulis resmi dari <strong>Pemilik Hak Cipta</strong> dan
                     <strong>Pembuat Aplikasi SMART TEACHER APPS</strong>.
                 </div>
             </div>
 
-            <!-- ===== SERTIFIKAT HAKI - Ganti "sertifikat_haki.png" dengan nama file Sertifikat HAKI Anda ===== -->
+            <!-- ===== SERTIFIKAT HAKI ===== -->
             <div class="haki-sertifikat-box">
                 <div class="haki-label">📜 Sertifikat Hak Kekayaan Intelektual (HAKI)</div>
                 <img src="Sertfikat_HAKI.jpg" alt="Sertifikat HAKI - SMART TEACHER APPS">
