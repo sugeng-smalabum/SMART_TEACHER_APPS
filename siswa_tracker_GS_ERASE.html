@@ -37,6 +37,7 @@
   label{display:block;font-size:0.82em;font-weight:600;color:var(--gray);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
   input,select{width:100%;padding:12px 14px;border:1.5px solid var(--gray-border);border-radius:10px;font-size:0.95em;font-family:inherit;outline:none;transition:border-color 0.2s,box-shadow 0.2s;background:white;color:var(--dark)}
   input:focus,select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,0.1)}
+  select{appearance:auto;-webkit-appearance:auto}
   
   .btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:1em;font-weight:700;font-family:inherit;cursor:pointer;transition:all 0.2s;letter-spacing:0.2px}
   .btn-primary{background:linear-gradient(135deg,#15803d,#16a34a);color:white}
@@ -166,21 +167,53 @@
 
     <div id="form-card" class="card">
       <div class="section-title"><span class="section-icon">&#128100;</span>Data Diri Siswa</div>
-      <div class="form-group">
-        <label>Nama Lengkap</label>
-        <input type="text" id="inp-nama" placeholder="Masukkan nama lengkap" autocomplete="off">
+
+      <!-- STEP 1: Pilih Kelas -->
+      <div class="form-group" id="step-kelas-group">
+        <label>Pilih Kelas</label>
+        <select id="inp-kelas" onchange="onKelasChange()" style="width:100%;padding:12px 14px;border:1.5px solid var(--gray-border);border-radius:10px;font-size:0.95em;font-family:inherit;outline:none;background:white;color:var(--dark)">
+          <option value="">-- Pilih Kelas --</option>
+          <option value="XI-1">XI-1</option>
+          <option value="XI-2">XI-2</option>
+          <option value="XI-3">XI-3</option>
+          <option value="XI-4">XI-4</option>
+          <option value="XI-5">XI-5</option>
+          <option value="XI-6">XI-6</option>
+          <option value="XI-7">XI-7</option>
+          <option value="XI-8">XI-8</option>
+          <option value="XI-9">XI-9</option>
+          <option value="XI-10">XI-10</option>
+          <option value="__manual__">✏️ Ketik Manual...</option>
+        </select>
+        <input type="text" id="inp-kelas-manual" placeholder="Ketik kelas manual" autocomplete="off" style="display:none;margin-top:8px;width:100%;padding:12px 14px;border:1.5px solid var(--gray-border);border-radius:10px;font-size:0.95em;font-family:inherit;outline:none">
       </div>
-      <div class="form-group">
-        <label>NIS / No. Absen</label>
-        <input type="text" id="inp-nis" placeholder="Masukkan NIS" autocomplete="off">
+
+      <!-- STEP 2: Pilih Nama -->
+      <div class="form-group" id="step-nama-group" style="display:none">
+        <label>Cari &amp; Pilih Nama</label>
+        <div style="position:relative">
+          <input type="text" id="inp-nama-search" placeholder="&#128269; Ketik nama untuk mencari..." autocomplete="off"
+            oninput="filterNama()" onfocus="showDropdown()" style="width:100%;padding:12px 14px;border:1.5px solid var(--gray-border);border-radius:10px;font-size:0.95em;font-family:inherit;outline:none">
+          <div id="nama-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:white;border:1.5px solid var(--green);border-radius:0 0 10px 10px;max-height:200px;overflow-y:auto;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,0.1)"></div>
+        </div>
+        <input type="hidden" id="inp-nama" value="">
+        <div id="nama-terpilih" style="display:none;margin-top:8px;padding:10px 14px;background:var(--green-light);border-radius:8px;border:1.5px solid var(--green);font-size:0.9em;font-weight:600;color:var(--green-dark);display:flex;align-items:center;justify-content:space-between">
+          <span id="nama-terpilih-text"></span>
+          <button onclick="resetNama()" style="background:none;border:none;cursor:pointer;color:var(--green-dark);font-size:1em;padding:0 0 0 8px">&#10005;</button>
+        </div>
+        <button onclick="pakaiNamaManual()" style="margin-top:8px;width:100%;padding:8px;border:1.5px dashed var(--gray-border);border-radius:8px;background:white;font-size:0.82em;font-family:inherit;cursor:pointer;color:var(--gray)">&#9998; Nama tidak ada di daftar? Ketik manual</button>
       </div>
-      <div class="form-group">
-        <label>Kelas</label>
-        <input type="text" id="inp-kelas" placeholder="Contoh: 10A, 11B" autocomplete="off">
-      </div>
-      <div class="form-group">
-        <label>Nama Guru Pendamping</label>
-        <input type="text" id="inp-guru" placeholder="Nama guru pendamping kelasmu" autocomplete="off">
+
+      <!-- STEP 3: NIS & Guru (muncul setelah nama dipilih) -->
+      <div id="step-detail-group" style="display:none">
+        <div class="form-group">
+          <label>NIS / No. Absen</label>
+          <input type="text" id="inp-nis" placeholder="Masukkan NIS" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>Nama Guru Pendamping</label>
+          <input type="text" id="inp-guru" placeholder="Nama guru pendamping kelasmu" autocomplete="off">
+        </div>
       </div>
       <div id="req-blocker" style="margin-bottom:10px;padding:10px 12px;background:var(--yellow-light);border-radius:8px;font-size:0.82em;color:var(--yellow);font-weight:600;text-align:center;display:none">&#9888;&#65039; Aktifkan GPS &amp; Internet terlebih dahulu</div>
       <button class="btn btn-primary" id="btn-mulai" onclick="mulaiTracking()" disabled style="opacity:0.5">&#128205; Mulai &amp; Aktifkan GPS</button>
@@ -238,7 +271,7 @@
 // KONFIGURASI GOOGLE APPS SCRIPT
 // Ganti dengan Web App URL dari deployment kamu
 // ============================================
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxqs23MH5CXI706J_54aKlmzxAnP2KUtsYjTaql9S_hF3l44ArGup1ptccHdij9IhmS/exec';
+const GAS_URL = 'GANTI_DENGAN_WEB_APP_URL_KAMU';
 
 // Fungsi kirim lokasi ke Google Sheets via GAS
 function kirimKeSheets(data) {
@@ -419,7 +452,7 @@ function updateCountdown() {
 window.mulaiTracking = function() {
   const nama = document.getElementById('inp-nama').value.trim();
   const nis = document.getElementById('inp-nis').value.trim();
-  const kelas = document.getElementById('inp-kelas').value.trim();
+  const kelas = getSelectedKelas ? getSelectedKelas() : document.getElementById('inp-kelas').value.trim();
   const guru = document.getElementById('inp-guru').value.trim();
 
   if (!nama || !nis || !kelas || !guru) {
@@ -544,6 +577,477 @@ window.stopTracking = function() {
 };
 
 renderItinerary('itinerary-register');
+
+// ===== DATA SISWA PER KELAS =====
+const DATA_SISWA = {
+  "XI-1": [
+    "AGGIE ALEXANDER FIANTO",
+    "ALEXANDER WILMAN SUTRISNO",
+    "ALIF FAIRUZ ZAHRI",
+    "ALYAA SURYANING TYAS",
+    "ALZENA AZMI DANARSARI",
+    "ANDIKA AGUNG NUGRAHA PUTRA",
+    "ANDINI KHAIRUN NIZA",
+    "ANINDYA SYAKIRA PUTRI RIZKIWAHANA",
+    "ASENSIO SHIMON KURNIA SANDI",
+    "AURICK FATHAN ALTAIRA HERMAWAN",
+    "CALLYSTA ABRINDA PUTRI WIYANA",
+    "CARISSA RIYONA DINANTY",
+    "ENJEL SINTA BELA",
+    "ERLANGGA CHANDRASA DANUMARTA",
+    "FACHRY DHANATAMA",
+    "GALAXYA EL KAFI NURLUKITO",
+    "GERALD AURELIO FRENY LEMENA",
+    "HANNE RULISTYA VALENTINE",
+    "KARINA INDRA FLORENCIA",
+    "M. BIMA SATRIA WIBAWA",
+    "MARITZA NARADIAURELIA SUNARDI",
+    "MOCHAMMAD ARIEF SURYADHARMA",
+    "MUHAMMAD AKHTAR AL FAIQ",
+    "NADA SALSABILA FATIN",
+    "PRITA LAURA AMANDA PUTRI",
+    "RAIHANNAH ARINI SOPHIA HIDAYAT",
+    "RAKHA RADITYA AJI",
+    "SYAKIRAH CALISTA YOSHINTA PUTRI",
+    "TA'JA ACHMAD AIMAR REFKA",
+    "WAHYU DRAJAT TITIS PRAMANA",
+    "YUNIA MERLITA DWI AGUSTIN",
+    "ZALFA ALFIYENI AGUSTI"
+  ],
+  "XI-2": [
+    "ABIRA SYAKIRA",
+    "ADITYA AGUNG NURCAHYA PUTRA",
+    "AFDHAL DYLA AGUNG SAPUTRA",
+    "AIRA QILA ALBANTANI",
+    "ANNISA EKADEWI NURRAHMA",
+    "ASYIFA STAMARA RANIA BILLAH",
+    "AUFA ILHAM EKA SAMETA",
+    "BINTANG PASA JANEETRA W",
+    "HILMY ZAKWAN ARIANTO",
+    "IZDIHAR HANIF AL-RAZAAN",
+    "JANETTA KHAYLA IMSANI",
+    "KHAIZURAN SYADDAN WALIUDDIN ZAKIR",
+    "KINANTIKA SASMITANING WIDHI",
+    "LOVERDY AUGUSTA ALMERRAKA",
+    "M. FATHUR RAHMAN",
+    "MAHARDIKA ARCENZI FIRJATULLAH KEVIN NABIL",
+    "MAHESWARA PRAGATA WISTARA",
+    "MUHAMMAD BAGAS PANUNTUN",
+    "MUHAMMAD NAUFAL 'ATHAA NUHAA",
+    "MUHAMMAD RAFI ALIF DZAKY",
+    "NABILLA EVALIA RAMADHANI",
+    "NADINE ALYSHA NAMIRA PUTRI",
+    "NAJWA AURELLYA ZULKARNAEN",
+    "NAURA FAWNIA SYAHLA",
+    "OKTAVIA FITRI LESTARI",
+    "RAFAEL VALENTINO PRAWORO PUTRA",
+    "RHEINO PRATAMA MAHARDANI",
+    "RIFDAH AQILAH ZIKRIYAH",
+    "RIZQIKA NUR RAHMA",
+    "SYERIL AGUSTIN FADILLAH",
+    "YANBADRA FIQRINA SANTOSO",
+    "ZAHIRA KHANZA RIZKI AHTASAR PUTRI",
+    "ZAIN MUHIBURROHMAN SAMSON"
+  ],
+  "XI-3": [
+    "ACHMAD DEWA KHANZUL ARSY",
+    "ACHMAD KURNIA MULYADHARMA",
+    "AFLAH MAHARDHIKA ASLAM",
+    "AHMAD ALFIRO ADIBHAKTI",
+    "ALLYSA MARTANIA PUTRI",
+    "AMIRA ZAKY SYALILLA",
+    "ANDITHA AURELIA PUTRI",
+    "AYDHIN FATHANAH",
+    "BENING RASHEESA PRASATYA",
+    "CHEISYA BUNGA YEVIASAFIRA",
+    "CHESTA ARKANA CAKRAQUANTA",
+    "DEVANO KEANE ARKANANTA",
+    "FAVIAN ADYUTA EGA SUSILO",
+    "FEBRIANI SALSABILA",
+    "KENZIE AZZAM DAMANHUDI",
+    "KEVIN AZZURA ALFARO",
+    "KIMYA KINANTI PRADIPTA",
+    "MUHAMMAD EZRA ARZANTA SYAH PUTRA",
+    "MUHAMMAD IQBAL ZAIDAN PUTRA UTAMA",
+    "MUHAMMAD RAKA ALFARIZI",
+    "MUHAMMAD RIZKY PRATAMA",
+    "NADIA PUTRI ZAFIRA",
+    "NAIYIRA SHIVA ZHAFIRA SEVILIN",
+    "NAYAKA TRISTAN RASENDRIYA",
+    "NAZIFA UFAIRA",
+    "RAHMA AYU INDAH LESTARI",
+    "RESTATIA NINDY PUTRI SETIAWAN",
+    "RIFDA KHAIRUNNISA OCEANI ARIYANTO",
+    "ROSSA YUFINDA EKA FITRI",
+    "SATRIA DARMA MANDALA PUTRA",
+    "SURYO AGUNG ARDIANSYAH",
+    "TALITHA ALYSA HURFI",
+    "VICKY PRAMOEDYAH"
+  ],
+  "XI-4": [
+    "ALMIRA AZARINE AZ-ZAHRA",
+    "AMANDA PUTRI RUDITA",
+    "ANNORA FLOREANZA",
+    "AXEL AUFAA PRATAMA",
+    "BAGASKARA WIDYADHANU",
+    "BILQIESH ALYA PUTRI MAULANA",
+    "CITRA VALENSYA",
+    "HANIF FAKHRUDDIN",
+    "IFTAHUL RIZKY ALJAYIDIN",
+    "IFTITAH PUTRI TSALSABILA",
+    "INTAN NIRWANA",
+    "JIHAN AMIRA NABILA ARYANTI",
+    "KANIA NUANSA DEWI",
+    "KAYLA VANIA NURIA",
+    "KAYSAN ARSHAVIN MAHARDHIKA",
+    "KHANSA HURIYYA FATIN",
+    "LINTANG ANNORA DANY",
+    "M. ABYAN GHAISAN MUSTHOFA",
+    "MAULANA WILDAN MAHENDRA",
+    "MUHAMMAD AKMAL BANYU PUNARA JATI",
+    "MUHAMMAD ASYRAAF NABIL LATIEF",
+    "MUHAMMAD BINTANG AZARIA",
+    "MUHAMMAD HAIDAR AZKA",
+    "MUHAMMAD SHAUMA ATTA AQILA",
+    "QUEENETA ANAND TAN",
+    "RAYA FADHILA",
+    "SATRIO SULUH JAGAT",
+    "SURYA PRAMUDYA PONGKUH SETIAWAN",
+    "ULLI ALBA MARESCHA EFENDY",
+    "VANESHA ANGELIA TEDJO",
+    "ZAFRIL FAWWAZ AZIZ",
+    "ZAYDAN AMIRUL HAQ"
+  ],
+  "XI-5": [
+    "ADDIN PARARTA SAYEKTI",
+    "AHMAD DZARKASIH SYAHPUTRA",
+    "AISYAH AQILA AZZAHRA",
+    "ASTERISK PRISCILA ZENITA SETIAWAN",
+    "ATHALATTA AZURANAYAKA",
+    "AZZAM RAFI' HAMMADI",
+    "BRILLIANT AULIYA KEYSYA",
+    "DAHAYU HAPSARI PRABAWATI",
+    "DASHA ARSYAD AVILA",
+    "EARLYTA IZZATI ALMAIRA",
+    "EVAN ANDHIKA PRASETYA",
+    "FACHRI ACHMAD RAMADHAN",
+    "HESTI LINTANG KENCONO",
+    "IVANA TSANY LUKITO",
+    "JANEETA PULCHERIA AURELLIA ANANG",
+    "KEISHA ALMIRAH RAMADHANI",
+    "KEVIN ATHALLA MAULANA",
+    "KIRANA INDRASWARI",
+    "M TSAQIF MUNAZHZHAM KURNIAWAN",
+    "MARCHO TOSHIHIRO ARIZONA",
+    "MARTA PRADIPTA DANISWARA",
+    "MOCH. HAFIZH RAMADHAN",
+    "NAFISHA AUFA ZAAFARANI",
+    "NAUFAL PUTRA PRASETYA",
+    "NINDYA ALEISHA RAHMA",
+    "RADITYA HERDYAN SYAHPUTRA",
+    "RIZKY FIRMANSYAH",
+    "SALSABILA NEILA NATHANIA",
+    "THABITA HUSNIYAH ALKAFF",
+    "THERESIA PRADIPTA RENAY DWINTASARI",
+    "WILDAN NAJIHAN FAIS",
+    "YURCEL ZAIDAN FIRJATULLAH"
+  ],
+  "XI-6": [
+    "AHMAD FAQIH AFFANDI",
+    "AIKO ZAHIRA RAHMAANI SAIMOEN",
+    "AULIA ANDHARA PUTRI",
+    "AYESHA ACINTYA FIRJATULLAH",
+    "BUNGA NAURELLA SABRINA",
+    "CHRISTIAN WIJAYA",
+    "DESI PAYUCA",
+    "ELVIRA LAKSITA MAHESWARI",
+    "FABYANA ALMIRANIDA KUSUMA HASRI",
+    "FAKHRI AHMAD DIENOVANTO",
+    "HANIFAH ZAHRA RANIAH",
+    "KANZHA AURELLA PUTRI",
+    "KEISHA SYAFA AZZAHRA",
+    "MOHAMMAD JAVIER ABIMANYU",
+    "MUHAMMAD FARRAAS AAQILAH",
+    "MUHAMMAD HAYDAR ATHALLAH",
+    "MUHAMMAD JIBRIL YAZID BAKTAYAN",
+    "MUHAMMAD RAFI ZIKRI",
+    "MUHAMMAD RASYA ASYRAF WIJANARKO",
+    "NABILAH AZZALIYAH THALIB",
+    "NAILA ALMIRA RIDHA",
+    "NAYLA SAFIRA",
+    "NOVANDA ATHARAIS ZACHARIA",
+    "OSCAR TOBIAS RADOSLAW IBAD",
+    "RADHITYA DANANG SETIAJI",
+    "RADITYA BAGAWANTA",
+    "RIKZA AUFA MUSYAFFA",
+    "SALWA NAURA AZ-ZAHRA MUZAFFAR",
+    "SHAFIRA MARVA RAISSA PUTRI NADIA",
+    "SHANA ALMAQHVIRA PUTRI WINARNO",
+    "SOFI ABDUL HALIM",
+    "YUSUF AHMAD IBRAHIM"
+  ],
+  "XI-7": [
+    "ALIEFIA KEISHA DELI NAZARA NOER",
+    "ALMIRAH YASMIN SUCI HARDANI",
+    "ASTINA PUTRI JANITRA YUDA",
+    "AVELIA NAURA",
+    "AYESHA KANYA PRAMESWARI",
+    "AYODYA DEWI KINASIH",
+    "AZZAHRA MUTIARA SELLIKA",
+    "CANDRA UKRA SENA YAHYA PUTRA",
+    "CLEONIMA CALLYSTA SATRIYO",
+    "CUT ALEENA MAHADEWI KINARA",
+    "DARISAGHA FAEYZA GHANI",
+    "HAFIYYAN MAULANA",
+    "HAIDAR RIZKY AKBAR",
+    "IGREAT ROSCIA SIMANJUNTAK",
+    "JIHAN PINKAN EGHNILIA WARIKI",
+    "M. IBRAHIM AFFELAY ALI",
+    "MOHAMMAD FAKKAR SABILILLAH",
+    "MUHAMMAD DAVIN ATTALAH SUSILO",
+    "MUHAMMAD ESSAMADA UTAMA",
+    "MUHAMMAD FATHURRAHMAN",
+    "MUHAMMAD IRSYAD FAIZ",
+    "MUHAMMAD SULAIMAN ADHIM",
+    "MUHAMMAD TAUFIQ ADI ISKANDAR",
+    "NESSHA SASKIYA SIMAREMARE",
+    "R. SATRIA RAFFINO DARMA PUTRA",
+    "RAISSHA ALMA",
+    "REVICO ARDIS SUSATYA",
+    "REZA PAHLEVI",
+    "SALSABILA AS SYAFI'AH",
+    "SILA VALEN AULIYA",
+    "SITI ALIFIA FEBRIANI",
+    "SOFAN ABDUSSALAM",
+    "SYVA AYU NACITA"
+  ],
+  "XI-8": [
+    "AISYAH SAFIRA NUGROHO",
+    "AKMAL DZAKY ARDIANSYAH",
+    "ALEXANDER KEVIN MARKS",
+    "ALFA NUSRO TANALINA",
+    "ANANDA BINTANG MAHESWARA",
+    "ANANDA NADIA KARAMCHAN RAHARJO",
+    "ANNISA AZZARA",
+    "AZKA RADHI KURNIAWAN",
+    "BELVA JASMIN ALZAHRA",
+    "CARISSA NADIA PUTRI",
+    "CYNTHIA PRASHITA DEVI",
+    "ELBARCA DZUNNURAIN TAUFIKUR RAHMAN",
+    "ELMIRA BIMA PUTRI",
+    "ENJELIA NINDI ANTIKA",
+    "FARIS AHMAD SURYA WARDHANA",
+    "IGNATIUS ADAM",
+    "JAWAD WISAM WAFI",
+    "KAYYISAH FATIN SALSABILA",
+    "KEYSHA NAURA PUTRI",
+    "KIMIKA ALMIRA SHINTANAYA",
+    "MUHAMMAD ANGGA SURYA JAYAKUSUMA",
+    "MUHAMMAD BAGAS ALFARIZKI",
+    "MUHAMMAD IKHWAN NUR HAKIM",
+    "NATHANAEL ARSEN",
+    "NAUFAL ANSHARULLAH",
+    "NAZILLA ESSIE SHIREEN",
+    "NUR HAYU MAHESWARI",
+    "RAAKAN ABBAS",
+    "RADYA RAKA NOER RAMADHAN",
+    "RISMA MAULIDIYA PUTERI",
+    "ROMAN IBRAHIMOVIC",
+    "TALITA ANINDYA DANASTRI",
+    "TRISTAN AUFA RYSANDI",
+    "ZAKIYAH NAILA NAZLA"
+  ],
+  "XI-9": [
+    "ABDUL WACHID AL MAULIDY",
+    "AKILA KAVIA DIAMANTA",
+    "ALYA ANANDHITA KHOIRUNNISSA",
+    "AULIA MELANIE MURTI",
+    "CINDY MAYKA PUTRI",
+    "DANESH ARYO PANDYA",
+    "DANISH ARYA PRADIPTA",
+    "DELLA AYUNDA SASKIYA",
+    "DICKY GLORY ANDIKA",
+    "ENESIA SAKYA ARUNDARI",
+    "FAKHRI AZFAR",
+    "JAVAN ZAFARAFI",
+    "KEVIN RAYNALD SAPUTRA",
+    "LILA SYIFANINGTIAS",
+    "LION HENRY PURNOMO",
+    "LUNA NAURA",
+    "MAULIVI DIVA KEILANI",
+    "MOCHAMMAD PASHA RIDHO CAHAYA",
+    "MOHAMMAD ALBY ZIA ADAM",
+    "MUHAMMAD AMMAR ZAKY",
+    "MUHAMMAD ARKHA ANANDRA PRATAMA",
+    "MUHAMMAD DAFFA RAFII RABBANI",
+    "MUHAMMAD FARIS IZZAN",
+    "MUTIARA DIPRA OKTVIANA",
+    "NANDANA ATHIALLA PARAHITA SURYA ABYUDAYA",
+    "QUEENA BILQIS AZALIA",
+    "RESYARHYINA GLAZE SIRAIT",
+    "SHAFA AZALIA SALSABILA",
+    "SURYA ADYA SANTA",
+    "ULUNG HUTAMA RAHARJO",
+    "WISCA FARADILLA PUTRI DARMA",
+    "YESSICA CINTA ALMIRA MULYONO",
+    "YIESHA PARKIA LOVIE FAUWAZ"
+  ],
+  "XI-10": [
+    "ACHMAD AMSAL MULKU",
+    "ACHMAD JINDAN JAWAHIR",
+    "ACHMAD SAIFULLOH ABIDIN",
+    "ADINDA LUXTRIWATI ATHIRAH ACHMAD",
+    "AHMAD ATHAYA FARAS AYMAN",
+    "AISHA ZALFA FITRIA ZALDI",
+    "AISYAH GHAIDA FITRIYAH",
+    "ALLENDRA MARSHYA SABRIA",
+    "ANAK AGUNG DANENDRA IBRAHIM PUTRA PRAMUDYA",
+    "ANDI MAULANA ZULKARNAEN",
+    "ANDROMEDA DWI CAHYA PUTRA PRIHADI",
+    "ARIF BUDI PRASETYO",
+    "AULIA NAYLA RAHMA",
+    "AURELLIA CHRISSANTY",
+    "BAIQ NAMIRA REYHANUUN",
+    "BARIROH AZZAHRO",
+    "DARYA CITRA MANGGALAYUDHA",
+    "DIMAS RADITYA ARYASATYA",
+    "FAIZA AMBAR RAMADHANI",
+    "HADIJAH AMIRA ALTHAF",
+    "IJO SASTRO PRASETYO",
+    "KEVANDRA AZKA HENDIKUSUMO",
+    "MAURA NAJLA HAFIZAH",
+    "MOCH. RIZQULLAH RAFIF WIBOWO",
+    "NAYLA MAIZA RISGIAWATI",
+    "RAISSA MALIKA MUTHAHHARI",
+    "RAKHA FADHIL KEANDRE",
+    "SALWA RAHMA AULIA",
+    "SAMIAJI MAHARDIKA NUGROHO",
+    "VANEZA AULIA ZAHRA"
+  ]
+};
+
+// ===== DROPDOWN LOGIC =====
+function onKelasChange() {
+  const sel = document.getElementById('inp-kelas');
+  const manualInput = document.getElementById('inp-kelas-manual');
+  const namaGroup = document.getElementById('step-nama-group');
+  const detailGroup = document.getElementById('step-detail-group');
+  
+  resetNama();
+  detailGroup.style.display = 'none';
+
+  if (sel.value === '__manual__') {
+    manualInput.style.display = 'block';
+    manualInput.focus();
+    namaGroup.style.display = 'block';
+    // Manual mode: show plain text input for nama
+    document.getElementById('inp-nama-search').placeholder = '✏️ Ketik nama lengkap...';
+    document.getElementById('inp-nama-search').oninput = function() {
+      document.getElementById('inp-nama').value = this.value;
+      if (this.value.length > 0) {
+        document.getElementById('step-detail-group').style.display = 'block';
+        document.getElementById('nama-terpilih').style.display = 'none';
+      }
+    };
+    document.getElementById('nama-dropdown').style.display = 'none';
+    document.getElementById('inp-nama-search').oninput = manualNamaInput;
+  } else if (sel.value) {
+    manualInput.style.display = 'none';
+    namaGroup.style.display = 'block';
+    document.getElementById('inp-nama-search').placeholder = '🔍 Ketik nama untuk mencari...';
+    document.getElementById('inp-nama-search').oninput = filterNama;
+    document.getElementById('inp-nama-search').value = '';
+    document.getElementById('inp-nama').value = '';
+  } else {
+    manualInput.style.display = 'none';
+    namaGroup.style.display = 'none';
+  }
+}
+
+function manualNamaInput() {
+  const val = this.value.trim();
+  document.getElementById('inp-nama').value = val;
+  if (val.length > 1) {
+    document.getElementById('step-detail-group').style.display = 'block';
+  }
+}
+
+function getSelectedKelas() {
+  const sel = document.getElementById('inp-kelas');
+  if (sel.value === '__manual__') {
+    return document.getElementById('inp-kelas-manual').value.trim();
+  }
+  return sel.value;
+}
+
+function filterNama() {
+  const kelas = document.getElementById('inp-kelas').value;
+  const q = document.getElementById('inp-nama-search').value.trim().toLowerCase();
+  const dropdown = document.getElementById('nama-dropdown');
+  
+  if (!kelas || kelas === '__manual__') return;
+  
+  const list = DATA_SISWA[kelas] || [];
+  const filtered = q ? list.filter(n => n.toLowerCase().includes(q)) : list;
+  
+  if (filtered.length === 0) {
+    dropdown.innerHTML = '<div style="padding:10px 14px;font-size:0.85em;color:var(--gray)">Nama tidak ditemukan — coba ketik manual</div>';
+    dropdown.style.display = 'block';
+    return;
+  }
+  
+  dropdown.innerHTML = filtered.map(nama => 
+    `<div onclick="pilihNama('${nama.replace(/'/g, "\'")}')" 
+      style="padding:10px 14px;font-size:0.88em;cursor:pointer;border-bottom:1px solid var(--gray-border);transition:background 0.15s"
+      onmouseover="this.style.background='var(--green-light)'"
+      onmouseout="this.style.background='white'">${nama}</div>`
+  ).join('');
+  dropdown.style.display = 'block';
+}
+
+function showDropdown() {
+  const kelas = document.getElementById('inp-kelas').value;
+  if (!kelas || kelas === '__manual__') return;
+  filterNama();
+}
+
+function pilihNama(nama) {
+  document.getElementById('inp-nama').value = nama;
+  document.getElementById('inp-nama-search').value = nama;
+  document.getElementById('nama-terpilih-text').textContent = nama;
+  document.getElementById('nama-terpilih').style.display = 'flex';
+  document.getElementById('nama-dropdown').style.display = 'none';
+  document.getElementById('step-detail-group').style.display = 'block';
+  // Focus ke NIS
+  setTimeout(() => document.getElementById('inp-nis').focus(), 100);
+}
+
+function resetNama() {
+  document.getElementById('inp-nama').value = '';
+  document.getElementById('inp-nama-search').value = '';
+  document.getElementById('nama-terpilih').style.display = 'none';
+  document.getElementById('nama-dropdown').style.display = 'none';
+  document.getElementById('step-detail-group').style.display = 'none';
+}
+
+function pakaiNamaManual() {
+  document.getElementById('inp-nama-search').placeholder = '✏️ Ketik nama lengkap secara manual...';
+  document.getElementById('inp-nama-search').oninput = manualNamaInput;
+  document.getElementById('nama-dropdown').style.display = 'none';
+  document.getElementById('nama-terpilih').style.display = 'none';
+  document.getElementById('inp-nama-search').value = '';
+  document.getElementById('inp-nama').value = '';
+  document.getElementById('inp-nama-search').focus();
+}
+
+// Tutup dropdown jika klik di luar
+document.addEventListener('click', function(e) {
+  const search = document.getElementById('inp-nama-search');
+  const dropdown = document.getElementById('nama-dropdown');
+  if (search && dropdown && !search.contains(e.target) && !dropdown.contains(e.target)) {
+    dropdown.style.display = 'none';
+  }
+});
 
 // ===== RESUME SESSION =====
 function activateTracking(nama, nis, kelas, guru) {
