@@ -163,6 +163,7 @@
   </div>
   <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
     <div style="display:flex;align-items:center;gap:8px">
+      <button onclick="ambilData()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:8px;padding:4px 10px;font-size:0.72em;font-weight:600;cursor:pointer;font-family:inherit" title="Refresh data sekarang">&#128260; Refresh</button>
       <button onclick="hapusSemuaData()" style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:white;border-radius:8px;padding:4px 10px;font-size:0.72em;font-weight:600;cursor:pointer;font-family:inherit" title="Hapus semua data percobaan">&#128465;&#65039; Hapus Semua</button>
       <div class="live-badge"><span class="pulse-dot"></span> LIVE</div>
     </div>
@@ -399,7 +400,8 @@ function prosesData(data) {
   // Update markers
   for(const nis in data){
     const s = data[nis];
-    if(!s.lat || !s.lon || (s.lat === 0 && s.lon === 0)) continue;
+    if((!s.lat || !s.lon || (s.lat === 0 && s.lon === 0)) && s.status !== 'online') continue;
+    if(s.lat === 0 && s.lon === 0) continue; // skip jika belum ada koordinat
 
     let jauh = false;
     if(titikKumpul && s.status === 'online'){
@@ -451,23 +453,35 @@ function ambilData() {
   isLoading = true;
   document.getElementById('koneksi-status').textContent = '🔄 Memuat...';
 
-  fetch(GAS_URL + '?action=getAll')
-    .then(r => r.json())
-    .then(result => {
-      isLoading = false;
-      if(result.status === 'ok') {
+  // Gunakan XMLHttpRequest agar redirect GAS ditangani dengan benar
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', GAS_URL + '?action=getAll', true);
+  xhr.onload = function() {
+    isLoading = false;
+    try {
+      console.log('GAS raw response:', xhr.responseText.substring(0, 300));
+      const result = JSON.parse(xhr.responseText);
+      if (result.status === 'ok') {
         prosesData(result.data || {});
         const now = new Date().toLocaleTimeString('id-ID');
         document.getElementById('koneksi-status').textContent = '✅ Update ' + now;
         document.getElementById('koneksi-status').style.color = '#16a34a';
+      } else {
+        throw new Error(result.message || 'Status error');
       }
-    })
-    .catch(err => {
-      isLoading = false;
-      document.getElementById('koneksi-status').textContent = '❌ Gagal terhubung';
+    } catch(e) {
+      document.getElementById('koneksi-status').textContent = '❌ Parse error: ' + e.message;
       document.getElementById('koneksi-status').style.color = '#dc2626';
-      console.error('Polling error:', err);
-    });
+      console.error('Parse error:', e, 'Response:', xhr.responseText);
+    }
+  };
+  xhr.onerror = function() {
+    isLoading = false;
+    document.getElementById('koneksi-status').textContent = '❌ Tidak dapat terhubung';
+    document.getElementById('koneksi-status').style.color = '#dc2626';
+    console.error('XHR error');
+  };
+  xhr.send();
 }
 
 // Jalankan pertama kali dan polling setiap 30 detik
