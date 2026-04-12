@@ -249,13 +249,13 @@
 // KONFIGURASI GOOGLE APPS SCRIPT
 // Ganti dengan Web App URL yang sama dengan siswa_tracker
 // ============================================
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxqs23MH5CXI706J_54aKlmzxAnP2KUtsYjTaql9S_hF3l44ArGup1ptccHdij9IhmS/exec';
+const GAS_URL = 'GANTI_DENGAN_WEB_APP_URL_KAMU';
 const POLL_INTERVAL = 30000; // Refresh data setiap 30 detik
 
 window.addEventListener('load', function() {
 
 // Hapus SEMUA data dari tampilan dan spreadsheet
-function hapusSemuaData() {
+window.hapusSemuaData = function() {
   const total = Object.keys(allSiswa).length;
   if (total === 0) { alert('Tidak ada data yang perlu dihapus.'); return; }
   if (!confirm(`Hapus SEMUA ${total} data siswa dari pantauan?\n\nSemua titik di peta akan hilang dan data di spreadsheet akan dihapus.\n\nGunakan fitur ini untuk membersihkan data percobaan.`)) return;
@@ -275,10 +275,10 @@ function hapusSemuaData() {
       .catch(err => console.error('Gagal hapus dari sheets:', err));
   }
   showNotif('del_all', '🗑️ Semua Data Dihapus', `${total} data siswa telah dihapus dari pantauan.`, 'ok');
-}
+};
 
 // Hapus data siswa dari spreadsheet + tampilan
-function hapusSiswa(nis, nama) {
+window.hapusSiswa = function(nis, nama) {
   if (!confirm(`Hapus data "${nama}" dari pantauan?\n\nData akan dihapus dari spreadsheet dan tidak muncul lagi di peta.`)) return;
   
   // Hapus dari tampilan lokal dulu (langsung terasa)
@@ -295,7 +295,7 @@ function hapusSiswa(nis, nama) {
       .catch(err => console.error('Gagal hapus dari sheets:', err));
   }
   showNotif('del_'+nis, '🗑️ Data Dihapus', `Data "${nama}" berhasil dihapus dari pantauan.`, 'ok');
-}
+};
 
 // ============ KONFIGURASI ============
 const JARAK_PERINGATAN_METER = 300; // siswa dianggap "jauh" jika > 300m dari titik kumpul
